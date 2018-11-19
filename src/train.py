@@ -1,26 +1,28 @@
 import argparse
 import time
 from sys import platform
-
+import sys
+sys.path.insert(0,'../')
 from models import *
 from utils.datasets import *
 from utils.utils import *
+from InputFile import *
 
 # batch_size 8: 32*17 = 544
 # batch_size 4: 32*25 = 800 (1.47 vs 544) or 32*23 = 736
 # batch_size 2: 32*35 = 1120 (1.40 vs 800, 2.06 cumulative)
 # batch_size 1: 32*49 = 1568 (1.40 vs 1120, 2.88 cumulative)
 
-targets_path = 'utils/targets_c60.mat'
+# Problem setup: read input file
+parser  = argparse.ArgumentParser(description='Input filename');
+parser.add_argument('inputfilename',\
+                    metavar='inputfilename',type=str,\
+                    help='Filename of the input file')
+args   = parser.parse_args()
+inputs = InputFile(args);
+inputs.printInputs();
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-epochs', type=int, default=999, help='number of epochs')
-parser.add_argument('-batch_size', type=int, default=8, help='size of each image batch')
-parser.add_argument('-cfg', type=str, default='cfg/c60_a30symmetric.cfg', help='cfg file path')
-parser.add_argument('-img_size', type=int, default=32 * 25, help='size of each image dimension')
-parser.add_argument('-resume', default=False, help='resume training flag')
-opt = parser.parse_args()
-print(opt)
+targets_path = inputs.targetspath;
 
 
 def main(opt):
