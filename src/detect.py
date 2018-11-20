@@ -6,42 +6,25 @@ from models import *
 from utils.datasets import *
 from utils.utils import *
 
-targets_path = 'utils/targets_c60.mat'
-
-parser = argparse.ArgumentParser()
-# Get data configuration
-if platform == 'darwin':  # macos
-    parser.add_argument('-image_folder', type=str, default='/Users/glennjocher/Downloads/DATA/xview/train_images/5.bmp')
-    parser.add_argument('-output_folder', type=str, default='./output_xview', help='path to outputs')
-    cuda = False  # torch.cuda.is_available()
-else:  # gcp
-    # cd yolo && python3 detect.py -secondary_classifier 1
-    parser.add_argument('-image_folder', type=str, default='../train_images/5.bmp', help='path to images')
-    parser.add_argument('-output_folder', type=str, default='../output', help='path to outputs')
-    cuda = False
-
-parser.add_argument('-plot_flag', type=bool, default=True)
-parser.add_argument('-secondary_classifier', type=bool, default=False)
-parser.add_argument('-cfg', type=str, default='cfg/c60_a30symmetric.cfg', help='cfg file path')
-parser.add_argument('-class_path', type=str, default='data/xview.names', help='path to class label file')
-parser.add_argument('-conf_thres', type=float, default=0.99, help='object confidence threshold')
-parser.add_argument('-nms_thres', type=float, default=0.4, help='iou threshold for non-maximum suppression')
-parser.add_argument('-batch_size', type=int, default=1, help='size of the batches')
-parser.add_argument('-img_size', type=int, default=32 * 51, help='size of each image dimension')
-opt = parser.parse_args()
-print(opt)
-
+# Problem setup: read input file
+parser  = argparse.ArgumentParser(description='Input filename');
+parser.add_argument('inputfilename',\
+                    metavar='inputfilename',type=str,\
+                    help='Filename of the input file')
+args   = parser.parse_args()
+opt    = InputFile(args);
+opt.printInputs();
 
 def detect(opt):
     if opt.plot_flag:
-        os.system('rm -rf ' + opt.output_folder + '_img')
-        os.makedirs(opt.output_folder + '_img', exist_ok=True)
-    os.system('rm -rf ' + opt.output_folder)
-    os.makedirs(opt.output_folder, exist_ok=True)
+        os.system('rm -rf ' + opt.outdir + '_img')
+        os.makedirs(opt.outdir + '_img', exist_ok=True)
+    os.system('rm -rf ' + opt.outdir)
+    os.makedirs(opt.outdir, exist_ok=True)
     device = torch.device('cuda:0' if cuda else 'cpu')
 
     # Load model 1
-    model = Darknet(opt.cfg, opt.img_size)
+    model = Darknet(opt.networkcfg, opt.img_size)
     checkpoint = torch.load('checkpoints/best.pt', map_location='cpu')
 
     model.load_state_dict(checkpoint['model'])
@@ -83,13 +66,13 @@ def detect(opt):
 
     # Set Dataloader
     classes = load_classes(opt.class_path)  # Extracts class labels from file
-    dataloader = ImageFolder(opt.image_folder, batch_size=opt.batch_size, img_size=opt.img_size)
+    dataloader = ImageFolder(opt.imagepath, batch_size=opt.batch_size, img_size=opt.img_size)
 
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
     prev_time = time.time()
     detections = None
-    mat_priors = scipy.io.loadmat(targets_path)
+    mat_priors = scipy.io.loadmat(opt.targets_path)
     for batch_i, (img_paths, img) in enumerate(dataloader):
         print('\n', batch_i, img.shape, end=' ')
 
@@ -184,11 +167,11 @@ def detect(opt):
             bbox_colors = random.sample(color_list, len(unique_classes))
 
             # write results to .txt file
-            results_path = os.path.join(opt.output_folder, path.split('/')[-1])
+            results_path = os.path.join(opt.outdir, path.split('/')[-1])
             if os.path.isfile(results_path + '.txt'):
                 os.remove(results_path + '.txt')
 
-            results_img_path = os.path.join(opt.output_folder + '_img', path.split('/')[-1])
+            results_img_path = os.path.join(opt.outdir + '_img', path.split('/')[-1])
             with open(results_path.replace('.bmp', '.tif') + '.txt', 'a') as file:
                 for i in unique_classes:
                     n = (detections[:, -1].cpu() == i).sum()
@@ -221,7 +204,7 @@ def detect(opt):
 
     if opt.plot_flag:
         from scoring import score
-        score.score(opt.output_folder + '/', '/Users/glennjocher/Downloads/DATA/xview/xView_train.geojson', '.')
+        score.score(opt.outdir + '/', '/Users/glennjocher/Downloads/DATA/xview/xView_train.geojson', '.')
 
 
 class ConvNetb(nn.Module):

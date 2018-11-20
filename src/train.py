@@ -24,8 +24,9 @@ inputs.printInputs();
 
 targets_path = inputs.targetspath;
 
+sys.exit()
 
-def main(opt):
+def main(inputs):
     os.makedirs('checkpoints', exist_ok=True)
     cuda = torch.cuda.is_available()
     device = torch.device('cuda:0' if cuda else 'cpu')
@@ -45,15 +46,15 @@ def main(opt):
         train_path = '../train_images'
 
     # Initialize model
-    model = Darknet(opt.cfg, opt.img_size)
+    model = Darknet(inputs.networkcfg, inputs.imgsize)
 
     # Get dataloader
-    dataloader = ListDataset(train_path, batch_size=opt.batch_size, img_size=opt.img_size, targets_path=targets_path)
+    dataloader = ListDataset(train_path, batch_size=inputs.batchsize, img_size=inputs.imgsize, targets_path=targets_path)
 
     # reload saved optimizer state
     start_epoch = 0
     best_loss = float('inf')
-    if opt.resume:
+    if inputs.resume:
         checkpoint = torch.load('checkpoints/latest.pt', map_location='cpu')
 
         model.load_state_dict(checkpoint['model'])
@@ -97,11 +98,11 @@ def main(opt):
     print('%10s' * 16 % (
         'Epoch', 'Batch', 'x', 'y', 'w', 'h', 'conf', 'cls', 'total', 'P', 'R', 'nGT', 'TP', 'FP', 'FN', 'time'))
     class_weights = xview_class_weights_hard_mining(range(60)).to(device)
-    for epoch in range(opt.epochs):
+    for epoch in range(inputs.epochs):
         epoch += start_epoch
 
         # img_size = random.choice([19, 20, 21, 22, 23, 24, 25]) * 32
-        # dataloader = ListDataset(train_path, batch_size=opt.batch_size, img_size=img_size, targets_path=targets_path)
+        # dataloader = ListDataset(train_path, batch_size=inputs.batchsize, img_size=img_size, targets_path=targets_path)
         # print('Running image size %g' % img_size)
 
         # Update scheduler
@@ -155,7 +156,7 @@ def main(opt):
                     mean_recall = 0
 
                 s = ('%10s%10s' + '%10.3g' * 14) % (
-                    '%g/%g' % (epoch, opt.epochs - 1), '%g/%g' % (i, len(dataloader) - 1), rloss['x'],
+                    '%g/%g' % (epoch, inputs.epochs - 1), '%g/%g' % (i, len(dataloader) - 1), rloss['x'],
                     rloss['y'], rloss['w'], rloss['h'], rloss['conf'], rloss['cls'],
                     rloss['loss'], mean_precision, mean_recall, model.losses['nGT'], model.losses['TP'],
                     model.losses['FP'], model.losses['FN'], time.time() - t1)
@@ -206,5 +207,5 @@ def main(opt):
 
 if __name__ == '__main__':
     torch.cuda.empty_cache()
-    main(opt)
+    main(inputs)
     torch.cuda.empty_cache()
