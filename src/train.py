@@ -22,9 +22,6 @@ args   = parser.parse_args()
 inputs = InputFile(args);
 inputs.printInputs();
 
-targets_path = inputs.targetspath;
-
-sys.exit()
 
 def main(inputs):
     os.makedirs('checkpoints', exist_ok=True)
@@ -49,7 +46,7 @@ def main(inputs):
     model = Darknet(inputs.networkcfg, inputs.imgsize)
 
     # Get dataloader
-    dataloader = ListDataset(train_path, batch_size=inputs.batchsize, img_size=inputs.imgsize, targets_path=targets_path)
+    dataloader = ListDataset(train_path, batch_size=inputs.batchsize, img_size=inputs.imgsize, targets_path=inputs.targetspath)
 
     # reload saved optimizer state
     start_epoch = 0
@@ -102,7 +99,7 @@ def main(inputs):
         epoch += start_epoch
 
         # img_size = random.choice([19, 20, 21, 22, 23, 24, 25]) * 32
-        # dataloader = ListDataset(train_path, batch_size=inputs.batchsize, img_size=img_size, targets_path=targets_path)
+        # dataloader = ListDataset(train_path, batch_size=inputs.batchsize, img_size=img_size, targets_path=inputs.targets_path)
         # print('Running image size %g' % img_size)
 
         # Update scheduler

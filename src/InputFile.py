@@ -29,6 +29,7 @@ class InputFile():
         print("**************************************************")
         print('\n');
     def readTrainingInputfile(self,inputfilestream):
+        self.traindir        = inputfilestream.readline().strip().split('= ')[1];
         self.epochs          = int(inputfilestream.readline().strip().split('= ')[1]);
         self.batchsize       = int(inputfilestream.readline().strip().split('= ')[1]);
         self.networkcfg      = inputfilestream.readline().strip().split('= ')[1];
