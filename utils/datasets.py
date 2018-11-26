@@ -2,7 +2,7 @@ import glob
 import math
 import os
 import random
-
+import sys
 import cv2
 import numpy as np
 import scipy.io
@@ -56,13 +56,27 @@ class ImageFolder():  # for eval-only
 
 class ListDataset():  # for training
     def __init__(self, path, batch_size=1, img_size=608, targets_path=''):
+        print('********************* DATA PREPROCESSING *********************')
+        print('Reading dataset from ' + path + '...');
         self.path = path
-        self.files = sorted(glob.glob('%s/*.bmp' % path))
-        self.nF = len(self.files)  # number of image files
-        self.nB = math.ceil(self.nF / batch_size)  # number of batches
+        filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
+        nbmp      = len(filesbmp)
+        if (nbmp == 0):
+            print('No .bmp data detected, checking for .tif...')
+            filestif = sorted(glob.glob('%s/*.tif' % path))
+            ntif     = len(filestif)
+            if (ntif > 0):
+                print('Converting .tif --> .bmp (.tif originals retained)...')
+                convert_tif2bmp(path)
+                filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
+            else:
+                sys.exit('Neither .bmp nor .tif data found, exiting.')
+        self.files      = filesbmp
+        self.nF         = len(self.files)  # number of image files
+        self.nB         = math.ceil(self.nF / batch_size)  # number of batches
         self.batch_size = batch_size
-        assert self.nB > 0, 'No images found in path %s' % path
         self.height = img_size
+        print('Successfully loaded ' + str(self.nF) + ' images.')
         # load targets
         self.mat = scipy.io.loadmat(targets_path)
         self.mat['id'] = self.mat['id'].squeeze()
@@ -86,6 +100,8 @@ class ListDataset():  # for training
         # RGB normalization of YUV-equalized images no clipping
         # self.rgb_mean = np.array([137.513, 127.813, 119.410], dtype=np.float32).reshape((1, 3, 1, 1))
         # self.rgb_std = np.array([69.095, 66.369, 64.236], dtype=np.float32).reshape((1, 3, 1, 1))
+
+        print('**************************************************************')
 
     def __iter__(self):
         self.count = -1
@@ -353,14 +369,12 @@ def random_affine(img, targets=None, degrees=(-10, 10), translate=(.1, .1), scal
         return imw
 
 
-def convert_tif2bmp(p='/Users/glennjocher/Downloads/DATA/xview/val_images_bmp'):
+def convert_tif2bmp(p):
     import glob
     import cv2
     files = sorted(glob.glob('%s/*.tif' % p))
     for i, f in enumerate(files):
-        print('%g/%g' % (i + 1, len(files)))
-
+        #print('%g/%g' % (i + 1, len(files)))
         img = cv2.imread(f)
-
         cv2.imwrite(f.replace('.tif', '.bmp'), img)
-        os.system('rm -rf ' + f)
+        #os.system('rm -rf ' + f)
