@@ -8,8 +8,8 @@ from InputFile import *
 
 class NetworkTrainer():
     def __init__(self, model, dataloader, inputs):
-        self.__inputs     = inputs;
-        self.__dataloader = dataloader;
+        self.__inputs      = inputs;
+        self.__dataloader  = dataloader;
         self.model    = model;
         self.setupCuda();
         self.loadSavedModels();
@@ -25,9 +25,7 @@ class NetworkTrainer():
             torch.cuda.manual_seed_all(0)
             torch.backends.cudnn.benchmark = True
 
-    def loadSavedModels(self,model):
-        start_epoch = 0
-        best_loss   = float('inf')
+    def loadSavedModels(self):
         if self.__inputs.resume:
             checkpoint = torch.load(self.__inputs.loaddir + 'latest.pt', map_location='cpu')
             self.model.load_state_dict(checkpoint['model'])
@@ -44,10 +42,12 @@ class NetworkTrainer():
             if torch.cuda.device_count() > 1:
                 print('Using ', torch.cuda.device_count(), ' GPUs')
                 self.model = nn.DataParallel(self.model)
+            self.__start_epoch = self.__inputs.epochstart;
+            self.__best_loss   = float('inf')
             self.model.to(self.__device).train()
             self.optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()), lr=1e-4, weight_decay=5e-4)
 
-    def backpropBatchLoss(self,nBatch,epoch,imgs,targets):
+    def backpropBatchLoss(self,nBatch,epoch,imgs,targets,j):
         targets_j = targets[j * nBatch : j * nBatch + nBatch]
         imgs_j    =    imgs[j * nBatch : j * nBatch + nBatch].to(self.__device)
         nGT       = sum([len(x) for x in targets_j])
@@ -96,11 +96,13 @@ class NetworkTrainer():
         return s;
 
     def train(self):
-        modelinfo(self.model)
+        print('********************* NETWORK TRAINING *********************')
+        print('Network architecture:')
+        #modelinfo(self.model)
         t0, t1 = time.time(), time.time()
         print('%10s' * 16 % (
             'Epoch', 'Batch', 'x', 'y', 'w', 'h', 'conf', 'cls', 'total', 'P', 'R', 'nGT', 'TP', 'FP', 'FN', 'time'))
-        self.class_weights = xview_class_weights_hard_mining(range(60)).to(device)
+        self.class_weights = xview_class_weights_hard_mining(range(60)).to(self.__device)
         # Main training loop
         for epoch in range(self.__inputs.epochs):
             epoch       += self.__start_epoch
@@ -110,7 +112,7 @@ class NetworkTrainer():
             for i, (imgs, targets) in enumerate(self.__dataloader):
                 n = 4  # number of pictures at a time
                 for j in range(int(len(imgs) / n)):
-                    flagContinue = self.backpropBatchLoss(n,epoch,imgs,targets);
+                    flagContinue = self.backpropBatchLoss(n,epoch,imgs,targets,j);
                     if flagContinue:
                         continue;
                     self.updateMetricsLoss();
@@ -141,4 +143,5 @@ class NetworkTrainer():
         # Save final model
         dt = time.time() - t0
         print('Finished %g epochs in %.2fs (%.2fs/epoch)' % (epoch, dt, dt / (epoch + 1)))
-
+        print('************************************************************')
+        print('\n');

@@ -31,6 +31,7 @@ class InputFile():
     def readTrainingInputfile(self,inputfilestream):
         self.traindir        = inputfilestream.readline().strip().split('= ')[1];
         self.epochs          = int(inputfilestream.readline().strip().split('= ')[1]);
+        self.epochstart      = int(inputfilestream.readline().strip().split('= ')[1]);
         self.batchsize       = int(inputfilestream.readline().strip().split('= ')[1]);
         self.networkcfg      = inputfilestream.readline().strip().split('= ')[1];
         self.imgsize         = int(inputfilestream.readline().strip().split('= ')[1]);

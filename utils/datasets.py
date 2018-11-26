@@ -58,9 +58,11 @@ class ListDataset():  # for training
     def __init__(self, path, batch_size=1, img_size=608, targets_path=''):
         print('********************* DATA PREPROCESSING *********************')
         print('Reading dataset from ' + path + '...');
+        # Check if .bmp data already exists
         self.path = path
         filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
         nbmp      = len(filesbmp)
+        # If .tif data exists, convert it; if not, exit
         if (nbmp == 0):
             print('No .bmp data detected, checking for .tif...')
             filestif = sorted(glob.glob('%s/*.tif' % path))
@@ -102,14 +104,15 @@ class ListDataset():  # for training
         # self.rgb_std = np.array([69.095, 66.369, 64.236], dtype=np.float32).reshape((1, 3, 1, 1))
 
         print('**************************************************************')
+        print('\n');
 
     def __iter__(self):
         self.count = -1
-        # self.shuffled_vector = np.random.permutation(self.nF)  # shuffled vector
-        self.shuffled_vector = np.random.choice(self.mat['image_numbers'].ravel(), self.nF,
-                                                p=self.mat['image_weights'].ravel())
-        return self
-
+        self.shuffled_vector = np.random.permutation(self.nF)  # shuffled vector
+        #self.shuffled_vector = np.random.choice(self.mat['image_numbers'].ravel(), self.nF,
+        #                                        p=self.mat['image_weights'].ravel())
+        return self        
+    
     # @profile
     def __next__(self):
         self.count += 1
@@ -126,8 +129,9 @@ class ListDataset():  # for training
         labels_all = []
         for index, files_index in enumerate(range(ia, ib)):
             # img_path = self.files[self.shuffled_vector[files_index]]  # BGR
-            img_path = '%s/%g.bmp' % (self.path, self.shuffled_vector[files_index])
             # img_path = '/Users/glennjocher/Downloads/DATA/xview/train_images/2294.bmp'
+            # img_path = '%s%g.bmp' % (self.path, self.shuffled_vector[files_index])
+            img_path = self.files[self.shuffled_vector[files_index]]
 
             img0 = cv2.imread(img_path)
             if img0 is None:
@@ -157,6 +161,7 @@ class ListDataset():  # for training
 
             # Load labels
             chip = img_path.rsplit('/')[-1]
+            chip = chip.rsplit('_')[-1]
             i = (self.mat['id'] == float(chip.replace('.tif', '').replace('.bmp', ''))).nonzero()[0]
             labels1 = self.mat['targets'][i]
 
@@ -374,7 +379,6 @@ def convert_tif2bmp(p):
     import cv2
     files = sorted(glob.glob('%s/*.tif' % p))
     for i, f in enumerate(files):
-        #print('%g/%g' % (i + 1, len(files)))
         img = cv2.imread(f)
         cv2.imwrite(f.replace('.tif', '.bmp'), img)
         #os.system('rm -rf ' + f)
