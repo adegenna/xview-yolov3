@@ -86,9 +86,9 @@ class NetworkTrainer():
             mean_recall = 0
         return mean_recall;
 
-    def outputBatchMetrics(self,epoch,mean_precision,mean_recall):
+    def outputBatchMetrics(self,epoch,mean_precision,mean_recall,i,t1):
         s = ('%10s%10s' + '%10.3g' * 14) % (
-            '%g/%g' % (epoch, inputs.epochs - 1), '%g/%g' % (i, len(self.__dataloader) - 1), self.__rloss['x'],
+            '%g/%g' % (epoch, self.__inputs.epochs - 1), '%g/%g' % (i, len(self.__dataloader) - 1), self.__rloss['x'],
             self.__rloss['y'], self.__rloss['w'], self.__rloss['h'], self.__rloss['conf'], self.__rloss['cls'],
             self.__rloss['loss'], mean_precision, mean_recall, self.model.losses['nGT'], self.model.losses['TP'],
             self.model.losses['FP'], self.model.losses['FN'], time.time() - t1)
@@ -119,7 +119,7 @@ class NetworkTrainer():
                     mean_precision = self.calculatePrecision();
                     mean_recall    = self.calculateRecall();
                     # Output metrics
-                    s  = self.outputBatchMetrics();
+                    s  = self.outputBatchMetrics(epoch,mean_precision,mean_recall,i,t1);
                     t1 = time.time()
             # Write epoch results
             with open(self.__inputs.outdir + 'results.txt', 'a') as file:

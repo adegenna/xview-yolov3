@@ -1,0 +1,15 @@
+inputtype        = detect
+projdir          = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/src/
+datadir          = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/data/xview/
+loaddir          = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/src/
+outdir           = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/output/
+targetspath      = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/utils/targets_c60.mat
+imagepath        = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/data/xview/train_images/5.bmp
+plotflag             = True
+secondary_classifier = False
+networkcfg           = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/cfg/c60_a30symmetric.cfg
+class_path           = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/data/xview.names
+conf_thres           = 0.99
+nms_thres            = 0.4
+batch_size           = 1
+img_size             = 1632

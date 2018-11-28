@@ -8,6 +8,7 @@ from utils.datasets import *
 from utils.utils import *
 from InputFile import *
 from NetworkTrainer import *
+import torch
 
 # batch_size 8: 32*17 = 544
 # batch_size 4: 32*25 = 800 (1.47 vs 544) or 32*23 = 736
