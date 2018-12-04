@@ -136,10 +136,10 @@ class NetworkTrainer():
             torch.save(checkpoint, self.__inputs.loaddir+'latest.pt')
             # Save best checkpoint
             if self.__best_loss == loss_per_target:
-                os.system('cp ' + self.loaddir + 'latest.pt ' + self.loaddir + 'best.pt')
+                os.system('cp ' + self.__inputs.loaddir + 'latest.pt ' + self.__inputs.loaddir + 'best.pt')
             # Save backup checkpoint
             if (epoch > 0) & (epoch % 100 == 0):
-                os.system('cp ' + self.loaddir + 'latest.pt ' + self.loaddir + 'backup' + str(epoch) + '.pt')
+                os.system('cp ' + self.__inputs.loaddir + 'latest.pt ' + self.__inputs.loaddir + 'backup' + str(epoch) + '.pt')
         # Save final model
         dt = time.time() - t0
         print('Finished %g epochs in %.2fs (%.2fs/epoch)' % (epoch, dt, dt / (epoch + 1)))
