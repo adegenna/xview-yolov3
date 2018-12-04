@@ -53,32 +53,34 @@ class ImageFolder():  # for eval-only
     def __len__(self):
         return self.nB  # number of batches
 
+class datasetParams():
+    # Just a struct for different parameters
+    def __init__(self):
+        self.labels   = None
+        self.labels1  = None
+        self.height   = None
+        self.area0    = None
+        self.nL1      = None
+        self.r        = None
+
 
 class ListDataset():  # for training
     def __init__(self, path, batch_size=1, img_size=608, targets_path=''):
         print('********************* DATA PREPROCESSING *********************')
         print('Reading dataset from ' + path + '...');
-        # Check if .bmp data already exists
-        self.path = path
-        filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
-        nbmp      = len(filesbmp)
-        # If .tif data exists, convert it; if not, exit
-        if (nbmp == 0):
-            print('No .bmp data detected, checking for .tif...')
-            filestif = sorted(glob.glob('%s/*.tif' % path))
-            ntif     = len(filestif)
-            if (ntif > 0):
-                print('Converting .tif --> .bmp (.tif originals retained)...')
-                convert_tif2bmp(path)
-                filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
-            else:
-                sys.exit('Neither .bmp nor .tif data found, exiting.')
-        self.files      = filesbmp
+        self.path       = path;
+        self.files      = readBmpDataset(path);
         self.nF         = len(self.files)  # number of image files
         self.nB         = math.ceil(self.nF / batch_size)  # number of batches
         self.batch_size = batch_size
         self.height = img_size
         print('Successfully loaded ' + str(self.nF) + ' images.')
+        self.labels   = None
+        self.labels1  = None
+        self.area0    = None
+        self.nL       = None
+        self.nL1      = None
+        self.r        = None
         # load targets
         self.mat = scipy.io.loadmat(targets_path)
         self.mat['id'] = self.mat['id'].squeeze()
@@ -129,7 +131,6 @@ class ListDataset():  # for training
         labels_all = []
         for index, files_index in enumerate(range(ia, ib)):
             # img_path = self.files[self.shuffled_vector[files_index]]  # BGR
-            # img_path = '/Users/glennjocher/Downloads/DATA/xview/train_images/2294.bmp'
             # img_path = '%s%g.bmp' % (self.path, self.shuffled_vector[files_index])
             img_path = self.files[self.shuffled_vector[files_index]]
 
@@ -139,144 +140,59 @@ class ListDataset():  # for training
 
             augment_hsv = False
             if augment_hsv:
-                # SV augmentation by 50%
-                fraction = 0.50
-                img_hsv = cv2.cvtColor(img0, cv2.COLOR_BGR2HSV)
-                S = img_hsv[:, :, 1].astype(np.float32)
-                V = img_hsv[:, :, 2].astype(np.float32)
-
-                a = (random.random() * 2 - 1) * fraction + 1
-                S *= a
-                if a > 1:
-                    np.clip(S, a_min=0, a_max=255, out=S)
-
-                a = (random.random() * 2 - 1) * fraction + 1
-                V *= a
-                if a > 1:
-                    np.clip(V, a_min=0, a_max=255, out=V)
-
-                img_hsv[:, :, 1] = S.astype(np.uint8)
-                img_hsv[:, :, 2] = V.astype(np.uint8)
-                cv2.cvtColor(img_hsv, cv2.COLOR_HSV2BGR, dst=img0)
+                augmentHSV(img0)
 
             # Load labels
             chip = img_path.rsplit('/')[-1]
             chip = chip.rsplit('_')[-1]
             i = (self.mat['id'] == float(chip.replace('.tif', '').replace('.bmp', ''))).nonzero()[0]
             labels1 = self.mat['targets'][i]
-
+            
             # Remove buildings and small cars
             # labels1 = labels1[(labels1[:, 0] != 5) & (labels1[:, 0] != 48)]
 
             img1, labels1, M = random_affine(img0, targets=labels1, degrees=(-20, 20), translate=(0.01, 0.01),
                                              scale=(0.70, 1.30))  # RGB
 
-            nL1 = len(labels1)
-            border = height / 2 + 1
-
-            # Pick 100 random points inside image
-            r = np.ones((100, 3))
-            r[:, :2] = np.random.rand(100, 2) * (np.array(img0.shape)[[1, 0]] - border * 2) + border
-            r = (r @ M.T)[:, :2]
-            r = r[np.all(r > border, 1) & np.all(r < img1.shape[0] - border, 1)]
-
-            #import matplotlib.pyplot as plt
-            #plt.imshow(img1[:, :, ::-1])
-            #plt.plot(labels1[:, [1, 3, 3, 1, 1]].T, labels1[:, [2, 2, 4, 4, 2]].T, '.-')
-            #plt.plot(r[:,0],r[:,1],'.')
-
-            if nL1 > 0:
-                weights = []
-                for k in range(len(r)):
-                    x = (labels1[:, 1] + labels1[:, 3]) / 2
-                    y = (labels1[:, 2] + labels1[:, 4]) / 2
-                    c = labels1[(abs(r[k, 0] - x) < height / 2) & (abs(r[k, 1] - y) < height / 2), 0]
-                    if len(c) == 0:
-                        weights.append(1e-16)
-                    else:
-                        weights.append(self.class_weights[c.astype(np.int8)].sum())
-
-                weights = np.array(weights)
-                weights /= weights.sum()
-                r = r[np.random.choice(len(r), size=8, p=weights, replace=False)]
-
-            if nL1 > 0:
-                area0 = (labels1[:, 3] - labels1[:, 1]) * (labels1[:, 4] - labels1[:, 2])
-
+            self.labels1  = labels1
+            self.r        = pickRandomPoints(100,img0,height,M,img1)
+            self.nL1      = len(labels1)
+            
+            if self.nL1 > 0:
+                self.pickRandom8Points()
+            
             h, w, _ = img1.shape
             for j in range(8):
-                labels = np.array([], dtype=np.float32)
+                self.labels = np.array([], dtype=np.float32)
+                pad_x,pad_y = self.eliminateBadLabels(j)
+                img = img1[pad_y:pad_y + self.height, pad_x:pad_x + self.height]
 
-                pad_x = int(r[j, 0] - height / 2)
-                pad_y = int(r[j, 1] - height / 2)
-                if nL1 > 0:
-                    labels = labels1.copy()
-                    labels[:, [1, 3]] -= pad_x
-                    labels[:, [2, 4]] -= pad_y
-                    np.clip(labels[:, 1:5], 0, height, out=labels[:, 1:5])
-
-                    lw = labels[:, 3] - labels[:, 1]
-                    lh = labels[:, 4] - labels[:, 2]
-                    area = lw * lh
-                    ar = np.maximum(lw / (lh + 1e-16), lh / (lw + 1e-16))
-
-                    # objects must have width and height > 4 pixels
-                    labels = labels[(lw > 4) & (lh > 4) & (area > 20) & (area / area0 > 0.1) & (ar < 10)]
-
-                # pad_x, pad_y, counter = 0, 0, 0
-                # while (counter < len(r)) & (len(labels) == 0):
-                #     pad_x = int(r[counter, 0] - height / 2)
-                #     pad_y = int(r[counter, 1] - height / 2)
-                #
-                #     if nL1 == 0:
-                #         break
-                #
-                #     labels = labels1.copy()
-                #     labels[:, [1, 3]] -= pad_x
-                #     labels[:, [2, 4]] -= pad_y
-                #     labels[:, 1:5] = np.clip(labels[:, 1:5], 0, height)
-                #
-                #     lw = labels[:, 3] - labels[:, 1]
-                #     lh = labels[:, 4] - labels[:, 2]
-                #     area = lw * lh
-                #     ar = np.maximum(lw / (lh + 1e-16), lh / (lw + 1e-16))
-                #
-                #     # objects must have width and height > 4 pixels
-                #     labels = labels[(lw > 4) & (lh > 4) & (area / area0 > 0.2) & (ar < 15)]
-                #     counter += 1
-
-                img = img1[pad_y:pad_y + height, pad_x:pad_x + height]
-
-                # import matplotlib.pyplot as plt
-                # plt.subplot(4, 4, j+1).imshow(img[:, :, ::-1])
-                # plt.plot(labels[:, [1, 3, 3, 1, 1]].T, labels[:, [2, 2, 4, 4, 2]].T, '.-')
-
-                nL = len(labels)
-                if nL > 0:
+                self.nL = len(self.labels)
+                if self.nL > 0:
                     # convert labels to xywh
-                    labels[:, 1:5] = xyxy2xywh(labels[:, 1:5].copy()) / height
+                    self.labels[:, 1:5] = xyxy2xywh(self.labels[:, 1:5].copy()) / self.height
                     # remap xview classes 11-94 to 0-61
                     # labels[:, 0] = xview_classes2indices(labels[:, 0])
 
                 # random lr flip
                 if random.random() > 0.5:
                     img = np.fliplr(img)
-                    if nL > 0:
-                        labels[:, 1] = 1 - labels[:, 1]
+                    if self.nL > 0:
+                        self.labels[:, 1] = 1 - self.labels[:, 1]
 
                 # random ud flip
                 if random.random() > 0.5:
                     img = np.flipud(img)
-                    if nL > 0:
-                        labels[:, 2] = 1 - labels[:, 2]
+                    if self.nL > 0:
+                        self.labels[:, 2] = 1 - self.labels[:, 2]
 
                 img_all.append(img)
-                labels_all.append(torch.from_numpy(labels))
+                labels_all.append(torch.from_numpy(self.labels))
 
         # Randomize
-        i = np.random.permutation(len(labels_all))
-        img_all = [img_all[j] for j in i]
-        labels_all = [labels_all[j] for j in i]
+        i           = np.random.permutation(len(labels_all))
+        img_all     = [img_all[j] for j in i]
+        labels_all  = [labels_all[j] for j in i]
 
         # Normalize
         img_all = np.stack(img_all)[:, :, :, ::-1].transpose(0, 3, 1, 2)  # BGR to RGB and cv2 to pytorch
@@ -288,6 +204,88 @@ class ListDataset():  # for training
 
     def __len__(self):
         return self.nB  # number of batches
+
+    def pickRandom8Points(self):
+        # Random selection of 8 points, weighted by something    
+        weights = []
+        for k in range(len(self.r)):
+            x = (self.labels1[:, 1] + self.labels1[:, 3]) / 2
+            y = (self.labels1[:, 2] + self.labels1[:, 4]) / 2
+            c = self.labels1[(abs(self.r[k, 0] - x) < self.height / 2) & (abs(self.r[k, 1] - y) < self.height / 2), 0]
+            if len(c) == 0:
+                weights.append(1e-16)
+            else:
+                weights.append(self.class_weights[c.astype(np.int8)].sum())
+        weights    = np.array(weights)
+        weights   /= weights.sum()
+        self.r     = self.r[np.random.choice(len(self.r), size=8, p=weights, replace=False)]
+        self.area0 = (self.labels1[:, 3] - self.labels1[:, 1]) * (self.labels1[:, 4] - self.labels1[:, 2])
+
+    def eliminateBadLabels(self,j):
+        # Eliminate labels that don't satisfy some criteria
+        pad_x  = int(self.r[j, 0] - self.height / 2)
+        pad_y  = int(self.r[j, 1] - self.height / 2)
+        if self.nL1 > 0:
+            self.labels = self.labels1.copy()    
+            self.labels[:, [1, 3]] -= pad_x
+            self.labels[:, [2, 4]] -= pad_y
+            np.clip(self.labels[:, 1:5], 0, self.height, out=self.labels[:, 1:5])
+            lw = self.labels[:, 3] - self.labels[:, 1]
+            lh = self.labels[:, 4] - self.labels[:, 2]
+            area = lw * lh
+            ar = np.maximum(lw / (lh + 1e-16), lh / (lw + 1e-16))
+            # objects must have width and height > 4 pixels
+            self.labels = self.labels[(lw > 4) & (lh > 4) & (area > 20) & (area / self.area0 > 0.1) & (ar < 10)]
+        return pad_x,pad_y
+
+
+
+def pickRandomPoints(pts,img0,height,M,img1):
+    # Pick random points inside image
+    border = height / 2 + 1
+    r = np.ones((pts, 3))
+    r[:, :2] = np.random.rand(pts, 2) * (np.array(img0.shape)[[1, 0]] - border * 2) + border
+    r = (r @ M.T)[:, :2]
+    r = r[np.all(r > border, 1) & np.all(r < img1.shape[0] - border, 1)]
+    return r
+
+
+def augmentHSV(img0):
+    # SV augmentation by 50%
+    fraction = 0.50
+    img_hsv = cv2.cvtColor(img0, cv2.COLOR_BGR2HSV)
+    S = img_hsv[:, :, 1].astype(np.float32)
+    V = img_hsv[:, :, 2].astype(np.float32)
+    a = (random.random() * 2 - 1) * fraction + 1
+    S *= a
+    if a > 1:
+        np.clip(S, a_min=0, a_max=255, out=S)
+    a = (random.random() * 2 - 1) * fraction + 1
+    V *= a
+    if a > 1:
+        np.clip(V, a_min=0, a_max=255, out=V)
+    img_hsv[:, :, 1] = S.astype(np.uint8)
+    img_hsv[:, :, 2] = V.astype(np.uint8)
+    cv2.cvtColor(img_hsv, cv2.COLOR_HSV2BGR, dst=img0)
+
+def readBmpDataset(path):
+    # Read all image files from path directory, converting tif --> bmp if necessary
+    filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
+    nbmp      = len(filesbmp)
+    # If .tif data exists, convert it; if not, exit
+    if (nbmp == 0):
+        print('No .bmp data detected, checking for .tif...')
+        filestif = sorted(glob.glob('%s/*.tif' % path))
+        ntif     = len(filestif)
+        if (ntif > 0):
+            print('Converting .tif --> .bmp (.tif originals retained)...')
+            convert_tif2bmp(path)
+            filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
+            return filesbmp
+        else:
+            sys.exit('Neither .bmp nor .tif data found, exiting.')
+    else:
+        return filesbmp;
 
 
 def resize_square(img, height=416, color=(0, 0, 0)):  # resizes a rectangular image to a padded square
