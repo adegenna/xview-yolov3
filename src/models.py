@@ -216,21 +216,28 @@ class Darknet(nn.Module):
         self.losses = defaultdict(float)
         layer_outputs = []
 
-        #print("x_dims: " + str(x.size()))
+        print("x_dims: " + str(x.size()))
         for i, (module_def, module) in enumerate(zip(self.module_defs, self.module_list)):
+            print(np.isinf(np.ravel(x.cpu().detach().numpy())).sum() , np.isnan(np.ravel(x.cpu().detach().numpy())).sum())     
             if module_def['type'] in ['convolutional', 'upsample']:
-                #print(str(i) + " conv/upsample")
+                print(str(i) + " conv/upsample")
+                #xtest = torch.Tensor(4, 3, 608, 608).uniform_(0, 1).to('cuda:0')
                 x = module(x)
+                #print(module)
+                #print(module.batch_norm_0.weight);
+                #xtest = module.batch_norm_0(module.conv_0(xtest))
+                #np.savetxt("xgpu" + str(i) + ".csv",xtest[0,0].cpu().detach().numpy());
+                #np.savetxt("xgpuconv" + str(i) + ".csv",module.conv_0.weight.cpu().detach().numpy().ravel());
             elif module_def['type'] == 'route':
-                #print(str(i) + " route")
+                print(str(i) + " route")
                 layer_i = [int(x) for x in module_def['layers'].split(',')]
                 x = torch.cat([layer_outputs[i] for i in layer_i], 1)
             elif module_def['type'] == 'shortcut':
-                #print(str(i) + " shortcut")
+                print(str(i) + " shortcut")
                 layer_i = int(module_def['from'])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def['type'] == 'yolo':
-                #print(str(i) + " yolo")
+                print(str(i) + " yolo")
                 # Train phase: get loss
                 if is_training:
                     x, *losses = module[0](x, targets, requestPrecision, weight, epoch)
@@ -240,7 +247,7 @@ class Darknet(nn.Module):
                 else:
                     x = module(x)
                 output.append(x)
-            #print("x_dims: " + str(x.size()))
+            print("x_dims: " + str(x.size()))
             layer_outputs.append(x)
 
         if is_training:

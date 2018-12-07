@@ -14,13 +14,14 @@ class InputFile():
             self.loaddir         = inputfilestream.readline().strip().split('= ')[1];
             self.outdir          = inputfilestream.readline().strip().split('= ')[1];
             self.targetspath     = inputfilestream.readline().strip().split('= ')[1];
+            self.targetfiletype  = inputfilestream.readline().strip().split('= ')[1];
             if (inputtype == "train"):
                 self.readTrainingInputfile(inputfilestream);
             elif (inputtype == "detect"):
                 self.readDetectInputfile(inputfilestream);
             inputfilestream.close();
         except:
-            sys.exit("Error: either the input file you specified does not exist, or it is formatted incorrectly.")
+            print("Using no input file (blank initialization).")
     def printInputs(self):
         attrs = vars(self);
         print('\n');

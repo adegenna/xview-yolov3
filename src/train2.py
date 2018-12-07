@@ -28,10 +28,7 @@ def main(inputs):
     # Problem setup
     os.makedirs(inputs.loaddir, exist_ok=True)
     model      = Darknet(inputs.networkcfg, inputs.imgsize)
-    dataloader = ListDataset(inputs.traindir, \
-                             batch_size=inputs.batchsize, \
-                             img_size=inputs.imgsize, \
-                             targets_path=inputs.targetspath)
+    dataloader = ListDataset(inputs)
     trainer    = NetworkTrainer(model, dataloader, inputs);
     # Start training
     trainer.train();

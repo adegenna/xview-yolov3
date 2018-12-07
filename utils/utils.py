@@ -4,6 +4,9 @@ import cv2
 import numpy as np
 import torch
 import torch.nn.functional as F
+import json
+import pickle
+import matplotlib.pyplot as plt
 
 # set printoptions
 torch.set_printoptions(linewidth=1320, precision=5, profile='long')
@@ -520,3 +523,68 @@ def plotResults():
             plt.plot(results[i, :300], marker='.', label=f)
             plt.title(s[i])
         plt.legend()
+    plt.show()
+
+def save_obj(obj, name):
+    with open( name , 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+
+def load_obj(name):
+    with open(name, 'rb') as f:
+        return pickle.load(f)
+
+def pruneTargetFile(nums,mat):
+    # Strip away all data from target matrix except those images whose numbers are specified by nums
+    allid = mat['image_numbers']
+    iddel = np.setdiff1d(allid,nums);
+    for i in range(len(iddel)):
+        idx            = np.ravel(np.where(mat['id'] == float(iddel[i]))[0])
+        mat['id']      = np.delete(mat['id'],idx,axis=0)
+        mat['targets'] = np.delete(mat['targets'],idx,axis=0)
+        mat['wh']      = np.delete(mat['wh'],idx,axis=0)
+        idx            = np.where(mat['image_numbers'] == iddel[i])[0][0]
+        mat['image_numbers'] = np.delete(mat['image_numbers'],idx,axis=0) 
+        mat['image_weights'] = np.delete(mat['image_weights'],idx,axis=0)
+    return mat;
+
+def get_labels(fname="xView_train.geojson"):
+    # Processes an xView GeoJSON file
+    # INPUT: filepath to the GeoJSON file
+    # OUTPUT: Bounding box coordinate array, Chip-name array, and Class-id array
+    with open(fname) as f:
+        data = json.load(f)
+    coords = np.zeros((len(data['features']),4))
+    chips = np.zeros((len(data['features'])),dtype="object")
+    classes = np.zeros((len(data['features'])))
+    for i in range(len(data['features'])):
+        if data['features'][i]['properties']['bounds_imcoords'] != []:
+            b_id = data['features'][i]['properties']['image_id']
+            val = np.array([int(num) for num in data['features'][i]['properties']['bounds_imcoords'].split(",")])
+            chips[i] = b_id
+            classes[i] = data['features'][i]['properties']['type_id']
+            coords[i] = val
+        else:
+            chips[i] = 'None'
+    return coords, chips, classes
+
+def plot_rgb_image(img,rgb_mean,rgb_std,obj=[]):
+    for j in range(3):
+        img[:, :, j] *= rgb_std[j]
+        img[:, :, j] += rgb_mean[j]
+    img /= 255
+    if (obj != []):
+        nobj = np.shape(obj)[0]
+        for i in range(nobj):
+            obji = obj[i];
+            x0,y0,dx,dy = obji
+            xlb = x0 - dx/2.
+            xlt = xlb
+            xrb = x0 + dx/2.
+            xrt = xrb
+            ylb = y0 - dy/2.
+            yrb = ylb
+            ylt = y0 + dy/2.
+            yrt = ylt
+            plt.plot([xlb,xrb,xrt,xlt,xlb],[ylb,yrb,yrt,ylt,ylb],'g',lw=2);
+    plt.imshow(img)
+    plt.show()

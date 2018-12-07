@@ -7,9 +7,10 @@ import cv2
 import numpy as np
 import scipy.io
 import torch
+from PIL import Image
 
 # from torch.utils.data import Dataset
-from utils.utils import xyxy2xywh, xview_class_weights
+from utils.utils import xyxy2xywh, xview_class_weights, load_obj
 
 
 class ImageFolder():  # for eval-only
@@ -53,27 +54,19 @@ class ImageFolder():  # for eval-only
     def __len__(self):
         return self.nB  # number of batches
 
-class datasetParams():
-    # Just a struct for different parameters
-    def __init__(self):
-        self.labels   = None
-        self.labels1  = None
-        self.height   = None
-        self.area0    = None
-        self.nL1      = None
-        self.r        = None
-
 
 class ListDataset():  # for training
-    def __init__(self, path, batch_size=1, img_size=608, targets_path=''):
+    def __init__(self, inputs):
         print('********************* DATA PREPROCESSING *********************')
-        print('Reading dataset from ' + path + '...');
-        self.path       = path;
-        self.files      = readBmpDataset(path);
+        print('Reading dataset from ' + inputs.traindir + '...');
+        self.path       = inputs.traindir;
+        self.files      = readBmpDataset(self.path);
         self.nF         = len(self.files)  # number of image files
-        self.nB         = math.ceil(self.nF / batch_size)  # number of batches
-        self.batch_size = batch_size
-        self.height = img_size
+        self.nB         = math.ceil(self.nF / inputs.batchsize)  # number of batches
+        self.batch_size = inputs.batchsize
+        self.height     = inputs.imgsize
+        self.targets_path   = inputs.targetspath
+        self.targetfiletype = inputs.targetfiletype
         print('Successfully loaded ' + str(self.nF) + ' images.')
         self.labels   = None
         self.labels1  = None
@@ -82,10 +75,14 @@ class ListDataset():  # for training
         self.nL1      = None
         self.r        = None
         # load targets
-        self.mat = scipy.io.loadmat(targets_path)
-        self.mat['id'] = self.mat['id'].squeeze()
+        if (self.targetfiletype == 'matlab'):
+            print("Loading target data from specified matlab file...")
+            self.mat = scipy.io.loadmat(self.targets_path)
+        elif (self.targetfiletype == 'pickle'):
+            print("Loading target data from specified pickle file...")
+            self.mat = load_obj(self.targets_path)
+        self.mat['id']     = self.mat['id'].squeeze()
         self.class_weights = xview_class_weights(range(60)).numpy()
-
         # RGB normalization values
         self.rgb_mean = np.array([60.134, 49.697, 40.746], dtype=np.float32).reshape((1, 3, 1, 1))
         self.rgb_std = np.array([29.99, 24.498, 22.046], dtype=np.float32).reshape((1, 3, 1, 1))
@@ -380,3 +377,5 @@ def convert_tif2bmp(p):
         img = cv2.imread(f)
         cv2.imwrite(f.replace('.tif', '.bmp'), img)
         #os.system('rm -rf ' + f)
+
+
