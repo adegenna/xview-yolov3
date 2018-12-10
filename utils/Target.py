@@ -11,6 +11,7 @@ from utils.datasetProcessing import *
 
 # ASSUMPTIONS ******************
 # 1) Training data filenames have to of form 'string[split]number.extension' or 'number.extension'
+# 2) Training datatype is .bmp (this should probably not be hardcoded...)
 # ******************************
 
 class Target():
