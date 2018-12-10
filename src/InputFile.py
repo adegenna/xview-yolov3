@@ -38,6 +38,8 @@ class InputFile():
         self.imgsize         = int(inputfilestream.readline().strip().split('= ')[1]);
         resume               = inputfilestream.readline().strip().split('= ')[1];
         self.resume          = ((resume == "True") | (resume == "true"));
+        invalid_class_list   = inputfilestream.readline().strip().split('= ')[1]
+        self.invalid_class_list = np.array( invalid_class_list.split(',') , dtype='int' )
     def readDetectInputfile(self,inputfilestream):
         self.imagepath       = inputfilestream.readline().strip().split('= ')[1];
         plotflag             = inputfilestream.readline().strip().split('= ')[1];

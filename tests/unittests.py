@@ -10,6 +10,7 @@ from utils.datasets import *
 from src.InputFile import *
 from utils.utils import plot_rgb_image
 from utils.datasetProcessing import *
+from utils.Target import *
 import warnings
 
 class GPUtests(unittest.TestCase):
@@ -88,7 +89,7 @@ class DatasetTests(unittest.TestCase):
         self.inputs             = InputFile(args);
         self.filetypes          = ['matlab', 'pickle']
         self.filetypeAppend     = ['.mat', '.pkl']
-        self.basetargetpath     = self.inputs.targetspath;
+        self.basetargetpath     = self.inputs.targetspath[0:-4];
         self.nclass             = 60
         self.nobjects           = 11057
         self.ndata              = 9
@@ -127,6 +128,64 @@ class DatasetTests(unittest.TestCase):
                 obj     = []
             img     = np.transpose(imgs[0].numpy(),(1,2,0))
             plot_rgb_image(img,dataloader.rgb_mean.squeeze(),dataloader.rgb_std.squeeze(),obj)
+
+
+
+class TargetTests(unittest.TestCase):
+    def setUp(self):
+        warnings.filterwarnings("ignore",category=ResourceWarning)
+        warnings.filterwarnings("ignore",category=DeprecationWarning)
+        args                    = lambda:0
+        args.inputfilename      = './input_test.dat'
+        self.inputs             = InputFile(args);
+        self.inputs.targetfile  = '/'.join(self.inputs.targetspath.split('/')[0:-1]) + '/jsontest.json'
+        self.inputs.targetfiletype = 'json'
+        self.nclass             = 60
+        self.nobjects           = 11158
+        self.ndata              = 9
+        self.targetdata         = Target(self.inputs);
+        
+    def test_load_target_file(self):
+        print('test target loading functionality (.json file)')
+        self.assertTrue( vars(self.targetdata)['_Target__chips'].size   == self.nobjects )
+        self.assertTrue( vars(self.targetdata)['_Target__coords'].shape == (self.nobjects,4) )
+        self.assertTrue( vars(self.targetdata)['_Target__classes'].size == self.nobjects )
+        self.assertTrue( len(vars(self.targetdata)['_Target__files'])   == self.ndata )
+
+    def test_xy_coords(self):
+        print('test target coordinate parsing function')
+        coords          = np.zeros([5,4]);
+        coords[:,0] = 1; coords[:,1] = 2; coords[:,2] = 3; coords[:,3] = 4;
+        x1,y1,x2,y2     = parse_xy_coords(coords)
+        self.assertTrue(np.all(x1 == 1))
+        self.assertTrue(np.all(y1 == 2))
+        self.assertTrue(np.all(x2 == 3))
+        self.assertTrue(np.all(y2 == 4))
+
+    def test_compute_width_height_area(self):
+        print('test target coordinate area function')
+        coords          = np.zeros([5,4]);
+        coords[:,0] = 1; coords[:,1] = 2; coords[:,2] = 3; coords[:,3] = 4;
+        x1,y1,x2,y2     = parse_xy_coords(coords)
+        w,h,area        = compute_width_height_area(x1,y1,x2,y2)
+        self.assertTrue(np.all(w == coords[:,2] - coords[:,0]))
+        self.assertTrue(np.all(h == coords[:,3] - coords[:,1]))
+        self.assertTrue(np.all(area == w*h))
+
+    def test_crop(self):
+        print('test target crop method')
+        self.targetdata.crop()
+        w = vars(self.targetdata)['_Target__w']
+        h = vars(self.targetdata)['_Target__h']
+        hwc = vars(self.targetdata)['_Target__HWC']
+        self.assertTrue( np.min(w) == 0 )
+        self.assertTrue( np.max(w) == 738 )
+        self.assertTrue( np.min(h) == 0 )
+        self.assertTrue( np.max(h) == 1028 )
+        
+        
+
+        
 
             
 if __name__ == '__main__':
