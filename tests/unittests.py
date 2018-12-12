@@ -174,12 +174,10 @@ class TargetTests(unittest.TestCase):
         self.assertTrue(np.all(h == coords[:,3] - coords[:,1]))
         self.assertTrue(np.all(area == w*h))
 
-    def test_crop(self):
-        print('test target crop method')
-        self.targetdata.crop()
-        w = vars(self.targetdata)['_Target__w']
-        h = vars(self.targetdata)['_Target__h']
-        hwc = vars(self.targetdata)['_Target__HWC']
+    def test_compute_cropped_data(self):
+        print('test target cropping method')
+        w = vars(self.targetdata)['_Target__crop_w']
+        h = vars(self.targetdata)['_Target__crop_h']
         self.assertTrue( np.min(w) == 0 )
         self.assertTrue( np.max(w) == 738 )
         self.assertTrue( np.min(h) == 0 )
@@ -203,24 +201,21 @@ class TargetTests(unittest.TestCase):
 
     def test_sigma_rejection_indices(self):
         print('test sigma rejection method')
-        self.targetdata.crop()
         i1,i2,i3 = self.targetdata.sigma_rejection_indices();
         self.assertTrue( (i1.size == self.nobjects) & (i2.size == self.nobjects) & (i3.size == self.nobjects) )
 
     def test_manual_dimension_requirements(self):
         print('test manual dimension requirements method')
-        self.targetdata.crop()
         area_lim = 20; w_lim = 4; h_lim = 4; AR_lim = 15;
         idx = self.targetdata.manual_dimension_requirements(area_lim,w_lim,h_lim,AR_lim)
-        test = np.all(  (vars(self.targetdata)['_Target__new_area'][idx] >= area_lim) & \
+        test = np.all(  (vars(self.targetdata)['_Target__crop_area'][idx] >= area_lim) & \
                         (vars(self.targetdata)['_Target__w'][idx]        > w_lim) & \
                         (vars(self.targetdata)['_Target__h'][idx]        > h_lim) & \
-                        (vars(self.targetdata)['_Target__new_AR'][idx]   < AR_lim) )
+                        (vars(self.targetdata)['_Target__crop_AR'][idx]   < AR_lim) )
         self.assertTrue(test)
 
     def test_edge_requirements(self):
         print('test edge requirements method')
-        self.targetdata.crop()
         w_lim = 10; h_lim = 10; x2_lim = 10; y2_lim = 10;
         idx = self.targetdata.edge_requirements(w_lim,h_lim,x2_lim,y2_lim)
         test = np.all(  (vars(self.targetdata)['_Target__x1'][idx] < vars(self.targetdata)['_Target__image_w'][idx]-w_lim) & \
@@ -247,7 +242,6 @@ class TargetTests(unittest.TestCase):
 
     def test_invalid_class_requirement(self):
         print('test invalid class requirement method')
-        self.targetdata.crop()
         input1 = self.inputs.invalid_class_list
         input2 = vars(self.targetdata)['_Target__classes']
         input3 = vars(self.targetdata)['_Target__coords']
