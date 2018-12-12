@@ -4,7 +4,7 @@ sys.path.append('../')
 import scipy.io
 import os
 import cv2
-
+from utils.fcn_sigma_rejection import *
 from utils.datasetProcessing import *
 
 # This is a python-conversion of utils/analysis.m and all related target preprocessing
@@ -74,34 +74,33 @@ class Target():
         self.__new_AR   = new_AR
 
     def sigma_rejection_indices(self):
-        i1                  = np.ones_like(self.__coords,dtype='int')
-        i2                  = np.ones_like(self.__coords,dtype='int')
-        i3                  = np.ones_like(self.__coords,dtype='int')
+        i1                  = np.ones_like(self.__x1,dtype='int')
+        i2                  = np.ones_like(self.__x1,dtype='int')
+        i3                  = np.ones_like(self.__x1,dtype='int')
         for i in range(len(self.__class_labels)):
             idx = np.where(self.__classes == self.__class_labels[i])[0]
-            _,v   = fcn_sigma_rejection(self.__new_area[j],12,3)
-            i1[j] = i1[j] & v
-            _,v   = fcn_sigma_rejection(self.__w[j],12,3)
-            i2[j] = i2[j] & v
-            _,v   = fcn_sigma_rejection(self.__h[j],12,3)
-            i3[j] = i3[j] & v
+            _,v   = fcn_sigma_rejection(self.__new_area[idx],12,3)
+            i1[idx] = i1[idx] & v
+            _,v   = fcn_sigma_rejection(self.__w[idx],12,3)
+            i2[idx] = i2[idx] & v
+            _,v   = fcn_sigma_rejection(self.__h[idx],12,3)
+            i3[idx] = i3[idx] & v
         return i1,i2,i3;
 
     def manual_dimension_requirements(self,area_lim,w_lim,h_lim,AR_lim):
-        return ( (self.__new_area >= area_lim) & ...
-                 (self.__w > w_lim) & ...
-                 (self.__h > h_lim) & ...
-                 (self.__new_ar < AR_lim) )
+        return ( (self.__new_area >= area_lim) & \
+                 (self.__w > w_lim) & \
+                 (self.__h > h_lim) & \
+                 (self.__new_AR < AR_lim) )
 
     def edge_requirements(self,w_lim,h_lim,x2_lim,y2_lim):
         # Extreme edges (i.e. don't start an x1 10 pixels from the right side)
-        return ( (self.__x1 < (self.__image_w-w_lim)) & ...
-                 (self.__y1 < (self.__image_h-h_lim)) & ...
-                 (self.__x2 > x2_lim) & ...
+        return ( (self.__x1 < (self.__image_w-w_lim)) & \
+                 (self.__y1 < (self.__image_h-h_lim)) & \
+                 (self.__x2 > x2_lim) & \
                  (self.__y2 > y2_lim) )
     
     def clean_coords(self):
-        self.crop()
         i0         = detect_nans_and_infs_by_row(self.__coords)
         i1,i2,i3   = self.sigma_rejection_indices()
         i4         = self.manual_dimension_requirements(20,4,4,15)

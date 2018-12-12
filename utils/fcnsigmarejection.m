@@ -15,13 +15,15 @@ end
 
 inliers = isfinite(x);  % remove nans;
 for j=1:ni    
-    newoutliers = ~inliers & ~isnan(x);  if j>1 && ~any(newoutliers); break; end
-    np=sum(inliers);  if np<3; break; end
+    newoutliers = ~inliers & ~isnan(x);
+    if j>1 && ~any(newoutliers); break; end
+    np=sum(inliers);  
+    if np<3; break; end
 
     x(newoutliers)=nan;
 
     %mu = sum(x,'omitnan')/np;
-    mu = nansum(x)/np
+    mu = nansum(x)/np;
     xms=(x-mu).^2;
     sigma = sqrt((1/(np-1))*nansum(xms));
     %sigma = sqrt((1/(np-1))*sum(xms,'omitnan'));
