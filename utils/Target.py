@@ -24,8 +24,21 @@ class Target():
         self.__x1,self.__y1,self.__x2,self.__y2  = parse_xy_coords(self.__coords)
         self.__w,self.__h,self.__area            = compute_width_height_area(self.__x1,self.__y1,self.__x2,self.__y2)
         self.set_image_w_and_h()
-        self.compute_cropped_data()
-        self.__mask    = None
+        self.__mask              = None
+        self.__filtered_x1       = None
+        self.__filtered_y1       = None
+        self.__filtered_x2       = None
+        self.__filtered_y2       = None
+        self.__filtered_w        = None
+        self.__filtered_h        = None
+        self.__filtered_area     = None 
+        self.__filtered_AR       = None
+        self.__filtered_coords   = None
+        self.__filtered_chips    = None
+        self.__filtered_classes  = None
+        self.__filtered_image_h  = None
+        self.__filtered_image_w  = None
+        self.__filtered_files    = None
 
     def set_image_w_and_h(self):
         self.__image_w         = np.zeros_like(self.__x1)
@@ -51,67 +64,69 @@ class Target():
             sys.exit('Target file either not specified or not supported')
 
     def compute_cropped_data(self):
-        self.__crop_x1 = np.minimum( np.maximum(self.__x1,0), self.__image_w);
-        self.__crop_y1 = np.minimum( np.maximum(self.__y1,0), self.__image_h);
-        self.__crop_x2 = np.minimum( np.maximum(self.__x2,0), self.__image_w);
-        self.__crop_y2 = np.minimum( np.maximum(self.__y2,0), self.__image_h);
-        self.compute_cropped_variables_from_cropped_xy()
+        self.__filtered_x1 = np.minimum( np.maximum(self.__x1,0), self.__image_w);
+        self.__filtered_y1 = np.minimum( np.maximum(self.__y1,0), self.__image_h);
+        self.__filtered_x2 = np.minimum( np.maximum(self.__x2,0), self.__image_w);
+        self.__filtered_y2 = np.minimum( np.maximum(self.__y2,0), self.__image_h);
+        self.compute_filtered_variables_from_filtered_xy()
 
-    def sigma_rejection_indices(self):
-        i1                  = np.ones_like(self.__crop_x1,dtype='int')
-        i2                  = np.ones_like(self.__crop_x1,dtype='int')
-        i3                  = np.ones_like(self.__crop_x1,dtype='int')
+    def sigma_rejection_indices(self,filtered_data):
+        mask_reject   = np.ones_like(self.__filtered_x1,dtype='int')
         for i in range(len(self.__class_labels)):
             idx = np.where(self.__classes == self.__class_labels[i])[0]
-            _,v   = fcn_sigma_rejection(self.__crop_area[idx],12,3)
-            i1[idx] = i1[idx] & v
-            _,v   = fcn_sigma_rejection(self.__crop_w[idx],12,3)
-            i2[idx] = i2[idx] & v
-            _,v   = fcn_sigma_rejection(self.__crop_h[idx],12,3)
-            i3[idx] = i3[idx] & v
-        return i1,i2,i3;
+            _,v   = fcn_sigma_rejection(filtered_data[idx],12,3)
+            mask_reject[idx] = mask_reject[idx] & v
+        return mask_reject
 
     def manual_dimension_requirements(self,area_lim,w_lim,h_lim,AR_lim):
-        return ( (self.__crop_area >= area_lim) & \
-                 (self.__crop_w > w_lim) & \
-                 (self.__crop_h > h_lim) & \
-                 (self.__crop_AR < AR_lim) )
+        return ( (self.__filtered_area >= area_lim) & \
+                 (self.__filtered_w > w_lim) & \
+                 (self.__filtered_h > h_lim) & \
+                 (self.__filtered_AR < AR_lim) )
 
     def edge_requirements(self,w_lim,h_lim,x2_lim,y2_lim):
         # Extreme edges (i.e. don't start an x1 10 pixels from the right side)
-        return ( (self.__crop_x1 < (self.__image_w-w_lim)) & \
-                 (self.__crop_y1 < (self.__image_h-h_lim)) & \
-                 (self.__crop_x2 > x2_lim) & \
-                 (self.__crop_y2 > y2_lim) )
+        return ( (self.__filtered_x1 < (self.__image_w-w_lim)) & \
+                 (self.__filtered_y1 < (self.__image_h-h_lim)) & \
+                 (self.__filtered_x2 > x2_lim) & \
+                 (self.__filtered_y2 > y2_lim) )
     
-    def compute_cropped_data_mask(self):
+    def compute_filtered_data_mask(self):
+        self.compute_cropped_data()
         i0         = detect_nans_and_infs_by_row(self.__coords)
-        i1,i2,i3   = self.sigma_rejection_indices()
+        i1         = self.sigma_rejection_indices(self.__filtered_area)
+        i2         = self.sigma_rejection_indices(self.__filtered_w)
+        i3         = self.sigma_rejection_indices(self.__filtered_h)
         i4         = self.manual_dimension_requirements(20,4,4,15)
-        i5         = self.edge_requirements(self,10,10,10,10)
-        i6         = area_requirement(self.__crop_area,self.__area,0.25)
+        i5         = self.edge_requirements(10,10,10,10)
+        i6         = area_requirement(self.__filtered_area,self.__area,0.25)
         i7         = nan_inf_size_requirements(self.__image_h,self.__image_w,32)
-        i8         = invalid_class_requirement(self.__inputs.invalid_class_list,self.__classes,self.__coords)
+        i8         = invalid_class_requirement(self.__inputs.invalid_class_list,self.__classes)
         valid      = i0 & i1 & i2 & i3 & i4 & i5 & i6 & i7 & i8;
         self.__mask = valid
 
-    def apply_mask_to_cropped_data(self):
+    def apply_mask_to_filtered_data(self):
         assert(self.__mask != None)
-        self.__crop_coords = self.__crop_coords[self.__mask];
-        self.compute_cropped_variables_from_cropped_coords()
+        self.__filtered_coords   = self.__filtered_coords[self.__mask];
+        self.__filtered_chips    = self.__chips[self.__mask]
+        self.__filtered_classes  = self.__classes[self.__mask]
+        self.__filtered_image_h  = self.__image_h[self.__mask]
+        self.__filtered_image_w  = self.__image_w[self.__mask]
+        self.__filtered_files    = self.__files[self.__mask]
+        self.compute_filtered_variables_from_filtered_coords()
 
-    def compute_cropped_variables_from_cropped_coords(self):
-        self.__crop_x1,self.__crop_y1,self.__crop_x2,self.__crop_y2  = parse_xy_coords(self.__crop_coords)
-        self.__crop_w,self.__crop_h,self.__crop_area  = \
-                compute_width_height_area(self.__crop_x1,self.__crop_y1,self.__crop_x2,self.__crop_y2)
-        self.__crop_AR            = np.maximum(self.__crop_w/self.__crop_h, self.__crop_h/self.__crop_w);
+    def compute_filtered_variables_from_filtered_coords(self):
+        self.__filtered_x1,self.__filtered_y1,self.__filtered_x2,self.__filtered_y2  = parse_xy_coords(self.__filtered_coords)
+        self.__filtered_w,self.__filtered_h,self.__filtered_area  = \
+                compute_width_height_area(self.__filtered_x1,self.__filtered_y1,self.__filtered_x2,self.__filtered_y2)
+        self.__filtered_AR            = np.maximum(self.__filtered_w/self.__filtered_h, self.__filtered_h/self.__filtered_w);
 
-    def compute_cropped_variables_from_cropped_xy(self):
-        self.__crop_w,self.__crop_h,self.__crop_area  = \
-                compute_width_height_area(self.__crop_x1,self.__crop_y1,self.__crop_x2,self.__crop_y2)
-        self.__crop_AR            = np.maximum(self.__crop_w/self.__crop_h, self.__crop_h/self.__crop_w);
-        self.__crop_coords        = concatenate_xy_to_coords(self.__crop_x1,self.__crop_y1,self.__crop_x2,self.__crop_y2)
-    
+    def compute_filtered_variables_from_filtered_xy(self):
+        self.__filtered_w,self.__filtered_h,self.__filtered_area  = \
+                compute_width_height_area(self.__filtered_x1,self.__filtered_y1,self.__filtered_x2,self.__filtered_y2)
+        self.__filtered_AR            = np.maximum(self.__filtered_w/self.__filtered_h, self.__filtered_h/self.__filtered_w);
+        self.__filtered_coords        = concatenate_xy_to_coords(self.__filtered_x1,self.__filtered_y1,self.__filtered_x2,self.__filtered_y2)
+        
 
 
 # Little auxiliary functions
@@ -148,10 +163,10 @@ def nan_inf_size_requirements(image_h,image_w,size):
     i7 = ~np.any( (np.isnan(hw) | np.isinf(hw)) | (hw < size) , axis = 1);
     return i7
 
-def invalid_class_requirement(invalid_class_list,classes,coords):
+def invalid_class_requirement(invalid_class_list,classes):
     # remove invalid classes 75 and 82 (e.g., 'None' class in xview)
     invalid_idx        = np.where( classes == invalid_class_list[:,None] )[1]
-    i8                 = np.ones_like(coords,dtype='int')
+    i8                 = np.ones_like(classes,dtype='int')
     i8[invalid_idx]    = 0
     return i8
 

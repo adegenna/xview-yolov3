@@ -176,8 +176,9 @@ class TargetTests(unittest.TestCase):
 
     def test_compute_cropped_data(self):
         print('test target cropping method')
-        w = vars(self.targetdata)['_Target__crop_w']
-        h = vars(self.targetdata)['_Target__crop_h']
+        self.targetdata.compute_cropped_data()
+        w = vars(self.targetdata)['_Target__filtered_w']
+        h = vars(self.targetdata)['_Target__filtered_h']
         self.assertTrue( np.min(w) == 0 )
         self.assertTrue( np.max(w) == 738 )
         self.assertTrue( np.min(h) == 0 )
@@ -201,21 +202,26 @@ class TargetTests(unittest.TestCase):
 
     def test_sigma_rejection_indices(self):
         print('test sigma rejection method')
-        i1,i2,i3 = self.targetdata.sigma_rejection_indices();
+        self.targetdata.compute_cropped_data()
+        i1       = self.targetdata.sigma_rejection_indices(vars(self.targetdata)['_Target__filtered_area']);
+        i2       = self.targetdata.sigma_rejection_indices(vars(self.targetdata)['_Target__filtered_w']);
+        i3       = self.targetdata.sigma_rejection_indices(vars(self.targetdata)['_Target__filtered_h']);
         self.assertTrue( (i1.size == self.nobjects) & (i2.size == self.nobjects) & (i3.size == self.nobjects) )
 
     def test_manual_dimension_requirements(self):
         print('test manual dimension requirements method')
+        self.targetdata.compute_cropped_data()
         area_lim = 20; w_lim = 4; h_lim = 4; AR_lim = 15;
         idx = self.targetdata.manual_dimension_requirements(area_lim,w_lim,h_lim,AR_lim)
-        test = np.all(  (vars(self.targetdata)['_Target__crop_area'][idx] >= area_lim) & \
+        test = np.all(  (vars(self.targetdata)['_Target__filtered_area'][idx] >= area_lim) & \
                         (vars(self.targetdata)['_Target__w'][idx]        > w_lim) & \
                         (vars(self.targetdata)['_Target__h'][idx]        > h_lim) & \
-                        (vars(self.targetdata)['_Target__crop_AR'][idx]   < AR_lim) )
+                        (vars(self.targetdata)['_Target__filtered_AR'][idx]   < AR_lim) )
         self.assertTrue(test)
 
     def test_edge_requirements(self):
         print('test edge requirements method')
+        self.targetdata.compute_cropped_data()
         w_lim = 10; h_lim = 10; x2_lim = 10; y2_lim = 10;
         idx = self.targetdata.edge_requirements(w_lim,h_lim,x2_lim,y2_lim)
         test = np.all(  (vars(self.targetdata)['_Target__x1'][idx] < vars(self.targetdata)['_Target__image_w'][idx]-w_lim) & \
@@ -245,10 +251,19 @@ class TargetTests(unittest.TestCase):
         input1 = self.inputs.invalid_class_list
         input2 = vars(self.targetdata)['_Target__classes']
         input3 = vars(self.targetdata)['_Target__coords']
-        idx    = invalid_class_requirement(input1,input2,input3)
+        idx    = invalid_class_requirement(input1,input2)
         test   = (input2[idx] == input1[:,None])
         invalidID = np.where(idx == 0)[0]
         self.assertTrue( np.all(input2[invalidID] == input1[0]) | np.all(input2[invalidID] == input1[1]) )
+
+    def test_apply_mask_to_filtered_data(self):
+        print('test mask application to filtered data method')
+        self.targetdata.compute_filtered_data_mask()
+        mask = vars(self.targetdata)['_Target__mask'] 
+        self.assertTrue( np.where(mask == 1)[0].size == 11047 )
+
+    
+
         
 if __name__ == '__main__':
     unittest.main();
