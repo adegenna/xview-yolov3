@@ -1,10 +1,12 @@
 import numpy as np
 import sys
-sys.path.append('../')
+sys.path.append('../../')
 import scipy.io
 import os
 import cv2
-from utils.fcn_sigma_rejection import *
+from sklearn.cluster import KMeans
+from src.targets.fcn_sigma_rejection import *
+from src.targets.per_class_stats import *
 from utils.datasetProcessing import *
 
 # This is a python-conversion of utils/analysis.m and all related target preprocessing
@@ -38,7 +40,6 @@ class Target():
         self.__filtered_classes  = None
         self.__filtered_image_h  = None
         self.__filtered_image_w  = None
-        self.__filtered_files    = None
 
     def set_image_w_and_h(self):
         self.__image_w         = np.zeros_like(self.__x1)
@@ -103,16 +104,19 @@ class Target():
         i7         = nan_inf_size_requirements(self.__image_h,self.__image_w,32)
         i8         = invalid_class_requirement(self.__inputs.invalid_class_list,self.__classes)
         valid      = i0 & i1 & i2 & i3 & i4 & i5 & i6 & i7 & i8;
-        self.__mask = valid
+        self.__mask = valid.astype(bool)
 
     def apply_mask_to_filtered_data(self):
-        assert(self.__mask != None)
+        try:
+            assert(self.__mask is not None)
+        except AssertionError as e:
+            e.args += ('Filtered data elements must be computed prior to using this function',)
+            raise
         self.__filtered_coords   = self.__filtered_coords[self.__mask];
         self.__filtered_chips    = self.__chips[self.__mask]
         self.__filtered_classes  = self.__classes[self.__mask]
         self.__filtered_image_h  = self.__image_h[self.__mask]
         self.__filtered_image_w  = self.__image_w[self.__mask]
-        self.__filtered_files    = self.__files[self.__mask]
         self.compute_filtered_variables_from_filtered_coords()
 
     def compute_filtered_variables_from_filtered_coords(self):
@@ -126,7 +130,36 @@ class Target():
                 compute_width_height_area(self.__filtered_x1,self.__filtered_y1,self.__filtered_x2,self.__filtered_y2)
         self.__filtered_AR            = np.maximum(self.__filtered_w/self.__filtered_h, self.__filtered_h/self.__filtered_w);
         self.__filtered_coords        = concatenate_xy_to_coords(self.__filtered_x1,self.__filtered_y1,self.__filtered_x2,self.__filtered_y2)
-        
+
+    def compute_image_weights_with_filtered_data(self):
+        try:
+            assert(self.__filtered_classes is not None)
+        except AssertionError as e:
+            e.args += ('Filtered data elements must be computed prior to using this function',)
+            raise
+        class_mu, class_sigma, class_cov = per_class_stats(self.__filtered_classes,self.__filtered_w,self.__filtered_h)
+        num_class_objects = np.unique(self.__filtered_classes,return_counts=True)[1]
+        weights           = 1./num_class_objects
+        weights          /= np.sum(weights)
+        self.__filtered_class_freq    = num_class_objects
+        self.__filtered_class_weights = weights
+
+    def compute_bounding_box_clusters_using_kmeans(self,n_clusters):
+        HW                 = np.vstack([self.__filtered_w,self.__filtered_h]).T
+        kmeans_wh          = KMeans(n_clusters,random_state=0).fit(HW)
+        clusters_wh        = kmeans_wh.cluster_centers_
+        idx                = np.argsort(clusters_wh[:,0]*clusters_wh[:,1])
+        self.__clusters_wh = clusters_wh[idx]
+
+    def process_target_data(self):
+        self.compute_cropped_data()
+        self.compute_filtered_data_mask()
+        self.apply_mask_to_filtered_data()
+        self.compute_image_weights_with_filtered_data()
+        self.compute_bounding_box_clusters_using_kmeans(self.__inputs.boundingboxclusters)
+
+    
+    
 
 
 # Little auxiliary functions

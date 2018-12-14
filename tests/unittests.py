@@ -10,8 +10,9 @@ from utils.datasets import *
 from src.InputFile import *
 from utils.utils import plot_rgb_image
 from utils.datasetProcessing import *
-from utils.Target import *
-from utils.fcn_sigma_rejection import *
+from src.targets.Target import *
+from src.targets.fcn_sigma_rejection import *
+from src.targets.per_class_stats import *
 import warnings
 
 class GPUtests(unittest.TestCase):
@@ -262,8 +263,39 @@ class TargetTests(unittest.TestCase):
         mask = vars(self.targetdata)['_Target__mask'] 
         self.assertTrue( np.where(mask == 1)[0].size == 11047 )
 
-    
+    def test_per_class_stats(self):
+        print('test per_class_stats function')
+        classes = np.array([ 3,5,2,5,3,5,7,7,4,3,2,4,5,6,7,8,0,1,4,2,2,4,6,7,8,0,0,8,6,4,3,1,4,6,9,6,9,0] ).astype(int)
+        w       = np.array([ 5,2,6,9,7,5,3,2,1,2,4,7,9,7,1,8,6,4,2,3,3,5,7,8,7,7,8,7,5,3,2,3,4,5,8,3,8,9] ).astype(float)
+        h       = np.array([ 1,7,2,6,4,9,7,6,4,2,5,6,4,2,5,7,8,1,9,3,6,3,3,2,1,6,8,5,3,5,7,3,2,2,2,6,5,1] ).astype(float)
+        class_mu,class_sigma,class_cov = per_class_stats(classes,w,h)
+        self.assertTrue( np.all(class_mu.shape  == (10,4)) & \
+                         np.all(class_sigma.shape == (10,4)) & \
+                         np.all(class_cov.shape == (10,4,4)) )
+        self.assertTrue( np.linalg.norm(class_mu[0] - np.array([2.0036,1.4877,3.4912,0.51592])) < 0.001 )
+        self.assertTrue( np.linalg.norm(class_sigma[0] - np.array([0.1512,0.86689,0.76245,0.98357])) < 0.001 )
+        self.assertTrue( np.linalg.norm(class_cov[0][0] - np.array([0.030482,-0.12869,-0.098209,0.15917])) < 0.001)
 
+    def test_compute_image_weights_with_filtered_data(self):
+        print('test class weight computation method')
+        self.targetdata.compute_cropped_data()
+        self.targetdata.compute_filtered_data_mask()
+        self.targetdata.apply_mask_to_filtered_data()
+        self.targetdata.compute_image_weights_with_filtered_data()
+        class_freq    = vars(self.targetdata)['_Target__filtered_class_freq']
+        class_weights = vars(self.targetdata)['_Target__filtered_class_weights']
+        self.assertTrue( np.all(class_freq[0:5] == np.array([10,25,10,9,2900])) )
+
+    def test_compute_bounding_box_clusters_using_kmeans(self):
+        print('test bounding box cluster computation method')
+        self.targetdata.process_target_data()
+        clusters_wh       = vars(self.targetdata)['_Target__clusters_wh']
+        clusters_expected = np.array([[13.098,9.7326],[11.681,17.44],[21.13,15.55]])
+        plt.plot(clusters_wh[:,0], clusters_wh[:,1], 'bo')
+        plt.show()
+        self.assertTrue( np.linalg.norm(clusters_wh[0:3] - clusters_expected) < 0.001)
+        
+    
         
 if __name__ == '__main__':
     unittest.main();

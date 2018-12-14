@@ -7,7 +7,7 @@ def per_class_stats(classes,w,h):
     n            = np.size(uc)
     class_mu     = np.zeros([n,4])
     class_sigma  = np.zeros([n,4])
-    class_cov    = np.zeros([n,4])
+    class_cov    = np.zeros([n,4,4])
     for i in range(n):
         j    = np.where(classes == uc[i])[0]
         wj   = np.log(w[j])
@@ -17,4 +17,5 @@ def per_class_stats(classes,w,h):
         data = np.vstack([wj,hj,aj,arj]).T
         class_mu[i]    = np.mean(data,axis=0)
         class_sigma[i] = np.std(data,axis=0)
-        class_cov[i]   = np.cov(data)
+        class_cov[i]   = np.cov(data.T)
+    return class_mu, class_sigma, class_cov
