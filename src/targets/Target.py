@@ -11,10 +11,10 @@ from utils.datasetProcessing import *
 
 # This is a python-conversion of utils/analysis.m and all related target preprocessing
 
-# ASSUMPTIONS ******************
-# 1) Training data filenames have to of form 'string[split]number.extension' or 'number.extension'
+# ****************** ASSUMPTIONS ******************
+# 1) Training data filenames have to be of form 'string[split]number.extension' or 'number.extension'
 # 2) Training datatype is .bmp (this should probably not be hardcoded...)
-# ******************************
+# *************************************************
 
 class Target():
     def __init__(self,inputs):
@@ -26,21 +26,8 @@ class Target():
         self.__x1,self.__y1,self.__x2,self.__y2  = parse_xy_coords(self.__coords)
         self.__w,self.__h,self.__area            = compute_width_height_area(self.__x1,self.__y1,self.__x2,self.__y2)
         self.set_image_w_and_h()
-        self.__mask              = None
-        self.__filtered_x1       = None
-        self.__filtered_y1       = None
-        self.__filtered_x2       = None
-        self.__filtered_y2       = None
-        self.__filtered_w        = None
-        self.__filtered_h        = None
-        self.__filtered_area     = None 
-        self.__filtered_AR       = None
-        self.__filtered_coords   = None
-        self.__filtered_chips    = None
-        self.__filtered_classes  = None
-        self.__filtered_image_h  = None
-        self.__filtered_image_w  = None
-
+        self.process_target_data()
+        
     def set_image_w_and_h(self):
         self.__image_w         = np.zeros_like(self.__x1)
         self.__image_h         = np.zeros_like(self.__x1)
@@ -157,9 +144,6 @@ class Target():
         self.apply_mask_to_filtered_data()
         self.compute_image_weights_with_filtered_data()
         self.compute_bounding_box_clusters_using_kmeans(self.__inputs.boundingboxclusters)
-
-    
-    
 
 
 # Little auxiliary functions
