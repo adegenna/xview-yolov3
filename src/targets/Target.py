@@ -99,11 +99,12 @@ class Target():
         except AssertionError as e:
             e.args += ('Filtered data elements must be computed prior to using this function',)
             raise
-        self.__filtered_coords   = self.__filtered_coords[self.__mask];
-        self.__filtered_chips    = self.__chips[self.__mask]
-        self.__filtered_classes  = self.__classes[self.__mask]
-        self.__filtered_image_h  = self.__image_h[self.__mask]
-        self.__filtered_image_w  = self.__image_w[self.__mask]
+        self.__filtered_coords       = self.__filtered_coords[self.__mask];
+        self.__filtered_chips        = self.__chips[self.__mask]
+        self.__filtered_classes      = self.__classes[self.__mask]
+        self.__filtered_image_h      = self.__image_h[self.__mask]
+        self.__filtered_image_w      = self.__image_w[self.__mask]
+        self.__filtered_class_labels = np.unique(self.__filtered_classes)
         self.compute_filtered_variables_from_filtered_coords()
 
     def compute_filtered_variables_from_filtered_coords(self):
