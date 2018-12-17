@@ -13,3 +13,4 @@ networkcfg       = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/cfg/c60_a3
 imgsize          = 608
 resume           = False
 invalidclasslist = 75,82
+boundingboxclusters = 30

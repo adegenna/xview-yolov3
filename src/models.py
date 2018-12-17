@@ -218,16 +218,9 @@ class Darknet(nn.Module):
 
         print("x_dims: " + str(x.size()))
         for i, (module_def, module) in enumerate(zip(self.module_defs, self.module_list)):
-            print(np.isinf(np.ravel(x.cpu().detach().numpy())).sum() , np.isnan(np.ravel(x.cpu().detach().numpy())).sum())     
             if module_def['type'] in ['convolutional', 'upsample']:
                 print(str(i) + " conv/upsample")
-                #xtest = torch.Tensor(4, 3, 608, 608).uniform_(0, 1).to('cuda:0')
                 x = module(x)
-                #print(module)
-                #print(module.batch_norm_0.weight);
-                #xtest = module.batch_norm_0(module.conv_0(xtest))
-                #np.savetxt("xgpu" + str(i) + ".csv",xtest[0,0].cpu().detach().numpy());
-                #np.savetxt("xgpuconv" + str(i) + ".csv",module.conv_0.weight.cpu().detach().numpy().ravel());
             elif module_def['type'] == 'route':
                 print(str(i) + " route")
                 layer_i = [int(x) for x in module_def['layers'].split(',')]
@@ -275,10 +268,7 @@ class Darknet(nn.Module):
 
 def parse_model_config(path):
     """Parses the yolo-v3 layer configuration file and returns module definitions"""
-    file = open(path, 'r')
-    lines = file.read().split('\n')
-    lines = [x for x in lines if x and not x.startswith('#')]
-    lines = [x.rstrip().lstrip() for x in lines]  # get rid of fringe whitespaces
+    lines       = read_config_file_to_string_list(path)
     module_defs = []
     for line in lines:
         if line.startswith('['):  # This marks the start of a new block
@@ -292,3 +282,53 @@ def parse_model_config(path):
             module_defs[-1][key.rstrip()] = value.strip()
 
     return module_defs
+
+def create_yolo_config_file(template_file_path,output_config_file_path,n_anchors,n_classes,anchor_coordinates):
+    """Creates a yolo-v3 layer configuration file from desired options"""
+    lines                       = read_config_file_to_string_list(template_file_path)
+    num_yolo_filters,n_anchors  = calculate_number_of_yolo_filters(n_anchors,n_classes)
+    anchors_per_yolo_layer      = n_anchors // 3
+    lineidx = 0
+    for line in lines:
+        if line.startswith('NUM_YOLO_FILTERS'):
+            line          += str(num_yolo_filters)
+        elif line.startswith('YOLO_MASK_LARGE'):
+            mask  = np.arange(2*anchors_per_yolo_layer,n_anchors)
+            line += str(list(mask))[1:-1]
+        elif line.startswith('YOLO_MASK_MEDIUM'):
+            mask  = np.arange(1*anchors_per_yolo_layer,2*anchors_per_yolo_layer)
+            line += str(list(mask))[1:-1]
+        elif line.startswith('YOLO_MASK_SMALL'):
+            mask  = np.arange(0,1*anchors_per_yolo_layer)
+            line += str(list(mask))[1:-1]
+        elif line.startswith('YOLO_ANCHORS'):
+            line += str(list(anchor_coordinates))[1:-1]
+        elif line.startswith('CLASSES'):
+            line += str(list(n_classes))
+        elif line.startswith('NUM_ANCHORS'):
+            line += str(list(n_anchors))
+        lines[lineidx] = line
+        lineidx += 1
+    write_string_list_to_config_file(output_config_file_path)
+
+def read_config_file_to_string_list(path):
+    file  = open(path, 'r')
+    lines = file.read().split('\n')
+    lines = [x for x in lines if x and not x.startswith('#')]
+    lines = [x.rstrip().lstrip() for x in lines]  # get rid of fringe whitespaces
+    return lines
+
+def write_string_list_to_config_file(lines,path):
+    with open(path, 'w') as f:
+        for item in lines:
+            f.write("%s\n" % item)
+
+def calculate_number_of_yolo_filters(n_anchors,n_classes):
+    anchorsmod3    = n_anchors % 3
+    try:
+        assert(anchorsmod3 == 0)
+    except:
+        print('Number of anchors must be a multiple of 3 in the YOLO architecture. Therefore, the number of anchors is being changed from ' + str(n_anchors) + ' to ' + str(n_anchors - mod3))
+        n_anchors -= mod3
+    num_yolo_filters = (n_classes + 5)*(n_anchors // 3)
+    return num_yolo_filters,n_anchors
