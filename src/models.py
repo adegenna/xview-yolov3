@@ -285,6 +285,10 @@ def parse_model_config(path):
 
 def create_yolo_config_file(template_file_path,output_config_file_path,n_anchors,n_classes,anchor_coordinates):
     """Creates a yolo-v3 layer configuration file from desired options"""
+    try:
+        assert(len(anchor_coordinates) == 2*n_anchors)
+    except:
+        sys.exit('Error: length of anchor_coordinates must equal 2*n_anchors')
     lines                       = read_config_file_to_string_list(template_file_path)
     num_yolo_filters,n_anchors  = calculate_number_of_yolo_filters(n_anchors,n_classes)
     anchors_per_yolo_layer      = n_anchors // 3
@@ -304,12 +308,12 @@ def create_yolo_config_file(template_file_path,output_config_file_path,n_anchors
         elif line.startswith('YOLO_ANCHORS'):
             line += str(list(anchor_coordinates))[1:-1]
         elif line.startswith('CLASSES'):
-            line += str(list(n_classes))
+            line += str(n_classes)
         elif line.startswith('NUM_ANCHORS'):
-            line += str(list(n_anchors))
+            line += str(n_anchors)
         lines[lineidx] = line
         lineidx += 1
-    write_string_list_to_config_file(output_config_file_path)
+    write_string_list_to_config_file(lines,output_config_file_path)
 
 def read_config_file_to_string_list(path):
     file  = open(path, 'r')

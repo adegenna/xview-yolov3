@@ -10,6 +10,7 @@ from utils.datasets import *
 from src.InputFile import *
 from utils.utils import plot_rgb_image
 from utils.datasetProcessing import *
+from src.models import *
 from src.targets.Target import *
 from src.targets.fcn_sigma_rejection import *
 from src.targets.per_class_stats import *
@@ -296,6 +297,30 @@ class TargetTests(unittest.TestCase):
         self.assertTrue( np.linalg.norm(clusters_wh[0:3] - clusters_expected) < 0.001)
         
     
-        
+class ModelsTests(unittest.TestCase):
+    def setUp(self):
+        warnings.filterwarnings("ignore",category=ResourceWarning)
+        warnings.filterwarnings("ignore",category=DeprecationWarning)
+        args                    = lambda:0
+        args.inputfilename      = './input_test.dat'
+        self.inputs             = InputFile(args);
+        if not os.path.exists(self.inputs.outdir):
+            os.makedirs(self.inputs.outdir)
+
+    def test_create_yolo_config_file(self):
+        template_file_path      = self.inputs.loaddir + "yolov3_template.cfg"
+        output_config_file_path = self.inputs.outdir  + "yolov3_config.cfg"
+        n_anchors = 3
+        n_classes = 60
+        anchor_coordinates = [11,12,13,14,15,16]
+        create_yolo_config_file(template_file_path,output_config_file_path,n_anchors,n_classes,anchor_coordinates)
+        config_list = read_config_file_to_string_list(output_config_file_path)
+        self.assertTrue( (config_list[497].startswith('NUM_YOLO_FILTERS')) & (config_list[497][-2:] == str(n_classes+5)) )
+        self.assertTrue( (config_list[500].startswith('YOLO_MASK_LARGE')) & (config_list[500][-1]   == str(2*n_anchors//3)) )
+        self.assertTrue( (config_list[501].startswith('YOLO_ANCHORS')) & (config_list[501][-22:]    == str(anchor_coordinates)[1:-1]) )
+        self.assertTrue( (config_list[502].startswith('CLASSES')) & (config_list[502][-2:]          == str(n_classes)) )
+        self.assertTrue( (config_list[503].startswith('NUM_ANCHORS')) & (config_list[503][-1]       == str(n_anchors)) )
+
+
 if __name__ == '__main__':
     unittest.main();

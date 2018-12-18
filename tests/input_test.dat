@@ -1,7 +1,7 @@
 inputtype        = train
 projdir          = /home/adegennaro/Projects/OGA/cat/xview-yolov3/src/
 datadir          = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/tests/data/
-loaddir          = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/tests/checkpoints/
+loaddir          = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/tests/
 outdir           = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/tests/output/
 targetspath      = /home/adegennaro/Projects/OGA/cat/src/xview-yolov3/tests/data/xview/labels/testtargets.mat
 targetfiletype   = matlab
