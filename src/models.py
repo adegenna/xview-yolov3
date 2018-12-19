@@ -295,21 +295,28 @@ def create_yolo_config_file(template_file_path,output_config_file_path,n_anchors
     lineidx = 0
     for line in lines:
         if line.startswith('NUM_YOLO_FILTERS'):
+            line           = 'filters = '
             line          += str(num_yolo_filters)
         elif line.startswith('YOLO_MASK_LARGE'):
+            line  = 'mask = '
             mask  = np.arange(2*anchors_per_yolo_layer,n_anchors)
             line += str(list(mask))[1:-1]
         elif line.startswith('YOLO_MASK_MEDIUM'):
+            line  = 'mask = '
             mask  = np.arange(1*anchors_per_yolo_layer,2*anchors_per_yolo_layer)
             line += str(list(mask))[1:-1]
         elif line.startswith('YOLO_MASK_SMALL'):
+            line  = 'mask = '
             mask  = np.arange(0,1*anchors_per_yolo_layer)
             line += str(list(mask))[1:-1]
         elif line.startswith('YOLO_ANCHORS'):
+            line  = 'anchors = '
             line += str(list(anchor_coordinates))[1:-1]
         elif line.startswith('CLASSES'):
+            line  = 'classes = '
             line += str(n_classes)
         elif line.startswith('NUM_ANCHORS'):
+            line  = 'num = '
             line += str(n_anchors)
         lines[lineidx] = line
         lineidx += 1

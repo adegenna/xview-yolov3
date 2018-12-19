@@ -315,11 +315,11 @@ class ModelsTests(unittest.TestCase):
         anchor_coordinates = [11,12,13,14,15,16]
         create_yolo_config_file(template_file_path,output_config_file_path,n_anchors,n_classes,anchor_coordinates)
         config_list = read_config_file_to_string_list(output_config_file_path)
-        self.assertTrue( (config_list[497].startswith('NUM_YOLO_FILTERS')) & (config_list[497][-2:] == str(n_classes+5)) )
-        self.assertTrue( (config_list[500].startswith('YOLO_MASK_LARGE')) & (config_list[500][-1]   == str(2*n_anchors//3)) )
-        self.assertTrue( (config_list[501].startswith('YOLO_ANCHORS')) & (config_list[501][-22:]    == str(anchor_coordinates)[1:-1]) )
-        self.assertTrue( (config_list[502].startswith('CLASSES')) & (config_list[502][-2:]          == str(n_classes)) )
-        self.assertTrue( (config_list[503].startswith('NUM_ANCHORS')) & (config_list[503][-1]       == str(n_anchors)) )
+        self.assertTrue( (config_list[497].startswith('filters')) & (config_list[497][-2:]   == str(n_classes+5)) )
+        self.assertTrue( (config_list[500].startswith('mask')) & (config_list[500][-1]       == str(2*n_anchors//3)) )
+        self.assertTrue( (config_list[501].startswith('anchors')) & (config_list[501][-22:]  == str(anchor_coordinates)[1:-1]) )
+        self.assertTrue( (config_list[502].startswith('classes')) & (config_list[502][-2:]   == str(n_classes)) )
+        self.assertTrue( (config_list[503].startswith('num')) & (config_list[503][-1]        == str(n_anchors)) )
 
 
 if __name__ == '__main__':
