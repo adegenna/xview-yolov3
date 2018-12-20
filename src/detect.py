@@ -6,16 +6,16 @@ from models import *
 from utils.datasets import *
 from utils.utils import *
 
-# Problem setup: read input file
-parser  = argparse.ArgumentParser(description='Input filename');
-parser.add_argument('inputfilename',\
-                    metavar='inputfilename',type=str,\
-                    help='Filename of the input file')
-args   = parser.parse_args()
-opt    = InputFile(args);
-opt.printInputs();
-
 def detect(opt):
+    # Problem setup: read input file
+    parser  = argparse.ArgumentParser(description='Input filename');
+    parser.add_argument('inputfilename',\
+                        metavar='inputfilename',type=str,\
+                        help='Filename of the input file')
+    args   = parser.parse_args()
+    opt    = InputFile(args);
+    opt.printInputs();
+    
     if opt.plot_flag:
         os.system('rm -rf ' + opt.outdir + '_img')
         os.makedirs(opt.outdir + '_img', exist_ok=True)

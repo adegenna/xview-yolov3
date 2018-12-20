@@ -15,16 +15,15 @@ import torch
 # batch_size 2: 32*35 = 1120 (1.40 vs 800, 2.06 cumulative)
 # batch_size 1: 32*49 = 1568 (1.40 vs 1120, 2.88 cumulative)
 
-# Problem setup: read input file
-parser  = argparse.ArgumentParser(description='Input filename');
-parser.add_argument('inputfilename',\
-                    metavar='inputfilename',type=str,\
-                    help='Filename of the input file')
-args   = parser.parse_args()
-inputs = InputFile(args);
-inputs.printInputs();
-
 def main(inputs):
+    # Problem setup: read input file
+    parser  = argparse.ArgumentParser(description='Input filename');
+    parser.add_argument('inputfilename',\
+                        metavar='inputfilename',type=str,\
+                        help='Filename of the input file')
+    args   = parser.parse_args()
+    inputs = InputFile(args);
+    inputs.printInputs();
     # Problem setup
     os.makedirs(inputs.loaddir, exist_ok=True)
     model      = Darknet(inputs.networkcfg, inputs.imgsize)
