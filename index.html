@@ -1,0 +1,324 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Welcome to YOLOv3’s documentation! &#8212; YOLOv3 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="includeme.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-yolov3-s-documentation">
+<h1>Welcome to YOLOv3’s documentation!<a class="headerlink" href="#welcome-to-yolov3-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="module-src.train2">
+<span id="yolov3-train"></span><h1>YOLOv3 train<a class="headerlink" href="#module-src.train2" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="module-src.detect">
+<span id="yolov3-detect"></span><h1>YOLOv3 detect<a class="headerlink" href="#module-src.detect" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="src.detect.ConvNetb">
+<em class="property">class </em><code class="descclassname">src.detect.</code><code class="descname">ConvNetb</code><span class="sig-paren">(</span><em>num_classes=60</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#ConvNetb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.ConvNetb" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="src.detect.ConvNetb.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#ConvNetb.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.ConvNetb.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.InputFile">
+<span id="yolov3-inputfile"></span><h1>YOLOv3 InputFile<a class="headerlink" href="#module-src.InputFile" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="module-src.models">
+<span id="yolov3-models"></span><h1>YOLOv3 models<a class="headerlink" href="#module-src.models" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="src.models.Darknet">
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>config_path</em>, <em>img_size=416</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
+<dd><p>YOLOv3 object detection model</p>
+<dl class="method">
+<dt id="src.models.Darknet.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="src.models.EmptyLayer">
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">EmptyLayer</code><a class="reference internal" href="_modules/src/models.html#EmptyLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.EmptyLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Placeholder for ‘route’ and ‘shortcut’ layers</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="src.models.YOLOLayer">
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">YOLOLayer</code><span class="sig-paren">(</span><em>anchors</em>, <em>nC</em>, <em>img_dim</em>, <em>anchor_idxs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#YOLOLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.YOLOLayer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="src.models.YOLOLayer.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>p</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#YOLOLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.YOLOLayer.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="src.models.create_modules">
+<code class="descclassname">src.models.</code><code class="descname">create_modules</code><span class="sig-paren">(</span><em>module_defs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs module list of layer blocks from module configuration in module_defs</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.models.create_yolo_config_file">
+<code class="descclassname">src.models.</code><code class="descname">create_yolo_config_file</code><span class="sig-paren">(</span><em>template_file_path</em>, <em>output_config_file_path</em>, <em>n_anchors</em>, <em>n_classes</em>, <em>anchor_coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_yolo_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_yolo_config_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a yolo-v3 layer configuration file from desired options</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.models.parse_model_config">
+<code class="descclassname">src.models.</code><code class="descname">parse_model_config</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#parse_model_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.parse_model_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the yolo-v3 layer configuration file and returns module definitions</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.NetworkTrainer">
+<span id="yolov3-networktrainer"></span><h1>YOLOv3 NetworkTrainer<a class="headerlink" href="#module-src.NetworkTrainer" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="module-src.targets.Target">
+<span id="yolov3-target"></span><h1>YOLOv3 Target<a class="headerlink" href="#module-src.targets.Target" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="yolov3-fcn-sigma-rejection">
+<h1>YOLOv3 fcn_sigma_rejection<a class="headerlink" href="#yolov3-fcn-sigma-rejection" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-src.targets.fcn_sigma_rejection"></span></div>
+<div class="section" id="id1">
+<h1>YOLOv3 fcn_sigma_rejection<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-src.targets.per_class_stats"></span></div>
+<div class="section" id="yolov3-datasetprocessing">
+<h1>YOLOv3 datasetProcessing<a class="headerlink" href="#yolov3-datasetprocessing" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-utils.datasetProcessing"></span></div>
+<div class="section" id="module-utils.datasets">
+<span id="yolov3-datasets"></span><h1>YOLOv3 datasets<a class="headerlink" href="#module-utils.datasets" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="module-utils.utils">
+<span id="yolov3-utils"></span><h1>YOLOv3 utils<a class="headerlink" href="#module-utils.utils" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="utils.utils.bbox_iou">
+<code class="descclassname">utils.utils.</code><code class="descname">bbox_iou</code><span class="sig-paren">(</span><em>box1</em>, <em>box2</em>, <em>x1y1x2y2=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#bbox_iou"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.bbox_iou" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the IoU of two bounding boxes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.build_targets">
+<code class="descclassname">utils.utils.</code><code class="descname">build_targets</code><span class="sig-paren">(</span><em>pred_boxes</em>, <em>pred_conf</em>, <em>pred_cls</em>, <em>target</em>, <em>anchor_wh</em>, <em>nA</em>, <em>nC</em>, <em>nG</em>, <em>requestPrecision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#build_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.build_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns nGT, nCorrect, tx, ty, tw, th, tconf, tcls</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.compute_ap">
+<code class="descclassname">utils.utils.</code><code class="descname">compute_ap</code><span class="sig-paren">(</span><em>recall</em>, <em>precision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#compute_ap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.compute_ap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the average precision, given the recall and precision curves.
+Code originally from <a class="reference external" href="https://github.com/rbgirshick/py-faster-rcnn">https://github.com/rbgirshick/py-faster-rcnn</a>.
+# Arguments</p>
+<blockquote>
+<div>recall:    The recall curve (list).
+precision: The precision curve (list).</div></blockquote>
+<dl class="docutils">
+<dt># Returns</dt>
+<dd>The average precision as computed in py-faster-rcnn.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.load_classes">
+<code class="descclassname">utils.utils.</code><code class="descname">load_classes</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#load_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.load_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads class labels at ‘path’</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-utils.utils_xview">
+<span id="yolov3-utils-xview"></span><h1>YOLOv3 utils_xview<a class="headerlink" href="#module-utils.utils_xview" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="module-tests.unittests">
+<span id="yolov3-unittests"></span><h1>YOLOv3 unittests<a class="headerlink" href="#module-tests.unittests" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="tests.unittests.DataProcessingTests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">DataProcessingTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.DataProcessingTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.unittests.DatasetTests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">DatasetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.DatasetTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.unittests.GPUtests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">GPUtests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.GPUtests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.unittests.ModelsTests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">ModelsTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.ModelsTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.unittests.TargetTests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">TargetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.TargetTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">YOLOv3</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="includeme.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Anthony DeGennaro.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
