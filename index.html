@@ -157,6 +157,146 @@ registered hooks while the latter silently ignores them.</p>
 </div>
 <div class="section" id="module-src.targets.Target">
 <span id="yolov3-target"></span><h1>YOLOv3 Target<a class="headerlink" href="#module-src.targets.Target" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="src.targets.Target.Target">
+<em class="property">class </em><code class="descclassname">src.targets.Target.</code><code class="descname">Target</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for handling target pre-processing tasks.</p>
+<dl class="method">
+<dt id="src.targets.Target.Target.apply_mask_to_filtered_data">
+<code class="descname">apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.apply_mask_to_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to apply mask to filtered data variables.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans">
+<code class="descname">compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><em>n_clusters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_bounding_box_clusters_using_kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">Method to compute bounding box clusters using kmeans.</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>n_clusters:</em> number of desired kmeans clusters</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_cropped_data">
+<code class="descname">compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_cropped_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_cropped_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to crop image data based on the width and height. Filtered variables are then computed based on the updated image coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_filtered_data_mask">
+<code class="descname">compute_filtered_data_mask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_data_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_data_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtered data by applying several filtering operations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_filtered_variables_from_filtered_coords">
+<code class="descname">compute_filtered_variables_from_filtered_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_variables_from_filtered_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_variables_from_filtered_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtered variables from filtered coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_filtered_variables_from_filtered_xy">
+<code class="descname">compute_filtered_variables_from_filtered_xy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_variables_from_filtered_xy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_variables_from_filtered_xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtered variables from filtered xy.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_image_weights_with_filtered_data">
+<code class="descname">compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_image_weights_with_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute image weights from filtered data. Weight is simply inverse of class frequency.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.edge_requirements">
+<code class="descname">edge_requirements</code><span class="sig-paren">(</span><em>w_lim</em>, <em>h_lim</em>, <em>x2_lim</em>, <em>y2_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.edge_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.edge_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtering based on edge specifications.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>w_lim:</em> limit for image width</div>
+<div class="line"><em>h_lim:</em> limit for image height</div>
+<div class="line"><em>x2_lim:</em> limit for image x2</div>
+<div class="line"><em>y2_lim:</em> limit for image y2</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line">indices where filtered variables satisfy the dimension requirements.</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.load_target_file">
+<code class="descname">load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.load_target_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.load_target_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to load a targetfile of type specified in the input file. Supported types: .json.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.manual_dimension_requirements">
+<code class="descname">manual_dimension_requirements</code><span class="sig-paren">(</span><em>area_lim</em>, <em>w_lim</em>, <em>h_lim</em>, <em>AR_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.manual_dimension_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtering based on specified dimension requirements.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>area_lim:</em> limit for image area</div>
+<div class="line"><em>w_lim:</em> limit for image width</div>
+<div class="line"><em>h_lim:</em> limit for image height</div>
+<div class="line"><em>AR_lim:</em> limit for image aspect ratio</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line">indices where filtered variables satisfy the dimension requirements.</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.process_target_data">
+<code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.process_target_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to perform all target processing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.set_image_w_and_h">
+<code class="descname">set_image_w_and_h</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.set_image_w_and_h"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.set_image_w_and_h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set width and height of images associated with targets.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.sigma_rejection_indices">
+<code class="descname">sigma_rejection_indices</code><span class="sig-paren">(</span><em>filtered_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.sigma_rejection_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute a mask based on a sigma rejection criterion.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>filtered_data:</em> data to which sigma rejection is applied and from which mask is computed</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>mask_reject:</em> binary mask computed from sigma rejection</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.strip_image_number_from_chips_and_files">
+<code class="descname">strip_image_number_from_chips_and_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.strip_image_number_from_chips_and_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.strip_image_number_from_chips_and_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to strip numbers from image filenames from both chips and files.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="yolov3-fcn-sigma-rejection">
 <h1>YOLOv3 fcn_sigma_rejection<a class="headerlink" href="#yolov3-fcn-sigma-rejection" title="Permalink to this headline">¶</a></h1>
