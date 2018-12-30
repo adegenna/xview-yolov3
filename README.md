@@ -12,6 +12,8 @@ Python 3.6 with the following packages:
 
 - `numpy`
 - `scipy`
+- `sklearn`
+- `matplotlib`
 - `torch`
 - `opencv-python`
 - `h5py`
