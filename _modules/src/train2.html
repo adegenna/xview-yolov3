@@ -1,0 +1,152 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>src.train2 &#8212; YOLOv3 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for src.train2</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">platform</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">utils.datasets</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">utils.utils</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">InputFile</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">NetworkTrainer</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1"># batch_size 8: 32*17 = 544</span>
+<span class="c1"># batch_size 4: 32*25 = 800 (1.47 vs 544) or 32*23 = 736</span>
+<span class="c1"># batch_size 2: 32*35 = 1120 (1.40 vs 800, 2.06 cumulative)</span>
+<span class="c1"># batch_size 1: 32*49 = 1568 (1.40 vs 1120, 2.88 cumulative)</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../index.html#src.train2.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main driver script for training the YOLOv3 network.</span>
+
+<span class="sd">    | **Inputs:**</span>
+<span class="sd">    |    *inputs:* an input file formatted according to the InputFile class</span>
+
+<span class="sd">    | **Outputs:**</span>
+<span class="sd">    |    *inputs.outdir/results.txt:* output metrics for each training epoch</span>
+<span class="sd">    |    *inputs.loaddir/latest.pt:* checkpoint file for latest network configuration</span>
+<span class="sd">    |    *inputs.loaddir/best.pt:* checkpoint file for best current network configuration</span>
+<span class="sd">    |    *inputs.loaddir/backup.pt:* checkpoint file for backup purposes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Problem setup: read input file</span>
+    <span class="n">parser</span>  <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Input filename&#39;</span><span class="p">);</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;inputfilename&#39;</span><span class="p">,</span>\
+                        <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;inputfilename&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>\
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Filename of the input file&#39;</span><span class="p">)</span>
+    <span class="n">args</span>   <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+    <span class="n">inputs</span><span class="o">.</span><span class="n">printInputs</span><span class="p">();</span>
+    <span class="c1"># Problem setup</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">loaddir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">model</span>      <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">imgsize</span><span class="p">)</span>
+    <span class="n">modelinfo</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">ListDataset</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">trainer</span>    <span class="o">=</span> <span class="n">NetworkTrainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">inputs</span><span class="p">);</span>
+    <span class="c1"># Start training</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">();</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">YOLOv3</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Anthony DeGennaro.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

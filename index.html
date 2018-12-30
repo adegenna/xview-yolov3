@@ -39,6 +39,27 @@
 </div>
 <div class="section" id="module-src.train2">
 <span id="yolov3-train"></span><h1>YOLOv3 train<a class="headerlink" href="#module-src.train2" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="src.train2.main">
+<code class="descclassname">src.train2.</code><code class="descname">main</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/train2.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.train2.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main driver script for training the YOLOv3 network.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>inputs:</em> an input file formatted according to the InputFile class</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>inputs.outdir/results.txt:</em> output metrics for each training epoch</div>
+<div class="line"><em>inputs.loaddir/latest.pt:</em> checkpoint file for latest network configuration</div>
+<div class="line"><em>inputs.loaddir/best.pt:</em> checkpoint file for best current network configuration</div>
+<div class="line"><em>inputs.loaddir/backup.pt:</em> checkpoint file for backup purposes</div>
+</div>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="module-src.detect">
 <span id="yolov3-detect"></span><h1>YOLOv3 detect<a class="headerlink" href="#module-src.detect" title="Permalink to this headline">¶</a></h1>
