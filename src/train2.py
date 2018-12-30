@@ -10,6 +10,19 @@ from InputFile import *
 from NetworkTrainer import *
 import torch
 
+"""
+Main driver script for training the YOLOv3 network.
+
+Inputs:
+   inputs: an input file formatted according to the InputFile class
+
+Outputs:
+   inputs.outdir/results.txt: output metrics for each training epoch
+   inputs.loaddir/latest.pt: checkpoint file for latest network configuration
+   inputs.loaddir/best.pt: checkpoint file for best current network configuration
+   inputs.loaddir/backup.pt: checkpoint file for backup purposes
+"""
+
 # batch_size 8: 32*17 = 544
 # batch_size 4: 32*25 = 800 (1.47 vs 544) or 32*23 = 736
 # batch_size 2: 32*35 = 1120 (1.40 vs 800, 2.06 cumulative)
