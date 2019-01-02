@@ -50,7 +50,7 @@
 <span class="c1"># 2) Training datatype is .bmp (this should probably not be hardcoded...)</span>
 <span class="c1"># *************************************************</span>
 
-<div class="viewcode-block" id="Target"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target">[docs]</a><span class="k">class</span> <span class="nc">Target</span><span class="p">():</span>
+<div class="viewcode-block" id="Target"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target">[docs]</a><span class="k">class</span> <span class="nc">Target</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for handling target pre-processing tasks.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -72,7 +72,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_image_w_and_h</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">process_target_data</span><span class="p">()</span>
         
-<div class="viewcode-block" id="Target.set_image_w_and_h"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.set_image_w_and_h">[docs]</a>    <span class="k">def</span> <span class="nf">set_image_w_and_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.set_image_w_and_h"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.set_image_w_and_h">[docs]</a>    <span class="k">def</span> <span class="nf">set_image_w_and_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to set width and height of images associated with targets.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -83,7 +83,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__HWC</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="mi">0</span><span class="p">];</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__HWC</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span></div>
 
-<div class="viewcode-block" id="Target.strip_image_number_from_chips_and_files"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.strip_image_number_from_chips_and_files">[docs]</a>    <span class="k">def</span> <span class="nf">strip_image_number_from_chips_and_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.strip_image_number_from_chips_and_files"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.strip_image_number_from_chips_and_files">[docs]</a>    <span class="k">def</span> <span class="nf">strip_image_number_from_chips_and_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to strip numbers from image filenames from both chips and files.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -93,7 +93,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">strip_image_number_from_filename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__files</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span></div>
             
-<div class="viewcode-block" id="Target.load_target_file"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.load_target_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_target_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.load_target_file"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.load_target_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_target_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to load a targetfile of type specified in the input file. Supported types: .json.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -104,7 +104,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Target file either not specified or not supported&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Target.compute_cropped_data"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.compute_cropped_data">[docs]</a>    <span class="k">def</span> <span class="nf">compute_cropped_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.compute_cropped_data"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.compute_cropped_data">[docs]</a>    <span class="k">def</span> <span class="nf">compute_cropped_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to crop image data based on the width and height. Filtered variables are then computed based on the updated image coordinates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -114,7 +114,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__y2</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span><span class="p">);</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_variables_from_filtered_xy</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Target.sigma_rejection_indices"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.sigma_rejection_indices">[docs]</a>    <span class="k">def</span> <span class="nf">sigma_rejection_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filtered_data</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.sigma_rejection_indices"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.sigma_rejection_indices">[docs]</a>    <span class="k">def</span> <span class="nf">sigma_rejection_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filtered_data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to compute a mask based on a sigma rejection criterion.</span>
 <span class="sd">        </span>
@@ -131,7 +131,7 @@
             <span class="n">mask_reject</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask_reject</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">v</span>
         <span class="k">return</span> <span class="n">mask_reject</span></div>
 
-<div class="viewcode-block" id="Target.manual_dimension_requirements"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.manual_dimension_requirements">[docs]</a>    <span class="k">def</span> <span class="nf">manual_dimension_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">area_lim</span><span class="p">,</span><span class="n">w_lim</span><span class="p">,</span><span class="n">h_lim</span><span class="p">,</span><span class="n">AR_lim</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.manual_dimension_requirements"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.manual_dimension_requirements">[docs]</a>    <span class="k">def</span> <span class="nf">manual_dimension_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">area_lim</span><span class="p">,</span><span class="n">w_lim</span><span class="p">,</span><span class="n">h_lim</span><span class="p">,</span><span class="n">AR_lim</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to compute filtering based on specified dimension requirements.</span>
 <span class="sd">        </span>
@@ -149,7 +149,7 @@
                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span> <span class="o">&gt;</span> <span class="n">h_lim</span><span class="p">)</span> <span class="o">&amp;</span> \
                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_AR</span> <span class="o">&lt;</span> <span class="n">AR_lim</span><span class="p">)</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Target.edge_requirements"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.edge_requirements">[docs]</a>    <span class="k">def</span> <span class="nf">edge_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">w_lim</span><span class="p">,</span><span class="n">h_lim</span><span class="p">,</span><span class="n">x2_lim</span><span class="p">,</span><span class="n">y2_lim</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.edge_requirements"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.edge_requirements">[docs]</a>    <span class="k">def</span> <span class="nf">edge_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">w_lim</span><span class="p">,</span><span class="n">h_lim</span><span class="p">,</span><span class="n">x2_lim</span><span class="p">,</span><span class="n">y2_lim</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to compute filtering based on edge specifications.</span>
 <span class="sd">        </span>
@@ -168,7 +168,7 @@
                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span> <span class="o">&gt;</span> <span class="n">x2_lim</span><span class="p">)</span> <span class="o">&amp;</span> \
                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span> <span class="o">&gt;</span> <span class="n">y2_lim</span><span class="p">)</span> <span class="p">)</span></div>
     
-<div class="viewcode-block" id="Target.compute_filtered_data_mask"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.compute_filtered_data_mask">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_data_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.compute_filtered_data_mask"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.compute_filtered_data_mask">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_data_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to compute filtered data by applying several filtering operations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -185,7 +185,7 @@
         <span class="n">valid</span>      <span class="o">=</span> <span class="n">i0</span> <span class="o">&amp;</span> <span class="n">i1</span> <span class="o">&amp;</span> <span class="n">i2</span> <span class="o">&amp;</span> <span class="n">i3</span> <span class="o">&amp;</span> <span class="n">i4</span> <span class="o">&amp;</span> <span class="n">i5</span> <span class="o">&amp;</span> <span class="n">i6</span> <span class="o">&amp;</span> <span class="n">i7</span> <span class="o">&amp;</span> <span class="n">i8</span><span class="p">;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__mask</span> <span class="o">=</span> <span class="n">valid</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Target.apply_mask_to_filtered_data"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.apply_mask_to_filtered_data">[docs]</a>    <span class="k">def</span> <span class="nf">apply_mask_to_filtered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.apply_mask_to_filtered_data"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.apply_mask_to_filtered_data">[docs]</a>    <span class="k">def</span> <span class="nf">apply_mask_to_filtered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to apply mask to filtered data variables.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -202,7 +202,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_variables_from_filtered_coords</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Target.compute_filtered_variables_from_filtered_coords"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.compute_filtered_variables_from_filtered_coords">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_variables_from_filtered_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.compute_filtered_variables_from_filtered_coords"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.compute_filtered_variables_from_filtered_coords">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_variables_from_filtered_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to compute filtered variables from filtered coordinates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -211,7 +211,7 @@
                 <span class="n">compute_width_height_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_AR</span>            <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">);</span></div>
 
-<div class="viewcode-block" id="Target.compute_filtered_variables_from_filtered_xy"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.compute_filtered_variables_from_filtered_xy">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_variables_from_filtered_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.compute_filtered_variables_from_filtered_xy"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.compute_filtered_variables_from_filtered_xy">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_variables_from_filtered_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to compute filtered variables from filtered xy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -220,7 +220,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_AR</span>            <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">);</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_coords</span>        <span class="o">=</span> <span class="n">concatenate_xy_to_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Target.compute_image_weights_with_filtered_data"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.compute_image_weights_with_filtered_data">[docs]</a>    <span class="k">def</span> <span class="nf">compute_image_weights_with_filtered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.compute_image_weights_with_filtered_data"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.compute_image_weights_with_filtered_data">[docs]</a>    <span class="k">def</span> <span class="nf">compute_image_weights_with_filtered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to compute image weights from filtered data. Weight is simply inverse of class frequency.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -236,7 +236,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_freq</span>    <span class="o">=</span> <span class="n">num_class_objects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_weights</span> <span class="o">=</span> <span class="n">weights</span></div>
 
-<div class="viewcode-block" id="Target.compute_bounding_box_clusters_using_kmeans"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans">[docs]</a>    <span class="k">def</span> <span class="nf">compute_bounding_box_clusters_using_kmeans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">n_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.compute_bounding_box_clusters_using_kmeans"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans">[docs]</a>    <span class="k">def</span> <span class="nf">compute_bounding_box_clusters_using_kmeans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">n_clusters</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        | Method to compute bounding box clusters using kmeans.</span>
 <span class="sd">        </span>
@@ -249,7 +249,7 @@
         <span class="n">idx</span>                <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">clusters_wh</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">clusters_wh</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__clusters_wh</span> <span class="o">=</span> <span class="n">clusters_wh</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Target.process_target_data"><a class="viewcode-back" href="../../../index.html#src.targets.Target.Target.process_target_data">[docs]</a>    <span class="k">def</span> <span class="nf">process_target_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Target.process_target_data"><a class="viewcode-back" href="../../../code.html#src.targets.Target.Target.process_target_data">[docs]</a>    <span class="k">def</span> <span class="nf">process_target_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to perform all target processing.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -319,6 +319,14 @@
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
@@ -341,14 +349,6 @@
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
@@ -358,7 +358,7 @@
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
     </div>
 

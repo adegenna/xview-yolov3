@@ -39,7 +39,7 @@
 <span class="kn">from</span> <span class="nn">utils.utils</span> <span class="k">import</span> <span class="o">*</span>
 
 
-<div class="viewcode-block" id="create_modules"><a class="viewcode-back" href="../../index.html#src.models.create_modules">[docs]</a><span class="k">def</span> <span class="nf">create_modules</span><span class="p">(</span><span class="n">module_defs</span><span class="p">):</span>
+<div class="viewcode-block" id="create_modules"><a class="viewcode-back" href="../../code.html#src.models.create_modules">[docs]</a><span class="k">def</span> <span class="nf">create_modules</span><span class="p">(</span><span class="n">module_defs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs module list of layer blocks from module configuration in module_defs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -99,14 +99,14 @@
     <span class="k">return</span> <span class="n">hyperparams</span><span class="p">,</span> <span class="n">module_list</span></div>
 
 
-<div class="viewcode-block" id="EmptyLayer"><a class="viewcode-back" href="../../index.html#src.models.EmptyLayer">[docs]</a><span class="k">class</span> <span class="nc">EmptyLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="EmptyLayer"><a class="viewcode-back" href="../../code.html#src.models.EmptyLayer">[docs]</a><span class="k">class</span> <span class="nc">EmptyLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Placeholder for &#39;route&#39; and &#39;shortcut&#39; layers&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EmptyLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="YOLOLayer"><a class="viewcode-back" href="../../index.html#src.models.YOLOLayer">[docs]</a><span class="k">class</span> <span class="nc">YOLOLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="YOLOLayer"><a class="viewcode-back" href="../../code.html#src.models.YOLOLayer">[docs]</a><span class="k">class</span> <span class="nc">YOLOLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="c1"># YOLO Layer 0</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchors</span><span class="p">,</span> <span class="n">nC</span><span class="p">,</span> <span class="n">img_dim</span><span class="p">,</span> <span class="n">anchor_idxs</span><span class="p">):</span>
@@ -136,7 +136,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">anchor_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaled_anchors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">anchor_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaled_anchors</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
-<div class="viewcode-block" id="YOLOLayer.forward"><a class="viewcode-back" href="../../index.html#src.models.YOLOLayer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="YOLOLayer.forward"><a class="viewcode-back" href="../../code.html#src.models.YOLOLayer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">FT</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">FloatTensor</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_cuda</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda:0&#39;</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_cuda</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
         <span class="c1"># weight = xview_class_weights(range(60)).to(device)</span>
@@ -233,7 +233,7 @@
             <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">data</span></div></div>
 
 
-<div class="viewcode-block" id="Darknet"><a class="viewcode-back" href="../../index.html#src.models.Darknet">[docs]</a><span class="k">class</span> <span class="nc">Darknet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="Darknet"><a class="viewcode-back" href="../../code.html#src.models.Darknet">[docs]</a><span class="k">class</span> <span class="nc">Darknet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;YOLOv3 object detection model&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="mi">416</span><span class="p">):</span>
@@ -244,7 +244,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span> <span class="o">=</span> <span class="n">img_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loss_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;conf&#39;</span><span class="p">,</span> <span class="s1">&#39;cls&#39;</span><span class="p">,</span> <span class="s1">&#39;nGT&#39;</span><span class="p">,</span> <span class="s1">&#39;TP&#39;</span><span class="p">,</span> <span class="s1">&#39;FP&#39;</span><span class="p">,</span> <span class="s1">&#39;FPe&#39;</span><span class="p">,</span> <span class="s1">&#39;FN&#39;</span><span class="p">,</span> <span class="s1">&#39;TC&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="Darknet.forward"><a class="viewcode-back" href="../../index.html#src.models.Darknet.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Darknet.forward"><a class="viewcode-back" href="../../code.html#src.models.Darknet.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">is_training</span> <span class="o">=</span> <span class="n">targets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">losses</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
@@ -300,7 +300,7 @@
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_training</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="parse_model_config"><a class="viewcode-back" href="../../index.html#src.models.parse_model_config">[docs]</a><span class="k">def</span> <span class="nf">parse_model_config</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_model_config"><a class="viewcode-back" href="../../code.html#src.models.parse_model_config">[docs]</a><span class="k">def</span> <span class="nf">parse_model_config</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parses the yolo-v3 layer configuration file and returns module definitions&quot;&quot;&quot;</span>
     <span class="n">lines</span>       <span class="o">=</span> <span class="n">read_config_file_to_string_list</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">module_defs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -317,7 +317,7 @@
 
     <span class="k">return</span> <span class="n">module_defs</span></div>
 
-<div class="viewcode-block" id="create_yolo_config_file"><a class="viewcode-back" href="../../index.html#src.models.create_yolo_config_file">[docs]</a><span class="k">def</span> <span class="nf">create_yolo_config_file</span><span class="p">(</span><span class="n">template_file_path</span><span class="p">,</span><span class="n">output_config_file_path</span><span class="p">,</span><span class="n">n_anchors</span><span class="p">,</span><span class="n">n_classes</span><span class="p">,</span><span class="n">anchor_coordinates</span><span class="p">):</span>
+<div class="viewcode-block" id="create_yolo_config_file"><a class="viewcode-back" href="../../code.html#src.models.create_yolo_config_file">[docs]</a><span class="k">def</span> <span class="nf">create_yolo_config_file</span><span class="p">(</span><span class="n">template_file_path</span><span class="p">,</span><span class="n">output_config_file_path</span><span class="p">,</span><span class="n">n_anchors</span><span class="p">,</span><span class="n">n_classes</span><span class="p">,</span><span class="n">anchor_coordinates</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a yolo-v3 layer configuration file from desired options&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">anchor_coordinates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_anchors</span><span class="p">)</span>
@@ -395,6 +395,14 @@
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
@@ -417,14 +425,6 @@
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
@@ -434,7 +434,7 @@
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
     </div>
 

@@ -1,0 +1,452 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Code Docs &#8212; YOLOv3 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contact" href="contact.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="code-docs">
+<h1>Code Docs<a class="headerlink" href="#code-docs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-src.train2">
+<span id="src"></span><h2>Src/<a class="headerlink" href="#module-src.train2" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="src.train2.main">
+<code class="descclassname">src.train2.</code><code class="descname">main</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/train2.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.train2.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main driver script for training the YOLOv3 network.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>inputs:</em> an input file formatted according to the InputFile class</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>inputs.outdir/results.txt:</em> output metrics for each training epoch</div>
+<div class="line"><em>inputs.loaddir/latest.pt:</em> checkpoint file for latest network configuration</div>
+<div class="line"><em>inputs.loaddir/best.pt:</em> checkpoint file for best current network configuration</div>
+<div class="line"><em>inputs.loaddir/backup.pt:</em> checkpoint file for backup purposes</div>
+</div>
+</div>
+</dd></dl>
+
+<span class="target" id="module-src.detect"></span><dl class="class">
+<dt id="src.detect.ConvNetb">
+<em class="property">class </em><code class="descclassname">src.detect.</code><code class="descname">ConvNetb</code><span class="sig-paren">(</span><em>num_classes=60</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#ConvNetb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.ConvNetb" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="src.detect.ConvNetb.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#ConvNetb.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.ConvNetb.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-src.InputFile"></span><span class="target" id="module-src.models"></span><dl class="class">
+<dt id="src.models.Darknet">
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>config_path</em>, <em>img_size=416</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
+<dd><p>YOLOv3 object detection model</p>
+<dl class="method">
+<dt id="src.models.Darknet.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="src.models.EmptyLayer">
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">EmptyLayer</code><a class="reference internal" href="_modules/src/models.html#EmptyLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.EmptyLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Placeholder for ‘route’ and ‘shortcut’ layers</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="src.models.YOLOLayer">
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">YOLOLayer</code><span class="sig-paren">(</span><em>anchors</em>, <em>nC</em>, <em>img_dim</em>, <em>anchor_idxs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#YOLOLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.YOLOLayer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="src.models.YOLOLayer.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>p</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#YOLOLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.YOLOLayer.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="src.models.create_modules">
+<code class="descclassname">src.models.</code><code class="descname">create_modules</code><span class="sig-paren">(</span><em>module_defs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs module list of layer blocks from module configuration in module_defs</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.models.create_yolo_config_file">
+<code class="descclassname">src.models.</code><code class="descname">create_yolo_config_file</code><span class="sig-paren">(</span><em>template_file_path</em>, <em>output_config_file_path</em>, <em>n_anchors</em>, <em>n_classes</em>, <em>anchor_coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_yolo_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_yolo_config_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a yolo-v3 layer configuration file from desired options</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.models.parse_model_config">
+<code class="descclassname">src.models.</code><code class="descname">parse_model_config</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#parse_model_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.parse_model_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the yolo-v3 layer configuration file and returns module definitions</p>
+</dd></dl>
+
+<span class="target" id="module-src.NetworkTrainer"></span><span class="target" id="module-src.targets.Target"></span><dl class="class">
+<dt id="src.targets.Target.Target">
+<em class="property">class </em><code class="descclassname">src.targets.Target.</code><code class="descname">Target</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for handling target pre-processing tasks.</p>
+<dl class="method">
+<dt id="src.targets.Target.Target.apply_mask_to_filtered_data">
+<code class="descname">apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.apply_mask_to_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to apply mask to filtered data variables.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans">
+<code class="descname">compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><em>n_clusters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_bounding_box_clusters_using_kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">Method to compute bounding box clusters using kmeans.</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>n_clusters:</em> number of desired kmeans clusters</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_cropped_data">
+<code class="descname">compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_cropped_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_cropped_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to crop image data based on the width and height. Filtered variables are then computed based on the updated image coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_filtered_data_mask">
+<code class="descname">compute_filtered_data_mask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_data_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_data_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtered data by applying several filtering operations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_filtered_variables_from_filtered_coords">
+<code class="descname">compute_filtered_variables_from_filtered_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_variables_from_filtered_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_variables_from_filtered_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtered variables from filtered coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_filtered_variables_from_filtered_xy">
+<code class="descname">compute_filtered_variables_from_filtered_xy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_variables_from_filtered_xy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_variables_from_filtered_xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtered variables from filtered xy.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.compute_image_weights_with_filtered_data">
+<code class="descname">compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_image_weights_with_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute image weights from filtered data. Weight is simply inverse of class frequency.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.edge_requirements">
+<code class="descname">edge_requirements</code><span class="sig-paren">(</span><em>w_lim</em>, <em>h_lim</em>, <em>x2_lim</em>, <em>y2_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.edge_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.edge_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtering based on edge specifications.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>w_lim:</em> limit for image width</div>
+<div class="line"><em>h_lim:</em> limit for image height</div>
+<div class="line"><em>x2_lim:</em> limit for image x2</div>
+<div class="line"><em>y2_lim:</em> limit for image y2</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line">indices where filtered variables satisfy the dimension requirements.</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.load_target_file">
+<code class="descname">load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.load_target_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.load_target_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to load a targetfile of type specified in the input file. Supported types: .json.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.manual_dimension_requirements">
+<code class="descname">manual_dimension_requirements</code><span class="sig-paren">(</span><em>area_lim</em>, <em>w_lim</em>, <em>h_lim</em>, <em>AR_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.manual_dimension_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute filtering based on specified dimension requirements.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>area_lim:</em> limit for image area</div>
+<div class="line"><em>w_lim:</em> limit for image width</div>
+<div class="line"><em>h_lim:</em> limit for image height</div>
+<div class="line"><em>AR_lim:</em> limit for image aspect ratio</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line">indices where filtered variables satisfy the dimension requirements.</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.process_target_data">
+<code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.process_target_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to perform all target processing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.set_image_w_and_h">
+<code class="descname">set_image_w_and_h</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.set_image_w_and_h"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.set_image_w_and_h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set width and height of images associated with targets.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.sigma_rejection_indices">
+<code class="descname">sigma_rejection_indices</code><span class="sig-paren">(</span><em>filtered_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.sigma_rejection_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute a mask based on a sigma rejection criterion.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>filtered_data:</em> data to which sigma rejection is applied and from which mask is computed</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>mask_reject:</em> binary mask computed from sigma rejection</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.strip_image_number_from_chips_and_files">
+<code class="descname">strip_image_number_from_chips_and_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.strip_image_number_from_chips_and_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.strip_image_number_from_chips_and_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to strip numbers from image filenames from both chips and files.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-src.targets.fcn_sigma_rejection"></span><span class="target" id="module-src.targets.per_class_stats"></span></div>
+<div class="section" id="module-utils.datasetProcessing">
+<span id="utils"></span><h2>Utils/<a class="headerlink" href="#module-utils.datasetProcessing" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-utils.datasets"></span><span class="target" id="module-utils.utils"></span><dl class="function">
+<dt id="utils.utils.bbox_iou">
+<code class="descclassname">utils.utils.</code><code class="descname">bbox_iou</code><span class="sig-paren">(</span><em>box1</em>, <em>box2</em>, <em>x1y1x2y2=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#bbox_iou"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.bbox_iou" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the IoU of two bounding boxes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.build_targets">
+<code class="descclassname">utils.utils.</code><code class="descname">build_targets</code><span class="sig-paren">(</span><em>pred_boxes</em>, <em>pred_conf</em>, <em>pred_cls</em>, <em>target</em>, <em>anchor_wh</em>, <em>nA</em>, <em>nC</em>, <em>nG</em>, <em>requestPrecision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#build_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.build_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns nGT, nCorrect, tx, ty, tw, th, tconf, tcls</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.compute_ap">
+<code class="descclassname">utils.utils.</code><code class="descname">compute_ap</code><span class="sig-paren">(</span><em>recall</em>, <em>precision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#compute_ap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.compute_ap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the average precision, given the recall and precision curves.
+Code originally from <a class="reference external" href="https://github.com/rbgirshick/py-faster-rcnn">https://github.com/rbgirshick/py-faster-rcnn</a>.
+# Arguments</p>
+<blockquote>
+<div>recall:    The recall curve (list).
+precision: The precision curve (list).</div></blockquote>
+<dl class="docutils">
+<dt># Returns</dt>
+<dd>The average precision as computed in py-faster-rcnn.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.load_classes">
+<code class="descclassname">utils.utils.</code><code class="descname">load_classes</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#load_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.load_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads class labels at ‘path’</p>
+</dd></dl>
+
+<span class="target" id="module-utils.utils_xview"></span></div>
+<div class="section" id="module-tests.unittests">
+<span id="tests"></span><h2>Tests/<a class="headerlink" href="#module-tests.unittests" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tests.unittests.DataProcessingTests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">DataProcessingTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.DataProcessingTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.unittests.DatasetTests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">DatasetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.DatasetTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.unittests.GPUtests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">GPUtests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.GPUtests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.unittests.ModelsTests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">ModelsTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.ModelsTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.unittests.TargetTests">
+<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">TargetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="tests.unittests.TargetTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">YOLOv3</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code Docs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.train2">Src/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.datasetProcessing">Utils/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tests.unittests">Tests/</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="contact.html" title="next chapter">Contact</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Anthony DeGennaro.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/code.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
