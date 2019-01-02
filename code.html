@@ -570,10 +570,35 @@ precision: The precision curve (list).</div></blockquote>
 <dl class="class">
 <dt id="tests.unittests.DataProcessingTests">
 <em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">DataProcessingTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Class for all data processing unit tests.</p>
+<dl class="method">
 <dt id="tests.unittests.DataProcessingTests.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.DataProcessingTests.test_get_dataset_filenames">
+<code class="descname">test_get_dataset_filenames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.test_get_dataset_filenames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.test_get_dataset_filenames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test loading of dataset filenames.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.DataProcessingTests.test_get_dataset_height_width_channels">
+<code class="descname">test_get_dataset_height_width_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.test_get_dataset_height_width_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.test_get_dataset_height_width_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test loading sizes of dataset images.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.DataProcessingTests.test_get_labels_geojson">
+<code class="descname">test_get_labels_geojson</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.test_get_labels_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.test_get_labels_geojson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test loading of geojson formatted data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.DataProcessingTests.test_strip_image_number_from_filename">
+<code class="descname">test_strip_image_number_from_filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.test_strip_image_number_from_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.test_strip_image_number_from_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality to strip image number from image filename.</p>
 </dd></dl>
 
 </dd></dl>
@@ -581,10 +606,23 @@ precision: The precision curve (list).</div></blockquote>
 <dl class="class">
 <dt id="tests.unittests.DatasetTests">
 <em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">DatasetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Class for all dataset-involved unit tests.</p>
+<dl class="method">
 <dt id="tests.unittests.DatasetTests.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.DatasetTests.test_load_targets">
+<code class="descname">test_load_targets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests.test_load_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests.test_load_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality to load training data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.DatasetTests.test_show_targets">
+<code class="descname">test_show_targets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests.test_show_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests.test_show_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality to label training data.</p>
 </dd></dl>
 
 </dd></dl>
@@ -592,10 +630,29 @@ precision: The precision curve (list).</div></blockquote>
 <dl class="class">
 <dt id="tests.unittests.GPUtests">
 <em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">GPUtests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Class for all GPU/cuda unit tests.</p>
+<dl class="method">
 <dt id="tests.unittests.GPUtests.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.GPUtests.test_cuda_available">
+<code class="descname">test_cuda_available</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.test_cuda_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.test_cuda_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether cuda is available.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.GPUtests.test_cuda_version">
+<code class="descname">test_cuda_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.test_cuda_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.test_cuda_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that cuda version is &gt;= 9.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.GPUtests.test_gpu_avail">
+<code class="descname">test_gpu_avail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.test_gpu_avail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.test_gpu_avail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that GPU hardware is available.</p>
 </dd></dl>
 
 </dd></dl>
@@ -603,10 +660,17 @@ precision: The precision curve (list).</div></blockquote>
 <dl class="class">
 <dt id="tests.unittests.ModelsTests">
 <em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">ModelsTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Class for all models-involved unit tests.</p>
+<dl class="method">
 <dt id="tests.unittests.ModelsTests.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.ModelsTests.test_create_yolo_config_file">
+<code class="descname">test_create_yolo_config_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests.test_create_yolo_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests.test_create_yolo_config_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality to create custom YOLOv3 config file from a template.</p>
 </dd></dl>
 
 </dd></dl>
@@ -614,10 +678,101 @@ precision: The precision curve (list).</div></blockquote>
 <dl class="class">
 <dt id="tests.unittests.TargetTests">
 <em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">TargetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Class for all target-involved unit tests.</p>
+<dl class="method">
 <dt id="tests.unittests.TargetTests.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_apply_mask_to_filtered_data">
+<code class="descname">test_apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_apply_mask_to_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test mask application to filtered data method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_area_requirements">
+<code class="descname">test_area_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_area_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_area_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test area requirements method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_compute_bounding_box_clusters_using_kmeans">
+<code class="descname">test_compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_compute_bounding_box_clusters_using_kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test bounding box cluster computation method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_compute_cropped_data">
+<code class="descname">test_compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_compute_cropped_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_compute_cropped_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality for cropping targets.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_compute_image_weights_with_filtered_data">
+<code class="descname">test_compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_compute_image_weights_with_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test class weight computation method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_compute_width_height_area">
+<code class="descname">test_compute_width_height_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_compute_width_height_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_compute_width_height_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality for computing target coordinate area.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_edge_requirements">
+<code class="descname">test_edge_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_edge_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_edge_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality for computing edge requirements on target data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_fcn_sigma_rejection">
+<code class="descname">test_fcn_sigma_rejection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_fcn_sigma_rejection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_fcn_sigma_rejection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality for computing sigma rejection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_invalid_class_requirement">
+<code class="descname">test_invalid_class_requirement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_invalid_class_requirement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_invalid_class_requirement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test invalid class requirement method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_load_target_file">
+<code class="descname">test_load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_load_target_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_load_target_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality for loading target data (.json file).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_manual_dimension_requirements">
+<code class="descname">test_manual_dimension_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_manual_dimension_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality for imposing manual dimensions requirements on target data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_nan_inf_size_requirements">
+<code class="descname">test_nan_inf_size_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_nan_inf_size_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_nan_inf_size_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test nan/inf/size requirements method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_per_class_stats">
+<code class="descname">test_per_class_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_per_class_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_per_class_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test per_class_stats function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_sigma_rejection_indices">
+<code class="descname">test_sigma_rejection_indices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_sigma_rejection_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality for computing sigma rejection indices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.unittests.TargetTests.test_xy_coords">
+<code class="descname">test_xy_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_xy_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_xy_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test functionality for target coordinate parsing.</p>
 </dd></dl>
 
 </dd></dl>
