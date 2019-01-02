@@ -165,7 +165,7 @@
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
 <div class="line-block">
-<div class="line"><em>inputs:</em> an input file formatted according to the InputFile class</div>
+<div class="line"><em>args:</em> command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</div>
 </div>
 </div>
 <div class="line-block">
@@ -198,7 +198,91 @@ registered hooks while the latter silently ignores them.</p>
 
 </dd></dl>
 
-<span class="target" id="module-src.InputFile"></span><span class="target" id="module-src.models"></span><dl class="class">
+<span class="target" id="module-src.InputFile"></span><dl class="class">
+<dt id="src.InputFile.InputFile">
+<em class="property">class </em><code class="descclassname">src.InputFile.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>args=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for packaging all input/config file options together.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>args:</em> (passed to constructor at runtime) command line arguments used in shell call for main driver script. args must have a inputfilename member that specifies the desired inputfile name. </div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Options:</strong></div>
+<div class="line-block">
+<div class="line"><em>inputtype:</em> Options are <cite>train</cite> or <cite>detect</cite></div>
+<div class="line"><em>projdir:</em> Absolute path to project directory</div>
+<div class="line"><em>datadir:</em> Absolute path to data directory</div>
+<div class="line"><em>loaddir:</em> Absolute path to load directory</div>
+<div class="line"><em>outdir:</em> Absolute path to output directory</div>
+<div class="line"><em>targetspath:</em> Absolute path to target file</div>
+<div class="line"><em>targetfiletype:</em> Type of target file</div>
+<div class="line"><em>traindir:</em> Type of target file</div>
+<div class="line"><em>targetfiletype:</em> Type of target file</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Options (Train-Specific):</strong></div>
+<div class="line-block">
+<div class="line"><em>traindir:</em> Type of target file</div>
+<div class="line"><em>epochs:</em> Number of training epochs</div>
+<div class="line"><em>epochstart:</em> Starting epoch</div>
+<div class="line"><em>batchsize:</em> Training batch size</div>
+<div class="line"><em>networkcfg:</em> Network architecture file</div>
+<div class="line"><em>imgsize:</em> Base image crop size</div>
+<div class="line"><em>resume:</em> Boolean value specifying whether training is resuming from previous iteration</div>
+<div class="line"><em>invalid_class_list:</em> Comma-separated list of classes to be ignored from training data</div>
+<div class="line"><em>boundingboxclusters:</em> Desired number of bounding-box clusters for the YOLO architecture</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Options (Detect-Specific):</strong></div>
+<div class="line-block">
+<div class="line"><em>imagepath:</em> Image path</div>
+<div class="line"><em>plotflag:</em> Flag for plotting</div>
+<div class="line"><em>secondary_classifier:</em> Boolean value specifying whether to use a secondary classifier</div>
+<div class="line"><em>networkcfg:</em> Network architecture file</div>
+<div class="line"><em>class_path:</em> Absolute path to class</div>
+<div class="line"><em>conf_thres:</em> Confidence threshold for detection</div>
+<div class="line"><em>nms_thres:</em> NMS threshold</div>
+<div class="line"><em>batch_size:</em> Desired batchsize</div>
+<div class="line"><em>img_size:</em> Desired cropped image size</div>
+</div>
+</div>
+<dl class="method">
+<dt id="src.InputFile.InputFile.printInputs">
+<code class="descname">printInputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.printInputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.printInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to print all config options.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.InputFile.InputFile.readDetectInputfile">
+<code class="descname">readDetectInputfile</code><span class="sig-paren">(</span><em>inputfilestream</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.readDetectInputfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.readDetectInputfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to read config options from a detection inputfile</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>inputfilestream:</em> specified inputfilestream.</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.InputFile.InputFile.readTrainingInputfile">
+<code class="descname">readTrainingInputfile</code><span class="sig-paren">(</span><em>inputfilestream</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.readTrainingInputfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.readTrainingInputfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to read config options from a training inputfile.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>inputfilestream:</em> specified inputfilestream.</div>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-src.models"></span><dl class="class">
 <dt id="src.models.Darknet">
 <em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>config_path</em>, <em>img_size=416</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
 <dd><p>YOLOv3 object detection model</p>
