@@ -485,7 +485,50 @@ registered hooks while the latter silently ignores them.</p>
 
 </dd></dl>
 
-<span class="target" id="module-src.targets.fcn_sigma_rejection"></span><span class="target" id="module-src.targets.per_class_stats"></span></div>
+<span class="target" id="module-src.targets.fcn_sigma_rejection"></span><dl class="function">
+<dt id="src.targets.fcn_sigma_rejection.fcn_sigma_rejection">
+<code class="descclassname">src.targets.fcn_sigma_rejection.</code><code class="descname">fcn_sigma_rejection</code><span class="sig-paren">(</span><em>x</em>, <em>srl=3</em>, <em>ni=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/fcn_sigma_rejection.html#fcn_sigma_rejection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.fcn_sigma_rejection.fcn_sigma_rejection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to perform sigma rejection on a dataset.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>x:</em> dataset</div>
+<div class="line"><em>srl:</em> desired cutoff number of standard deviations for rejection  </div>
+<div class="line"><em>ni:</em> desired number of iterations</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>x:</em> dataset with outliers removed</div>
+<div class="line"><em>inliers:</em> indices of inliers w.r.t. original dataset</div>
+</div>
+</div>
+</dd></dl>
+
+<span class="target" id="module-src.targets.per_class_stats"></span><dl class="function">
+<dt id="src.targets.per_class_stats.per_class_stats">
+<code class="descclassname">src.targets.per_class_stats.</code><code class="descname">per_class_stats</code><span class="sig-paren">(</span><em>classes</em>, <em>w</em>, <em>h</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/per_class_stats.html#per_class_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.per_class_stats.per_class_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to calculate statistics of target data.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>classes:</em> target data processed/produced with the Target class</div>
+<div class="line"><em>w:</em> image width</div>
+<div class="line"><em>h:</em> image height</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>class_mu:</em> mean of target classes</div>
+<div class="line"><em>class_sigma:</em> standard deviation of target classes</div>
+<div class="line"><em>class_cov:</em> covariance of target classes</div>
+</div>
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="module-utils.datasetProcessing">
 <span id="utils"></span><h2>Utils/<a class="headerlink" href="#module-utils.datasetProcessing" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-utils.datasets"></span><span class="target" id="module-utils.utils"></span><dl class="function">
