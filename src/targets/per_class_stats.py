@@ -1,6 +1,19 @@
 import numpy as np
 
 def per_class_stats(classes,w,h):
+    """
+    Function to calculate statistics of target data.
+    
+    | **Inputs:**
+    |    *classes:* target data processed/produced with the Target class
+    |    *w:* image width
+    |    *h:* image height
+
+    | **Outputs:**
+    |    *class_mu:* mean of target classes
+    |    *class_sigma:* standard deviation of target classes
+    |    *class_cov:* covariance of target classes
+    """
     area         = np.log(w*h)
     aspect_ratio = np.log(w/h)
     uc           = np.unique(classes)

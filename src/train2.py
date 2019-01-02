@@ -20,7 +20,7 @@ def main(inputs):
     Main driver script for training the YOLOv3 network.
 
     | **Inputs:**
-    |    *inputs:* an input file formatted according to the InputFile class
+    |    *args:* command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.
 
     | **Outputs:**
     |    *inputs.outdir/results.txt:* output metrics for each training epoch
