@@ -47,15 +47,37 @@ class Target():
         """
         self.__image_w         = np.zeros_like(self.__x1)
         self.__image_h         = np.zeros_like(self.__x1)
+        idx_nonexistent        = []
         for i in range(len(self.__image_w)):
             try:
-                idx           = np.where(self.__files == self.__chips[i])[0][0]
+                idx               = np.where(self.__files == self.__chips[i])[0][0]
+                self.__image_h[i] = self.__HWC[idx,0];
+                self.__image_w[i] = self.__HWC[idx,1];
             except:
-                print( np.unique(self.__chips) )
-                sys.exit('chips_i not found in files list')
-            self.__image_h[i] = self.__HWC[idx,0];
-            self.__image_w[i] = self.__HWC[idx,1];
+                print('Chip ' + str(self.__chips[i]) + ' not found, ignoring...')
+                idx_i           = self.detect_nonexistent_chip(self.__chips[i])
+                idx_nonexistent = np.append(idx_nonexistent,idx_i)
+        self.remove_nonexistent_chips_from_database(idx_nonexistent)
 
+    def detect_nonexistent_chip(self,chip_i):
+        """
+        Method to detect all instances in database of a chip that does not exist
+        """
+        idx       = np.where(self.__chips == chip_i)[0]
+        return idx
+
+    def remove_nonexistent_chips_from_database(self,idx_nonexistent):
+        """
+        Method to remove all nonexistent chips from database
+        """
+        self.__chips   = np.delete(self.__chips,idx_nonexistent)
+        self.__coords  = np.delete(self.__chips,idx_nonexistent)
+        self.__classes = np.delete(self.__chips,idx_nonexistent)
+        self.__image_h = np.delete(self.__chips,idx_nonexistent)
+        self.__image_w = np.delete(self.__chips,idx_nonexistent)
+        
+        
+    
     def strip_image_number_from_chips_and_files(self):
         """
         Method to strip numbers from image filenames from both chips and files.
