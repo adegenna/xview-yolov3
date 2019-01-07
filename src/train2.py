@@ -15,7 +15,7 @@ import torch
 # batch_size 2: 32*35 = 1120 (1.40 vs 800, 2.06 cumulative)
 # batch_size 1: 32*49 = 1568 (1.40 vs 1120, 2.88 cumulative)
 
-def main(inputs):
+def main():
     """
     Main driver script for training the YOLOv3 network.
 
@@ -39,14 +39,15 @@ def main(inputs):
     inputs.printInputs();
     # Problem setup
     os.makedirs(inputs.loaddir, exist_ok=True)
-    model      = Darknet(inputs.networkcfg, inputs.imgsize)
-    modelinfo(model)
     dataloader = ListDataset(inputs)
+    if (inputs.boundingboxclusters != None):
+        create_yolo_architecture(inputs)
+    model      = Darknet(inputs)
     trainer    = NetworkTrainer(model, dataloader, inputs);
     # Start training
     trainer.train();
 
 if __name__ == '__main__':
     torch.cuda.empty_cache()
-    main(inputs)
+    main()
     torch.cuda.empty_cache()

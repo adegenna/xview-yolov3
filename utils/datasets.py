@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../')
 import glob
 import math
 import os
@@ -10,8 +12,8 @@ import torch
 from PIL import Image
 
 # from torch.utils.data import Dataset
-from utils.utils import xyxy2xywh, xview_class_weights, load_obj
-
+from utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset
+from src.targets import *
 
 class ImageFolder():  # for eval-only
     def __init__(self, path, batch_size=1, img_size=416):
@@ -78,10 +80,23 @@ class ListDataset():  # for training
         if (self.targetfiletype == 'matlab'):
             print("Loading target data from specified matlab file...")
             self.mat = scipy.io.loadmat(self.targets_path)
+            self.targetIDs     = self.mat['id'].squeeze()
+            self.targets       = self.mat['targets']
         elif (self.targetfiletype == 'pickle'):
             print("Loading target data from specified pickle file...")
             self.mat = load_obj(self.targets_path)
-        self.mat['id']     = self.mat['id'].squeeze()
+            self.targetIDs     = self.mat['id'].squeeze()
+            self.targets       = self.mat['targets']
+        elif (self.targetfiletype == 'json'):
+            print("Loading target data from specified json file...")
+            targets         = Target(inputs)
+            self.targetIDs  = vars(targets)['_Target__chips']
+            coords          = vars(targets)['_Target__filtered_coords']
+            classes         = vars(targets)['_Target__filtered_classes']
+            self.targets    = np.hstack([np.reshape(classes,[len(classes),1]),coords])
+        else:
+            sys.exit('Specified target filetype is not supported')
+        
         self.class_weights = xview_class_weights(range(60)).numpy()
         # RGB normalization values
         self.rgb_mean = np.array([60.134, 49.697, 40.746], dtype=np.float32).reshape((1, 3, 1, 1))
@@ -142,8 +157,8 @@ class ListDataset():  # for training
             # Load labels
             chip = img_path.rsplit('/')[-1]
             chip = chip.rsplit('_')[-1]
-            i = (self.mat['id'] == float(chip.replace('.tif', '').replace('.bmp', ''))).nonzero()[0]
-            labels1 = self.mat['targets'][i]
+            i = (self.targetIDs == float(chip.replace('.tif', '').replace('.bmp', ''))).nonzero()[0]
+            labels1 = self.targets[i]
             
             # Remove buildings and small cars
             # labels1 = labels1[(labels1[:, 0] != 5) & (labels1[:, 0] != 48)]
@@ -265,25 +280,6 @@ def augmentHSV(img0):
     img_hsv[:, :, 2] = V.astype(np.uint8)
     cv2.cvtColor(img_hsv, cv2.COLOR_HSV2BGR, dst=img0)
 
-def readBmpDataset(path):
-    # Read all image files from path directory, converting tif --> bmp if necessary
-    filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
-    nbmp      = len(filesbmp)
-    # If .tif data exists, convert it; if not, exit
-    if (nbmp == 0):
-        print('No .bmp data detected, checking for .tif...')
-        filestif = sorted(glob.glob('%s/*.tif' % path))
-        ntif     = len(filestif)
-        if (ntif > 0):
-            print('Converting .tif --> .bmp (.tif originals retained)...')
-            convert_tif2bmp(path)
-            filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
-            return filesbmp
-        else:
-            sys.exit('Neither .bmp nor .tif data found, exiting.')
-    else:
-        return filesbmp;
-
 
 def resize_square(img, height=416, color=(0, 0, 0)):  # resizes a rectangular image to a padded square
     shape = img.shape[:2]  # shape = [height, width]
@@ -368,14 +364,5 @@ def random_affine(img, targets=None, degrees=(-10, 10), translate=(.1, .1), scal
     else:
         return imw
 
-
-def convert_tif2bmp(p):
-    import glob
-    import cv2
-    files = sorted(glob.glob('%s/*.tif' % p))
-    for i, f in enumerate(files):
-        img = cv2.imread(f)
-        cv2.imwrite(f.replace('.tif', '.bmp'), img)
-        #os.system('rm -rf ' + f)
 
 

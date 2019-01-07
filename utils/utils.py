@@ -6,6 +6,7 @@ import torch
 import torch.nn.functional as F
 import json
 import pickle
+import glob
 import matplotlib.pyplot as plt
 
 # set printoptions
@@ -568,3 +569,43 @@ def plot_rgb_image(img,rgb_mean,rgb_std,obj=[]):
             plt.plot([xlb,xrb,xrt,xlt,xlb],[ylb,yrb,yrt,ylt,ylb],'g',lw=2);
     plt.imshow(img)
     plt.show()
+
+def readBmpDataset(path):
+    """
+    Function to read a .bmp dataset. If the provided directory does not contain .bmp files, a conversion is attempted.
+
+    | **Inputs:**
+    |   *path:* Absolute path to the dataset directory
+    """
+    # Read all image files from path directory, converting tif --> bmp if necessary
+    filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
+    nbmp      = len(filesbmp)
+    # If .tif data exists, convert it; if not, exit
+    if (nbmp == 0):
+        print('No .bmp data detected, checking for .tif...')
+        filestif = sorted(glob.glob('%s/*.tif' % path))
+        ntif     = len(filestif)
+        if (ntif > 0):
+            print('Converting .tif --> .bmp (.tif originals retained)...')
+            convert_tif2bmp(path)
+            filesbmp  = sorted(glob.glob('%s/*.bmp' % path))
+            return filesbmp
+        else:
+            sys.exit('Neither .bmp nor .tif data found, exiting.')
+    else:
+        return filesbmp;
+
+def convert_tif2bmp(p):
+    """
+    Function to convert .tif --> .bmp
+
+    | **Inputs:**
+    |   *p:* Absolute path to the dataset directory
+    """
+    import glob
+    import cv2
+    files = sorted(glob.glob('%s/*.tif' % p))
+    for i, f in enumerate(files):
+        img = cv2.imread(f)
+        cv2.imwrite(f.replace('.tif', '.bmp'), img)
+        #os.system('rm -rf ' + f)

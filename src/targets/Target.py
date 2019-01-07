@@ -5,9 +5,10 @@ import scipy.io
 import os
 import cv2
 from sklearn.cluster import KMeans
-from src.targets.fcn_sigma_rejection import *
-from src.targets.per_class_stats import *
+from targets.fcn_sigma_rejection import *
+from targets.per_class_stats import *
 from utils.datasetProcessing import *
+from utils.utils import convert_tif2bmp, readBmpDataset
 
 # This is a python-conversion of utils/analysis.m and all related target preprocessing
 
@@ -28,6 +29,8 @@ class Target():
         | **Inputs:**
         |    *inputs:* input file formatted according to InputFile class
         """
+        # Start by converting traindir/ dataset to .bmp (if necessary)
+        _ = readBmpDataset(inputs.traindir);
         self.__inputs             = inputs
         self.__datatype_extension = '.bmp'
         self.load_target_file()
@@ -45,7 +48,11 @@ class Target():
         self.__image_w         = np.zeros_like(self.__x1)
         self.__image_h         = np.zeros_like(self.__x1)
         for i in range(len(self.__image_w)):
-            idx               = np.where(self.__files == self.__chips[i])[0][0]
+            try:
+                idx           = np.where(self.__files == self.__chips[i])[0][0]
+            except:
+                print( np.unique(self.__chips) )
+                sys.exit('chips_i not found in files list')
             self.__image_h[i] = self.__HWC[idx,0];
             self.__image_w[i] = self.__HWC[idx,1];
 
@@ -65,7 +72,7 @@ class Target():
         """
         if (self.__inputs.targetfiletype == 'json'):
             self.__extension = '.json'
-            self.__coords, self.__chips, self.__classes = get_labels_geojson(self.__inputs.targetfile)
+            self.__coords, self.__chips, self.__classes = get_labels_geojson(self.__inputs.targetspath)
             self.__class_labels = np.unique(self.__classes)
         else:
             sys.exit('Target file either not specified or not supported')

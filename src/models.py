@@ -1,9 +1,9 @@
+import sys
+sys.path.append('../')
 from collections import defaultdict
-
 import torch.nn as nn
-
 from utils.utils import *
-
+from src.targets import *
 
 def create_modules(module_defs):
     """
@@ -202,12 +202,15 @@ class YOLOLayer(nn.Module):
 class Darknet(nn.Module):
     """YOLOv3 object detection model"""
 
-    def __init__(self, config_path, img_size=416):
-        super(Darknet, self).__init__()
-        self.module_defs = parse_model_config(config_path)
-        self.module_defs[0]['height'] = img_size
+    def __init__(self, inputs):
+        super(Darknet, self).__init__()        
+        try:
+            self.module_defs = parse_model_config(inputs.networkcfg)
+        except:
+            sys.exit('Need to write functionality for creating custom YOLO file...')
+        self.module_defs[0]['height'] = inputs.imgsize
         self.hyperparams, self.module_list = create_modules(self.module_defs)
-        self.img_size = img_size
+        self.img_size   = inputs.imgsize
         self.loss_names = ['loss', 'x', 'y', 'w', 'h', 'conf', 'cls', 'nGT', 'TP', 'FP', 'FPe', 'FN', 'TC']
 
     def forward(self, x, targets=None, requestPrecision=False, weight=None, epoch=None):
@@ -282,6 +285,18 @@ def parse_model_config(path):
             module_defs[-1][key.rstrip()] = value.strip()
 
     return module_defs
+
+def create_yolo_architecture(inputs):
+    """Creates a yolo-v3 layer configuration file from desired options"""
+    targets                 = Target(inputs)
+    output_config_file_path = '/'.join(inputs.networkcfg.split('/')[0:-1]) + '/yolov3_custom.cfg'
+    n_classes               = len(vars(targets)['_Target__class_labels'])
+    anchor_coordinates      = vars(targets)['_Target__clusters_wh']
+    create_yolo_config_file(inputs.networkcfg,\
+                            output_config_file_path,\
+                            inputs.boundingboxclusters,\
+                            n_classes,\
+                            anchor_coordinates)
 
 def create_yolo_config_file(template_file_path,output_config_file_path,n_anchors,n_classes,anchor_coordinates):
     """Creates a yolo-v3 layer configuration file from desired options"""

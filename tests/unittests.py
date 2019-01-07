@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import cv2
 import json
 sys.path.append('../')
+sys.path.append('../src')
 from utils.datasets import *
 from src.InputFile import *
 from utils.utils import plot_rgb_image
@@ -25,8 +26,7 @@ class GPUtests(unittest.TestCase):
         """
         Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.
         """
-        warnings.filterwarnings("ignore",category=ResourceWarning)
-        warnings.filterwarnings("ignore",category=DeprecationWarning)
+        warnings.filterwarnings("ignore")
         
     def test_cuda_available(self):
         """
@@ -67,8 +67,7 @@ class DataProcessingTests(unittest.TestCase):
         """
         Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.
         """
-        warnings.filterwarnings("ignore",category=ResourceWarning)
-        warnings.filterwarnings("ignore",category=DeprecationWarning)
+        warnings.filterwarnings("ignore")
         args                    = lambda:0
         args.inputfilename      = './input_test.dat'
         self.inputs             = InputFile(args)
@@ -126,8 +125,7 @@ class DatasetTests(unittest.TestCase):
         """
         Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.
         """
-        warnings.filterwarnings("ignore",category=ResourceWarning)
-        warnings.filterwarnings("ignore",category=DeprecationWarning)
+        warnings.filterwarnings("ignore")
         args                    = lambda:0
         args.inputfilename      = './input_test.dat'
         self.inputs             = InputFile(args);
@@ -189,12 +187,11 @@ class TargetTests(unittest.TestCase):
         """
         Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.
         """
-        warnings.filterwarnings("ignore",category=ResourceWarning)
-        warnings.filterwarnings("ignore",category=DeprecationWarning)
+        warnings.filterwarnings("ignore")
         args                    = lambda:0
         args.inputfilename      = './input_test.dat'
         self.inputs             = InputFile(args);
-        self.inputs.targetfile  = '/'.join(self.inputs.targetspath.split('/')[0:-1]) + '/jsontest.json'
+        self.inputs.targetspath = '/'.join(self.inputs.targetspath.split('/')[0:-1]) + '/jsontest.json'
         self.inputs.targetfiletype = 'json'
         self.nclass             = 41
         self.nobjects           = 11158
@@ -403,8 +400,7 @@ class ModelsTests(unittest.TestCase):
         """
         Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.
         """
-        warnings.filterwarnings("ignore",category=ResourceWarning)
-        warnings.filterwarnings("ignore",category=DeprecationWarning)
+        warnings.filterwarnings("ignore")
         args                    = lambda:0
         args.inputfilename      = './input_test.dat'
         self.inputs             = InputFile(args);
