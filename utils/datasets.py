@@ -10,6 +10,7 @@ import numpy as np
 import scipy.io
 import torch
 from PIL import Image
+from utils.utils import xview_classes2indices
 
 # from torch.utils.data import Dataset
 from utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset
@@ -93,7 +94,9 @@ class ListDataset():  # for training
             self.targetIDs  = vars(targets)['_Target__chips']
             coords          = vars(targets)['_Target__filtered_coords']
             classes         = vars(targets)['_Target__filtered_classes']
+            classes         = xview_classes2indices(classes)
             self.targets    = np.hstack([np.reshape(classes,[len(classes),1]),coords])
+            self.targets_metadata = targets
         else:
             sys.exit('Specified target filetype is not supported')
         
@@ -227,6 +230,7 @@ class ListDataset():  # for training
             if len(c) == 0:
                 weights.append(1e-16)
             else:
+                print(c)
                 weights.append(self.class_weights[c.astype(np.int8)].sum())
         weights    = np.array(weights)
         weights   /= weights.sum()

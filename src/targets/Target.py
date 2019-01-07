@@ -48,15 +48,20 @@ class Target():
         self.__image_w         = np.zeros_like(self.__x1)
         self.__image_h         = np.zeros_like(self.__x1)
         idx_nonexistent        = []
+        chip_nonexistent       = []
         for i in range(len(self.__image_w)):
             try:
                 idx               = np.where(self.__files == self.__chips[i])[0][0]
                 self.__image_h[i] = self.__HWC[idx,0];
                 self.__image_w[i] = self.__HWC[idx,1];
             except:
-                print('Chip ' + str(self.__chips[i]) + ' not found, ignoring...')
                 idx_i           = self.detect_nonexistent_chip(self.__chips[i])
                 idx_nonexistent = np.append(idx_nonexistent,idx_i)
+                chip_nonexistent = np.append(chip_nonexistent,self.__chips[i])
+        chip_nonexistent  = np.unique(chip_nonexistent).astype('int')
+        for i in range(len(chip_nonexistent)):
+            print('Chip ' + str(chip_nonexistent[i]) + ' not found, ignoring...')
+        idx_nonexistent = np.unique(idx_nonexistent).astype('int')
         self.remove_nonexistent_chips_from_database(idx_nonexistent)
 
     def detect_nonexistent_chip(self,chip_i):
@@ -70,13 +75,18 @@ class Target():
         """
         Method to remove all nonexistent chips from database
         """
-        self.__chips   = np.delete(self.__chips,idx_nonexistent)
-        self.__coords  = np.delete(self.__chips,idx_nonexistent)
-        self.__classes = np.delete(self.__chips,idx_nonexistent)
-        self.__image_h = np.delete(self.__chips,idx_nonexistent)
-        self.__image_w = np.delete(self.__chips,idx_nonexistent)
-        
-        
+        self.__chips   = np.delete(self.__chips   , idx_nonexistent)
+        self.__coords  = np.delete(self.__coords  , idx_nonexistent , axis=0)
+        self.__classes = np.delete(self.__classes , idx_nonexistent)
+        self.__image_h = np.delete(self.__image_h , idx_nonexistent)
+        self.__image_w = np.delete(self.__image_w , idx_nonexistent)
+        self.__x1      = np.delete(self.__x1      , idx_nonexistent)
+        self.__x2      = np.delete(self.__x2      , idx_nonexistent)
+        self.__y1      = np.delete(self.__y1      , idx_nonexistent)
+        self.__y2      = np.delete(self.__y2      , idx_nonexistent)
+        self.__w       = np.delete(self.__w       , idx_nonexistent)
+        self.__h       = np.delete(self.__h       , idx_nonexistent)
+        self.__area    = np.delete(self.__area    , idx_nonexistent)
     
     def strip_image_number_from_chips_and_files(self):
         """
@@ -238,11 +248,12 @@ class Target():
         | **Inputs:**
         |    *n_clusters:* number of desired kmeans clusters
         """
+        print('Computing bounding box anchors for YOLOv3 architecture using kmeans...')
         HW                 = np.vstack([self.__filtered_w,self.__filtered_h]).T
         kmeans_wh          = KMeans(n_clusters,random_state=0).fit(HW)
         clusters_wh        = kmeans_wh.cluster_centers_
         idx                = np.argsort(clusters_wh[:,0]*clusters_wh[:,1])
-        self.__clusters_wh = clusters_wh[idx]
+        self.__clusters_wh = np.ravel(clusters_wh[idx])
 
     def process_target_data(self):
         """
@@ -252,7 +263,8 @@ class Target():
         self.compute_filtered_data_mask()
         self.apply_mask_to_filtered_data()
         self.compute_image_weights_with_filtered_data()
-        self.compute_bounding_box_clusters_using_kmeans(self.__inputs.boundingboxclusters)
+        if (self.__inputs.computeboundingboxclusters == True):
+            self.compute_bounding_box_clusters_using_kmeans(self.__inputs.boundingboxclusters)
 
 
 # Little auxiliary functions

@@ -286,17 +286,18 @@ def parse_model_config(path):
 
     return module_defs
 
-def create_yolo_architecture(inputs):
+def create_yolo_architecture(inputs,targets):
     """Creates a yolo-v3 layer configuration file from desired options"""
-    targets                 = Target(inputs)
+    print('Creating custom YOLOv3 architecture from desired specifications...')
     output_config_file_path = '/'.join(inputs.networkcfg.split('/')[0:-1]) + '/yolov3_custom.cfg'
-    n_classes               = len(vars(targets)['_Target__class_labels'])
+    n_classes               = len(vars(targets)['_Target__filtered_class_labels'])
     anchor_coordinates      = vars(targets)['_Target__clusters_wh']
     create_yolo_config_file(inputs.networkcfg,\
                             output_config_file_path,\
                             inputs.boundingboxclusters,\
                             n_classes,\
                             anchor_coordinates)
+    return output_config_file_path
 
 def create_yolo_config_file(template_file_path,output_config_file_path,n_anchors,n_classes,anchor_coordinates):
     """Creates a yolo-v3 layer configuration file from desired options"""

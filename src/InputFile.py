@@ -31,7 +31,8 @@ class InputFile():
     |    *resume:* Boolean value specifying whether training is resuming from previous iteration
     |    *invalid_class_list:* Comma-separated list of classes to be ignored from training data
     |    *boundingboxclusters:* Desired number of bounding-box clusters for the YOLO architecture
-    
+    |    *computeboundingboxclusters:* Boolean value specifying whether to compute bounding box clusters
+
     | **Options (Detect-Specific):**
     |    *imagepath:* Image path
     |    *plotflag:* Flag for plotting
@@ -88,8 +89,10 @@ class InputFile():
         resume               = inputfilestream.readline().strip().split('= ')[1];
         self.resume          = ((resume == "True") | (resume == "true"));
         invalid_class_list   = inputfilestream.readline().strip().split('= ')[1]
-        self.invalid_class_list = np.array( invalid_class_list.split(',') , dtype='int' )
-        self.boundingboxclusters = int(inputfilestream.readline().strip().split('= ')[1]);
+        self.invalid_class_list         = np.array( invalid_class_list.split(',') , dtype='int' )
+        self.boundingboxclusters        = int(inputfilestream.readline().strip().split('= ')[1]);
+        computeboundingboxclusters      = inputfilestream.readline().strip().split('= ')[1];
+        self.computeboundingboxclusters = ((computeboundingboxclusters == "True") | (computeboundingboxclusters == "true"));
     def readDetectInputfile(self,inputfilestream):
         """
         Method to read config options from a detection inputfile
