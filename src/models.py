@@ -207,7 +207,7 @@ class Darknet(nn.Module):
         try:
             self.module_defs = parse_model_config(inputs.networkcfg)
         except:
-            sys.exit('Need to write functionality for creating custom YOLO file...')
+            sys.exit('Loading YOLOv3 config file failed...')
         self.module_defs[0]['height'] = inputs.imgsize
         self.hyperparams, self.module_list = create_modules(self.module_defs)
         self.img_size   = inputs.imgsize
