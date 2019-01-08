@@ -91,7 +91,7 @@ class ListDataset():  # for training
         elif (self.targetfiletype == 'json'):
             print("Loading target data from specified json file...")
             targets         = Target(inputs)
-            self.targetIDs  = vars(targets)['_Target__chips']
+            self.targetIDs  = vars(targets)['_Target__filtered_chips']
             coords          = vars(targets)['_Target__filtered_coords']
             classes         = vars(targets)['_Target__filtered_classes']
             classes         = xview_classes2indices(classes)
