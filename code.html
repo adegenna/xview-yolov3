@@ -160,7 +160,7 @@
 <span id="src"></span><h2>Src/<a class="headerlink" href="#module-src.train2" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="src.train2.main">
-<code class="descclassname">src.train2.</code><code class="descname">main</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/train2.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.train2.main" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.train2.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/train2.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.train2.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main driver script for training the YOLOv3 network.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -234,6 +234,7 @@ registered hooks while the latter silently ignores them.</p>
 <div class="line"><em>resume:</em> Boolean value specifying whether training is resuming from previous iteration</div>
 <div class="line"><em>invalid_class_list:</em> Comma-separated list of classes to be ignored from training data</div>
 <div class="line"><em>boundingboxclusters:</em> Desired number of bounding-box clusters for the YOLO architecture</div>
+<div class="line"><em>computeboundingboxclusters:</em> Boolean value specifying whether to compute bounding box clusters</div>
 </div>
 </div>
 <div class="line-block">
@@ -284,7 +285,7 @@ registered hooks while the latter silently ignores them.</p>
 
 <span class="target" id="module-src.models"></span><dl class="class">
 <dt id="src.models.Darknet">
-<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>config_path</em>, <em>img_size=416</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
 <dd><p>YOLOv3 object detection model</p>
 <dl class="method">
 <dt id="src.models.Darknet.forward">
@@ -331,6 +332,12 @@ registered hooks while the latter silently ignores them.</p>
 <dt id="src.models.create_modules">
 <code class="descclassname">src.models.</code><code class="descname">create_modules</code><span class="sig-paren">(</span><em>module_defs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_modules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs module list of layer blocks from module configuration in module_defs</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.models.create_yolo_architecture">
+<code class="descclassname">src.models.</code><code class="descname">create_yolo_architecture</code><span class="sig-paren">(</span><em>inputs</em>, <em>targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_yolo_architecture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_yolo_architecture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a yolo-v3 layer configuration file from desired options</p>
 </dd></dl>
 
 <dl class="function">
@@ -400,6 +407,12 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="src.targets.Target.Target.detect_nonexistent_chip">
+<code class="descname">detect_nonexistent_chip</code><span class="sig-paren">(</span><em>chip_i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.detect_nonexistent_chip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.detect_nonexistent_chip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to detect all instances in database of a chip that does not exist</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="src.targets.Target.Target.edge_requirements">
 <code class="descname">edge_requirements</code><span class="sig-paren">(</span><em>w_lim</em>, <em>h_lim</em>, <em>x2_lim</em>, <em>y2_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.edge_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.edge_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtering based on edge specifications.</p>
@@ -451,6 +464,12 @@ registered hooks while the latter silently ignores them.</p>
 <dt id="src.targets.Target.Target.process_target_data">
 <code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.process_target_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to perform all target processing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.Target.remove_nonexistent_chips_from_database">
+<code class="descname">remove_nonexistent_chips_from_database</code><span class="sig-paren">(</span><em>idx_nonexistent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.remove_nonexistent_chips_from_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.remove_nonexistent_chips_from_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to remove all nonexistent chips from database</p>
 </dd></dl>
 
 <dl class="method">
@@ -559,9 +578,33 @@ precision: The precision curve (list).</div></blockquote>
 </dd></dl>
 
 <dl class="function">
+<dt id="utils.utils.convert_tif2bmp">
+<code class="descclassname">utils.utils.</code><code class="descname">convert_tif2bmp</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#convert_tif2bmp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.convert_tif2bmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to convert .tif –&gt; .bmp</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>p:</em> Absolute path to the dataset directory</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="utils.utils.load_classes">
 <code class="descclassname">utils.utils.</code><code class="descname">load_classes</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#load_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.load_classes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads class labels at ‘path’</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.readBmpDataset">
+<code class="descclassname">utils.utils.</code><code class="descname">readBmpDataset</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#readBmpDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.readBmpDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to read a .bmp dataset. If the provided directory does not contain .bmp files, a conversion is attempted.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>path:</em> Absolute path to the dataset directory</div>
+</div>
+</div>
 </dd></dl>
 
 <span class="target" id="module-utils.utils_xview"></span></div>

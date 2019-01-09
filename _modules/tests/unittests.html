@@ -154,6 +154,7 @@
 <span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../src&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">utils.datasets</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">src.InputFile</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">utils.utils</span> <span class="k">import</span> <span class="n">plot_rgb_image</span>
@@ -173,8 +174,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">ResourceWarning</span><span class="p">)</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span></div>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span></div>
         
 <div class="viewcode-block" id="GPUtests.test_cuda_available"><a class="viewcode-back" href="../../code.html#tests.unittests.GPUtests.test_cuda_available">[docs]</a>    <span class="k">def</span> <span class="nf">test_cuda_available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -215,8 +215,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">ResourceWarning</span><span class="p">)</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
         <span class="n">args</span>                    <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="mi">0</span>
         <span class="n">args</span><span class="o">.</span><span class="n">inputfilename</span>      <span class="o">=</span> <span class="s1">&#39;./input_test.dat&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span>             <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -274,8 +273,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">ResourceWarning</span><span class="p">)</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
         <span class="n">args</span>                    <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="mi">0</span>
         <span class="n">args</span><span class="o">.</span><span class="n">inputfilename</span>      <span class="o">=</span> <span class="s1">&#39;./input_test.dat&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span>             <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
@@ -337,12 +335,11 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">ResourceWarning</span><span class="p">)</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
         <span class="n">args</span>                    <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="mi">0</span>
         <span class="n">args</span><span class="o">.</span><span class="n">inputfilename</span>      <span class="o">=</span> <span class="s1">&#39;./input_test.dat&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span>             <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">targetfile</span>  <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">targetspath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/jsontest.json&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">targetspath</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">targetspath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/jsontest.json&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">targetfiletype</span> <span class="o">=</span> <span class="s1">&#39;json&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nclass</span>             <span class="o">=</span> <span class="mi">41</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nobjects</span>           <span class="o">=</span> <span class="mi">11158</span>
@@ -551,8 +548,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">ResourceWarning</span><span class="p">)</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
         <span class="n">args</span>                    <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="mi">0</span>
         <span class="n">args</span><span class="o">.</span><span class="n">inputfilename</span>      <span class="o">=</span> <span class="s1">&#39;./input_test.dat&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span>             <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>

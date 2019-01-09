@@ -146,12 +146,12 @@
            <div itemprop="articleBody">
             
   <h1>Source code for src.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
-
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-
 <span class="kn">from</span> <span class="nn">utils.utils</span> <span class="k">import</span> <span class="o">*</span>
-
+<span class="kn">from</span> <span class="nn">src.targets</span> <span class="k">import</span> <span class="o">*</span>
 
 <div class="viewcode-block" id="create_modules"><a class="viewcode-back" href="../../code.html#src.models.create_modules">[docs]</a><span class="k">def</span> <span class="nf">create_modules</span><span class="p">(</span><span class="n">module_defs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -350,12 +350,15 @@
 <div class="viewcode-block" id="Darknet"><a class="viewcode-back" href="../../code.html#src.models.Darknet">[docs]</a><span class="k">class</span> <span class="nc">Darknet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;YOLOv3 object detection model&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="mi">416</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Darknet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span> <span class="o">=</span> <span class="n">parse_model_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">img_size</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Darknet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span> <span class="o">=</span> <span class="n">parse_model_config</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Loading YOLOv3 config file failed...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">imgsize</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hyperparams</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_list</span> <span class="o">=</span> <span class="n">create_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span> <span class="o">=</span> <span class="n">img_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span>   <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">imgsize</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loss_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;conf&#39;</span><span class="p">,</span> <span class="s1">&#39;cls&#39;</span><span class="p">,</span> <span class="s1">&#39;nGT&#39;</span><span class="p">,</span> <span class="s1">&#39;TP&#39;</span><span class="p">,</span> <span class="s1">&#39;FP&#39;</span><span class="p">,</span> <span class="s1">&#39;FPe&#39;</span><span class="p">,</span> <span class="s1">&#39;FN&#39;</span><span class="p">,</span> <span class="s1">&#39;TC&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="Darknet.forward"><a class="viewcode-back" href="../../code.html#src.models.Darknet.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -364,21 +367,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">losses</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">layer_outputs</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x_dims: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+        <span class="c1">#print(&quot;x_dims: &quot; + str(x.size()))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">module_def</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_list</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;convolutional&#39;</span><span class="p">,</span> <span class="s1">&#39;upsample&#39;</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; conv/upsample&quot;</span><span class="p">)</span>
+                <span class="c1">#print(str(i) + &quot; conv/upsample&quot;)</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;route&#39;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; route&quot;</span><span class="p">)</span>
+                <span class="c1">#print(str(i) + &quot; route&quot;)</span>
                 <span class="n">layer_i</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">layer_outputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">layer_i</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;shortcut&#39;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; shortcut&quot;</span><span class="p">)</span>
+                <span class="c1">#print(str(i) + &quot; shortcut&quot;)</span>
                 <span class="n">layer_i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">])</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">layer_outputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">layer_outputs</span><span class="p">[</span><span class="n">layer_i</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;yolo&#39;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; yolo&quot;</span><span class="p">)</span>
+                <span class="c1">#print(str(i) + &quot; yolo&quot;)</span>
                 <span class="c1"># Train phase: get loss</span>
                 <span class="k">if</span> <span class="n">is_training</span><span class="p">:</span>
                     <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">losses</span> <span class="o">=</span> <span class="n">module</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">x</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
@@ -388,7 +391,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">x</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x_dims: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+            <span class="c1">#print(&quot;x_dims: &quot; + str(x.size()))</span>
             <span class="n">layer_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">is_training</span><span class="p">:</span>
@@ -430,6 +433,19 @@
             <span class="n">module_defs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">module_defs</span></div>
+
+<div class="viewcode-block" id="create_yolo_architecture"><a class="viewcode-back" href="../../code.html#src.models.create_yolo_architecture">[docs]</a><span class="k">def</span> <span class="nf">create_yolo_architecture</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">targets</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a yolo-v3 layer configuration file from desired options&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Creating custom YOLOv3 architecture from desired specifications...&#39;</span><span class="p">)</span>
+    <span class="n">output_config_file_path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/yolov3_custom.cfg&#39;</span>
+    <span class="n">n_classes</span>               <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">targets</span><span class="p">)[</span><span class="s1">&#39;_Target__filtered_class_labels&#39;</span><span class="p">])</span>
+    <span class="n">anchor_coordinates</span>      <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">targets</span><span class="p">)[</span><span class="s1">&#39;_Target__clusters_wh&#39;</span><span class="p">]</span>
+    <span class="n">create_yolo_config_file</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span><span class="p">,</span>\
+                            <span class="n">output_config_file_path</span><span class="p">,</span>\
+                            <span class="n">inputs</span><span class="o">.</span><span class="n">boundingboxclusters</span><span class="p">,</span>\
+                            <span class="n">n_classes</span><span class="p">,</span>\
+                            <span class="n">anchor_coordinates</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_config_file_path</span></div>
 
 <div class="viewcode-block" id="create_yolo_config_file"><a class="viewcode-back" href="../../code.html#src.models.create_yolo_config_file">[docs]</a><span class="k">def</span> <span class="nf">create_yolo_config_file</span><span class="p">(</span><span class="n">template_file_path</span><span class="p">,</span><span class="n">output_config_file_path</span><span class="p">,</span><span class="n">n_anchors</span><span class="p">,</span><span class="n">n_classes</span><span class="p">,</span><span class="n">anchor_coordinates</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a yolo-v3 layer configuration file from desired options&quot;&quot;&quot;</span>
