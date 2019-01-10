@@ -7,7 +7,7 @@ import cv2
 import json
 sys.path.append('../')
 sys.path.append('../src')
-from utils.datasets import *
+from datasets.datasets import *
 from src.InputFile import *
 from utils.utils import plot_rgb_image
 from utils.datasetProcessing import *

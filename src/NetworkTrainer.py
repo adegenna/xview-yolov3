@@ -2,7 +2,7 @@ import argparse
 import time
 from sys import platform
 from models import *
-from utils.datasets import *
+from datasets import *
 from utils.utils import *
 from InputFile import *
 

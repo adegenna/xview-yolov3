@@ -4,7 +4,7 @@ from sys import platform
 import sys
 sys.path.insert(0,'../')
 from models import *
-from utils.datasets import *
+from datasets import *
 from utils.utils import *
 from InputFile import *
 
