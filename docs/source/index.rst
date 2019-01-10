@@ -5,16 +5,17 @@
 
 Welcome to YOLOv3's documentation
 ==================================
+Project repository: https://github.com/adegenna/xview-yolov3.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   includeme
    intro
    requirements
    installation
    code
+   inheritance
    contact
 
 Indices and tables
