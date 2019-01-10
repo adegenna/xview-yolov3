@@ -14,3 +14,4 @@ imgsize          = 608
 resume           = False
 invalidclasslist = 75,82
 boundingboxclusters = 30
+computeboundingboxclusters = False

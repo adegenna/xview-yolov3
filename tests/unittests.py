@@ -385,11 +385,12 @@ class TargetTests(unittest.TestCase):
         """
         print('test bounding box cluster computation method')
         self.targetdata.process_target_data()
+        self.targetdata.compute_bounding_box_clusters_using_kmeans(vars(self.targetdata)['_Target__inputs'].boundingboxclusters)
         clusters_wh       = vars(self.targetdata)['_Target__clusters_wh']
-        clusters_expected = np.array([[13.098,9.7326],[11.681,17.44],[21.13,15.55]])
-        plt.plot(clusters_wh[:,0], clusters_wh[:,1], 'bo')
+        clusters_expected = np.array([13.098,9.7326,11.681,17.44,21.13,15.55])
+        plt.plot(clusters_wh[0::2], clusters_wh[1::2], 'bo')
         plt.show()
-        self.assertTrue( np.linalg.norm(clusters_wh[0:3] - clusters_expected) < 0.001)
+        self.assertTrue( np.linalg.norm(clusters_wh[0:6] - clusters_expected) < 0.001)
         
     
 class ModelsTests(unittest.TestCase):
