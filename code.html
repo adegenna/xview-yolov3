@@ -358,19 +358,19 @@ registered hooks while the latter silently ignores them.</p>
 <dd><p>Parses the yolo-v3 layer configuration file and returns module definitions</p>
 </dd></dl>
 
-<span class="target" id="module-src.NetworkTrainer"></span><span class="target" id="module-src.targets.Target"></span><dl class="class">
-<dt id="src.targets.Target.Target">
-<em class="property">class </em><code class="descclassname">src.targets.Target.</code><code class="descname">Target</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-src.NetworkTrainer"></span><span class="target" id="module-src.targets"></span><dl class="class">
+<dt id="src.targets.Target">
+<em class="property">class </em><code class="descclassname">src.targets.</code><code class="descname">Target</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for handling target pre-processing tasks.</p>
 <dl class="method">
-<dt id="src.targets.Target.Target.apply_mask_to_filtered_data">
-<code class="descname">apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.apply_mask_to_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.apply_mask_to_filtered_data">
+<code class="descname">apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to apply mask to filtered data variables.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans">
-<code class="descname">compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><em>n_clusters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_bounding_box_clusters_using_kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.compute_bounding_box_clusters_using_kmeans">
+<code class="descname">compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><em>n_clusters</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
 <dd><div class="line-block">
 <div class="line">Method to compute bounding box clusters using kmeans.</div>
 </div>
@@ -383,44 +383,44 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.compute_cropped_data">
-<code class="descname">compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_cropped_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_cropped_data" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.compute_cropped_data">
+<code class="descname">compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_cropped_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to crop image data based on the width and height. Filtered variables are then computed based on the updated image coordinates.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.compute_filtered_data_mask">
-<code class="descname">compute_filtered_data_mask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_data_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_data_mask" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.compute_filtered_data_mask">
+<code class="descname">compute_filtered_data_mask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_filtered_data_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtered data by applying several filtering operations.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.compute_filtered_variables_from_filtered_coords">
-<code class="descname">compute_filtered_variables_from_filtered_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_variables_from_filtered_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_variables_from_filtered_coords" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.compute_filtered_variables_from_filtered_coords">
+<code class="descname">compute_filtered_variables_from_filtered_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_filtered_variables_from_filtered_coords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtered variables from filtered coordinates.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.compute_filtered_variables_from_filtered_xy">
-<code class="descname">compute_filtered_variables_from_filtered_xy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_filtered_variables_from_filtered_xy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_filtered_variables_from_filtered_xy" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.compute_filtered_variables_from_filtered_xy">
+<code class="descname">compute_filtered_variables_from_filtered_xy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_filtered_variables_from_filtered_xy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtered variables from filtered xy.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.compute_image_weights_with_filtered_data">
-<code class="descname">compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.compute_image_weights_with_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.compute_image_weights_with_filtered_data">
+<code class="descname">compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute image weights from filtered data. Weight is simply inverse of class frequency.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.detect_nonexistent_chip">
-<code class="descname">detect_nonexistent_chip</code><span class="sig-paren">(</span><em>chip_i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.detect_nonexistent_chip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.detect_nonexistent_chip" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.detect_nonexistent_chip">
+<code class="descname">detect_nonexistent_chip</code><span class="sig-paren">(</span><em>chip_i</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.detect_nonexistent_chip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to detect all instances in database of a chip that does not exist</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.edge_requirements">
-<code class="descname">edge_requirements</code><span class="sig-paren">(</span><em>w_lim</em>, <em>h_lim</em>, <em>x2_lim</em>, <em>y2_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.edge_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.edge_requirements" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.edge_requirements">
+<code class="descname">edge_requirements</code><span class="sig-paren">(</span><em>w_lim</em>, <em>h_lim</em>, <em>x2_lim</em>, <em>y2_lim</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.edge_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtering based on edge specifications.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong> </div>
@@ -440,14 +440,14 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.load_target_file">
-<code class="descname">load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.load_target_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.load_target_file" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.load_target_file">
+<code class="descname">load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.load_target_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to load a targetfile of type specified in the input file. Supported types: .json.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.manual_dimension_requirements">
-<code class="descname">manual_dimension_requirements</code><span class="sig-paren">(</span><em>area_lim</em>, <em>w_lim</em>, <em>h_lim</em>, <em>AR_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.manual_dimension_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.manual_dimension_requirements">
+<code class="descname">manual_dimension_requirements</code><span class="sig-paren">(</span><em>area_lim</em>, <em>w_lim</em>, <em>h_lim</em>, <em>AR_lim</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtering based on specified dimension requirements.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong> </div>
@@ -467,26 +467,26 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.process_target_data">
-<code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.process_target_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.process_target_data">
+<code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to perform all target processing.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.remove_nonexistent_chips_from_database">
-<code class="descname">remove_nonexistent_chips_from_database</code><span class="sig-paren">(</span><em>idx_nonexistent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.remove_nonexistent_chips_from_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.remove_nonexistent_chips_from_database" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.remove_nonexistent_chips_from_database">
+<code class="descname">remove_nonexistent_chips_from_database</code><span class="sig-paren">(</span><em>idx_nonexistent</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.remove_nonexistent_chips_from_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to remove all nonexistent chips from database</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.set_image_w_and_h">
-<code class="descname">set_image_w_and_h</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.set_image_w_and_h"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.set_image_w_and_h" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.set_image_w_and_h">
+<code class="descname">set_image_w_and_h</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.set_image_w_and_h" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set width and height of images associated with targets.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.sigma_rejection_indices">
-<code class="descname">sigma_rejection_indices</code><span class="sig-paren">(</span><em>filtered_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.sigma_rejection_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.sigma_rejection_indices">
+<code class="descname">sigma_rejection_indices</code><span class="sig-paren">(</span><em>filtered_data</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute a mask based on a sigma rejection criterion.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong> </div>
@@ -503,16 +503,16 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.Target.strip_image_number_from_chips_and_files">
-<code class="descname">strip_image_number_from_chips_and_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/Target.html#Target.strip_image_number_from_chips_and_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.Target.Target.strip_image_number_from_chips_and_files" title="Permalink to this definition">¶</a></dt>
+<dt id="src.targets.Target.strip_image_number_from_chips_and_files">
+<code class="descname">strip_image_number_from_chips_and_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.strip_image_number_from_chips_and_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to strip numbers from image filenames from both chips and files.</p>
 </dd></dl>
 
 </dd></dl>
 
-<span class="target" id="module-src.targets.fcn_sigma_rejection"></span><dl class="function">
-<dt id="src.targets.fcn_sigma_rejection.fcn_sigma_rejection">
-<code class="descclassname">src.targets.fcn_sigma_rejection.</code><code class="descname">fcn_sigma_rejection</code><span class="sig-paren">(</span><em>x</em>, <em>srl=3</em>, <em>ni=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/fcn_sigma_rejection.html#fcn_sigma_rejection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.fcn_sigma_rejection.fcn_sigma_rejection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="src.targets.fcn_sigma_rejection">
+<code class="descclassname">src.targets.</code><code class="descname">fcn_sigma_rejection</code><span class="sig-paren">(</span><em>x</em>, <em>srl=3</em>, <em>ni=3</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.fcn_sigma_rejection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to perform sigma rejection on a dataset.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -531,9 +531,9 @@ registered hooks while the latter silently ignores them.</p>
 </div>
 </dd></dl>
 
-<span class="target" id="module-src.targets.per_class_stats"></span><dl class="function">
-<dt id="src.targets.per_class_stats.per_class_stats">
-<code class="descclassname">src.targets.per_class_stats.</code><code class="descname">per_class_stats</code><span class="sig-paren">(</span><em>classes</em>, <em>w</em>, <em>h</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/targets/per_class_stats.html#per_class_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.targets.per_class_stats.per_class_stats" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="src.targets.per_class_stats">
+<code class="descclassname">src.targets.</code><code class="descname">per_class_stats</code><span class="sig-paren">(</span><em>classes</em>, <em>w</em>, <em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.per_class_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to calculate statistics of target data.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -553,10 +553,16 @@ registered hooks while the latter silently ignores them.</p>
 </div>
 </dd></dl>
 
+<span class="target" id="module-src.datasets"></span><dl class="class">
+<dt id="src.datasets.ListDataset">
+<em class="property">class </em><code class="descclassname">src.datasets.</code><code class="descname">ListDataset</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasets.html#ListDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.ListDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image dataset class for training</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-utils.datasetProcessing">
 <span id="utils"></span><h2>Utils/<a class="headerlink" href="#module-utils.datasetProcessing" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-utils.datasets"></span><span class="target" id="module-utils.utils"></span><dl class="function">
+<span class="target" id="module-utils.utils"></span><dl class="function">
 <dt id="utils.utils.bbox_iou">
 <code class="descclassname">utils.utils.</code><code class="descname">bbox_iou</code><span class="sig-paren">(</span><em>box1</em>, <em>box2</em>, <em>x1y1x2y2=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#bbox_iou"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.bbox_iou" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the IoU of two bounding boxes</p>

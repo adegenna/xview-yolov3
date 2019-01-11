@@ -36,10 +36,18 @@ NetworkTrainer
    }
 
 
-targets/Target
+targets.Target
 ---------------------
 .. graphviz::
 
    digraph {
       "src.targets.Target" -> "src.targets.fcn_sigma_rejection", "src.targets.per_class_stats", "utils.datasetProcessing", "utils.utils";
+   }
+
+datasets.ListDataset
+---------------------
+.. graphviz::
+
+   digraph {
+      "src.datasets.ListDataset" -> "src.datasets.datasetTransformations", "src.targets", "utils.utils";
    }
