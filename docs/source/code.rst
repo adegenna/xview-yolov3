@@ -18,14 +18,12 @@ Src/
 .. automodule:: src.NetworkTrainer
    :members:
 
-.. automodule:: src.targets.Target
-   :members:
+.. automodule:: src.targets
+   :members: Target, fcn_sigma_rejection, per_class_stats
 
-.. automodule:: src.targets.fcn_sigma_rejection
-   :members:
+.. automodule:: src.datasets
+   :members: ListDataset, datasetTransformations, ImageFolder
 
-.. automodule:: src.targets.per_class_stats
-   :members:
 
 Utils/
 ---------------------
