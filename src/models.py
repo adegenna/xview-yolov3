@@ -177,7 +177,7 @@ class YOLOLayer(nn.Module):
 
             loss = lx + ly + lw + lh + lconf + lcls
             i = torch.sigmoid(pred_conf[~mask]) > 0.999
-            FPe = torch.zeros(60)
+            FPe = torch.zeros(self.nC)
             if i.sum() > 0:
                 FP_classes = torch.argmax(pred_cls[~mask][i], 1)
                 for c in FP_classes:
@@ -205,6 +205,7 @@ class Darknet(nn.Module):
         super(Darknet, self).__init__()        
         try:
             self.module_defs = parse_model_config(inputs.networkcfg)
+            self.nC          = int(self.module_defs[-1]['classes'])
         except:
             sys.exit('Loading YOLOv3 config file failed...')
         self.module_defs[0]['height'] = inputs.imgsize
@@ -248,7 +249,7 @@ class Darknet(nn.Module):
         if is_training:
             self.losses['nGT'] /= 3
             self.losses['TC'] /= 3
-            metrics = torch.zeros(4, 60)  # TP, FP, FN, target_count
+            metrics = torch.zeros(4, self.nC)  # TP, FP, FN, target_count
 
             ui = np.unique(self.losses['TC'])[1:]
             for i in ui:
