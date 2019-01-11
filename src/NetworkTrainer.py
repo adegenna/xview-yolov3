@@ -102,7 +102,8 @@ class NetworkTrainer():
         t0, t1 = time.time(), time.time()
         print('%10s' * 16 % (
             'Epoch', 'Batch', 'x', 'y', 'w', 'h', 'conf', 'cls', 'total', 'P', 'R', 'nGT', 'TP', 'FP', 'FN', 'time'))
-        self.class_weights = xview_class_weights_hard_mining(range(60)).to(self.__device)
+        class_weights      = vars(self.__dataloader.targets_metadata)['_Target__filtered_class_weights']
+        self.class_weights = (torch.from_numpy(class_weights).float()).to(self.__device)
         # Main training loop
         for epoch in range(self.__inputs.epochs):
             epoch       += self.__start_epoch
