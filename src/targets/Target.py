@@ -302,7 +302,7 @@ def nan_inf_size_requirements(image_h,image_w,size):
     return i7
 
 def invalid_class_requirement(invalid_class_list,classes):
-    # remove invalid classes 75 and 82 (e.g., 'None' class in xview)
+    # remove invalid classes (e.g., 'None' class in xview)
     invalid_idx        = np.where( classes == invalid_class_list[:,None] )[1]
     i8                 = np.ones_like(classes,dtype='int')
     i8[invalid_idx]    = 0

@@ -33,6 +33,24 @@ def modelinfo(model):
             i, name, p.requires_grad, p.numel(), list(p.shape), p.mean(), p.std()))
     print('\n%g layers, %g parameters, %g gradients' % (i + 1, nparams, ngradients))
 
+def zerocenter_class_indices(classes):
+    """
+    This function takes a list of N elements with M<N unique labels, and relabels them such that the labels are 0,1,...,M-1. Note that this function assumes that all class labels of interest appear at least once in classes.
+
+    | **Inputs:**
+    |    *classes:* N-list of original class indices.
+
+    | **Outputs:**
+    |    *classes_zeroed:* N-list of classes relabeled such that the labels are 0...M-1  
+    | e.g., [5,9,7,12,7,9] --> [0,2,1,3,1,2]
+    """
+    classes                 = classes.astype(int)
+    classes_unique          = np.unique(classes)
+    mapping_to_zeroed       = np.zeros(max(classes_unique)+1).astype(int)
+    mapping_to_zeroed[:]    = -1
+    mapping_to_zeroed[classes_unique] = np.arange(len(classes_unique))
+    classes_zeroed          = [mapping_to_zeroed[int(c)] for c in classes]
+    return classes_zeroed
 
 def xview_classes2indices(classes):  # remap xview classes 11-94 to 0-61
     indices = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, -1, 3, -1, 4, 5, 6, 7, 8, -1, 9, 10, 11, 12, 13, 14,

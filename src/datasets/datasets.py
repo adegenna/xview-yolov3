@@ -10,10 +10,9 @@ import numpy as np
 import scipy.io
 import torch
 from PIL import Image
-from utils.utils import xview_classes2indices
 
 # from torch.utils.data import Dataset
-from utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset
+from utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset, zerocenter_class_indices
 from src.targets import *
 from datasets.datasetTransformations import *
 
@@ -45,24 +44,26 @@ class ListDataset():  # for training
             self.mat = scipy.io.loadmat(self.targets_path)
             self.targetIDs     = self.mat['id'].squeeze()
             self.targets       = self.mat['targets']
+            self.class_weights = xview_class_weights(range(60)).numpy()
         elif (self.targetfiletype == 'pickle'):
             print("Loading target data from specified pickle file...")
             self.mat = load_obj(self.targets_path)
             self.targetIDs     = self.mat['id'].squeeze()
             self.targets       = self.mat['targets']
+            self.class_weights = xview_class_weights(range(60)).numpy()
         elif (self.targetfiletype == 'json'):
             print("Loading target data from specified json file...")
             targets         = Target(inputs)
             self.targetIDs  = vars(targets)['_Target__filtered_chips']
             coords          = vars(targets)['_Target__filtered_coords']
             classes         = vars(targets)['_Target__filtered_classes']
-            classes         = xview_classes2indices(classes)
+            classes         = zerocenter_class_indices(classes)
             self.targets    = np.hstack([np.reshape(classes,[len(classes),1]),coords]).astype(float)
             self.targets_metadata = targets
+            self.class_weights    = vars(targets)['_Target__filtered_class_weights']
         else:
             sys.exit('Specified target filetype is not supported')
         
-        self.class_weights = xview_class_weights(range(60)).numpy()
         # RGB normalization values
         self.rgb_mean = np.array([60.134, 49.697, 40.746], dtype=np.float32).reshape((1, 3, 1, 1))
         self.rgb_std = np.array([29.99, 24.498, 22.046], dtype=np.float32).reshape((1, 3, 1, 1))
