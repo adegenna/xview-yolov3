@@ -39,7 +39,7 @@ def main():
     inputs.printInputs();
     # Problem setup
     os.makedirs(inputs.loaddir, exist_ok=True)
-    dataloader = ListDataset(inputs)
+    dataloader = ListDataset(inputs)    
     if inputs.computeboundingboxclusters:
         networkcfg        = create_yolo_architecture(inputs,dataloader.targets_metadata)
         inputs.networkcfg = networkcfg

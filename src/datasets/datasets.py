@@ -15,6 +15,7 @@ from PIL import Image
 from utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset, zerocenter_class_indices
 from src.targets import *
 from datasets.datasetTransformations import *
+from datasets.datasetStats import *
 
 class ListDataset():  # for training
     """
@@ -65,8 +66,13 @@ class ListDataset():  # for training
             sys.exit('Specified target filetype is not supported')
         
         # RGB normalization values
-        self.rgb_mean = np.array([60.134, 49.697, 40.746], dtype=np.float32).reshape((1, 3, 1, 1))
-        self.rgb_std = np.array([29.99, 24.498, 22.046], dtype=np.float32).reshape((1, 3, 1, 1))
+        rgb_mean,rgb_std = compute_dataset_rgb_stats(self.files)
+        self.rgb_mean = np.array(rgb_mean , dtype=np.float32).reshape((1, 3, 1, 1))
+        self.rgb_std  = np.array(rgb_std  , dtype=np.float32).reshape((1, 3, 1, 1))
+        
+        # self.rgb_mean = np.array([60.134, 49.697, 40.746], dtype=np.float32).reshape((1, 3, 1, 1))
+        # self.rgb_std = np.array([29.99, 24.498, 22.046], dtype=np.float32).reshape((1, 3, 1, 1))
+        
         # RGB normalization of HSV-equalized images
         # self.rgb_mean = np.array([122.367, 107.586, 86.987], dtype=np.float32).reshape((1, 3, 1, 1))
         # self.rgb_std = np.array([65.914, 55.797, 47.340], dtype=np.float32).reshape((1, 3, 1, 1))
@@ -214,7 +220,6 @@ class ListDataset():  # for training
             ar = np.maximum(lw / (lh + 1e-16), lh / (lw + 1e-16))
             # objects must have width and height > 4 pixels
             self.labels = self.labels[(lw > 4) & (lh > 4) & (area > 20) & (area / self.area0 > 0.1) & (ar < 10)]
-        return pad_x,pad_y
-
+        return pad_x,pad_y        
 
 

@@ -9,7 +9,6 @@ import cv2
 import numpy as np
 import scipy.io
 import torch
-from PIL import Image
 
 """
 Collection of random transformation tools to be used by the ListDataset class 
