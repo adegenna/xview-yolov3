@@ -10,10 +10,6 @@ import numpy as np
 import scipy.io
 import torch
 
-"""
-Collection of random transformation tools to be used by the ListDataset class 
-"""
-
 def pickRandomPoints(pts,img0,height,M,img1):
     """
     Function to select random points of a specified chip size from a specified transformed image
@@ -68,17 +64,17 @@ def augmentHSV(img0):
 
 
 def resize_square(img, height=416, color=(0, 0, 0)):  # resizes a rectangular image to a padded square
-        """
-        Function to resize a rectangular image to a padded square
+    """
+    Function to resize a rectangular image to a padded square
+    
+    | **Inputs:** 
+    |    *img:* dataset image loaded by OpenCV
+    |    *height:* desired image height
+    |    *color:* triplet specifying fill values for image borders
 
-        | **Inputs:** 
-        |    *img:* dataset image loaded by OpenCV
-        |    *height:* desired image height
-        |    *color:* triplet specifying fill values for image borders
-
-        | **Outputs:**
-        |    *img:* transformed image
-        """
+    | **Outputs:**
+    |    *img:* transformed image
+    """
 
     shape = img.shape[:2]  # shape = [height, width]
     ratio = float(height) / max(shape)
