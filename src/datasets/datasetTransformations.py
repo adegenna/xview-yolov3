@@ -15,6 +15,20 @@ Collection of random transformation tools to be used by the ListDataset class
 """
 
 def pickRandomPoints(pts,img0,height,M,img1):
+    """
+    Function to select random points of a specified chip size from a specified transformed image
+
+    | **Inputs:** 
+    |    *pts:* number of desired random points
+    |    *img0:* dataset image loaded by OpenCV
+    |    *height:* desired chip size
+    |    *M:* random affine transformation to use (calculated with random_affine)
+    |    *img1:* transformed version of img0 (calculated with random_affine applied to img0)
+
+    | **Outputs:**
+    |    *r:* random points from specified image img0, transformed with the same random affine mapping used to take img0 to img1
+    """
+
     # Pick random points inside image
     border = height / 2 + 1
     r = np.ones((pts, 3))
@@ -25,6 +39,16 @@ def pickRandomPoints(pts,img0,height,M,img1):
 
 
 def augmentHSV(img0):
+    """
+    Function to perform HSV augmentation (by a random factor of +/- 50%)
+
+    | **Inputs:** 
+    |    *img0:* dataset image loaded by OpenCV
+
+    | **Outputs:**
+    |    *img:* transformed image
+    """
+
     # SV augmentation by 50%
     fraction = 0.50
     img_hsv = cv2.cvtColor(img0, cv2.COLOR_BGR2HSV)
@@ -44,6 +68,18 @@ def augmentHSV(img0):
 
 
 def resize_square(img, height=416, color=(0, 0, 0)):  # resizes a rectangular image to a padded square
+        """
+        Function to resize a rectangular image to a padded square
+
+        | **Inputs:** 
+        |    *img:* dataset image loaded by OpenCV
+        |    *height:* desired image height
+        |    *color:* triplet specifying fill values for image borders
+
+        | **Outputs:**
+        |    *img:* transformed image
+        """
+
     shape = img.shape[:2]  # shape = [height, width]
     ratio = float(height) / max(shape)
     new_shape = [round(shape[0] * ratio), round(shape[1] * ratio)]
@@ -57,6 +93,24 @@ def resize_square(img, height=416, color=(0, 0, 0)):  # resizes a rectangular im
 
 def random_affine(img, targets=None, degrees=(-10, 10), translate=(.1, .1), scale=(.9, 1.1), shear=(-3, 3),
                   borderValue=(0, 0, 0)):
+    """
+    Function to performs a random affine transformation on a specified image/target combination. See https://medium.com/uruvideo/dataset-augmentation-with-random-homographies-a8f4b44830d4 for a general discussion.
+
+    | **Inputs:** 
+    |    *img:* dataset image loaded by OpenCV
+    |    *targets:* a target from a ListDataset object
+    |    *degrees:* min/max range of possible degrees of rotation
+    |    *translate:* max possible values for scaling, specified as a percentage of the vertical and horizontal dimensions of img
+    |    *scale:* min/max range of possible values for scaling (specified such that no scaling = 1)
+    |    *shear:* min/max range of possible values of degrees for shearing
+    |    *borderValue*: triplet specifying fill values for image borders
+
+    | **Outputs:**
+    |    *imw:* transformed image
+    |    *targets:* transformed targets (if targets is not None)
+    |    *M:* affine transformation used (if targets is not None)
+    """
+
     # torchvision.transforms.RandomAffine(degrees=(-10, 10), translate=(.1, .1), scale=(.9, 1.1), shear=(-10, 10))
     # https://medium.com/uruvideo/dataset-augmentation-with-random-homographies-a8f4b44830d4
     border = 750
