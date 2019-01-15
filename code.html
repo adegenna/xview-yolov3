@@ -89,7 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-src.train2">Src/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.train">Src/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.datasetProcessing">Utils/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tests.unittests">Tests/</a></li>
 </ul>
@@ -162,11 +162,11 @@
             
   <div class="section" id="code-docs">
 <h1>Code Docs<a class="headerlink" href="#code-docs" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-src.train2">
-<span id="src"></span><h2>Src/<a class="headerlink" href="#module-src.train2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-src.train">
+<span id="src"></span><h2>Src/<a class="headerlink" href="#module-src.train" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="src.train2.main">
-<code class="descclassname">src.train2.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/train2.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.train2.main" title="Permalink to this definition">¶</a></dt>
+<dt id="src.train.main">
+<code class="descclassname">src.train.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/train.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.train.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main driver script for training the YOLOv3 network.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -559,6 +559,92 @@ registered hooks while the latter silently ignores them.</p>
 <dd><p>Image dataset class for training</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="src.datasets.pickRandomPoints">
+<code class="descclassname">src.datasets.</code><code class="descname">pickRandomPoints</code><span class="sig-paren">(</span><em>pts</em>, <em>img0</em>, <em>height</em>, <em>M</em>, <em>img1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasetTransformations.html#pickRandomPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.pickRandomPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to select random points of a specified chip size from a specified transformed image</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>pts:</em> number of desired random points</div>
+<div class="line"><em>img0:</em> dataset image loaded by OpenCV</div>
+<div class="line"><em>height:</em> desired chip size</div>
+<div class="line"><em>M:</em> random affine transformation to use (calculated with random_affine)</div>
+<div class="line"><em>img1:</em> transformed version of img0 (calculated with random_affine applied to img0)</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>r:</em> random points from specified image img0, transformed with the same random affine mapping used to take img0 to img1</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.datasets.augmentHSV">
+<code class="descclassname">src.datasets.</code><code class="descname">augmentHSV</code><span class="sig-paren">(</span><em>img0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasetTransformations.html#augmentHSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.augmentHSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to perform HSV augmentation (by a random factor of +/- 50%)</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>img0:</em> dataset image loaded by OpenCV</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>img:</em> transformed image</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.datasets.resize_square">
+<code class="descclassname">src.datasets.</code><code class="descname">resize_square</code><span class="sig-paren">(</span><em>img</em>, <em>height=416</em>, <em>color=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasetTransformations.html#resize_square"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.resize_square" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to resize a rectangular image to a padded square</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>img:</em> dataset image loaded by OpenCV</div>
+<div class="line"><em>height:</em> desired image height</div>
+<div class="line"><em>color:</em> triplet specifying fill values for image borders</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>img:</em> transformed image</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.datasets.random_affine">
+<code class="descclassname">src.datasets.</code><code class="descname">random_affine</code><span class="sig-paren">(</span><em>img</em>, <em>targets=None</em>, <em>degrees=(-10</em>, <em>10)</em>, <em>translate=(0.1</em>, <em>0.1)</em>, <em>scale=(0.9</em>, <em>1.1)</em>, <em>shear=(-3</em>, <em>3)</em>, <em>borderValue=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasetTransformations.html#random_affine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.random_affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to performs a random affine transformation on a specified image/target combination. See <a class="reference external" href="https://medium.com/uruvideo/dataset-augmentation-with-random-homographies-a8f4b44830d4">https://medium.com/uruvideo/dataset-augmentation-with-random-homographies-a8f4b44830d4</a> for a general discussion.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>img:</em> dataset image loaded by OpenCV</div>
+<div class="line"><em>targets:</em> a target from a ListDataset object</div>
+<div class="line"><em>degrees:</em> min/max range of possible degrees of rotation</div>
+<div class="line"><em>translate:</em> max possible values for scaling, specified as a percentage of the vertical and horizontal dimensions of img</div>
+<div class="line"><em>scale:</em> min/max range of possible values for scaling (specified such that no scaling = 1)</div>
+<div class="line"><em>shear:</em> min/max range of possible values of degrees for shearing</div>
+<div class="line"><em>borderValue</em>: triplet specifying fill values for image borders</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>imw:</em> transformed image</div>
+<div class="line"><em>targets:</em> transformed targets (if targets is not None)</div>
+<div class="line"><em>M:</em> affine transformation used (if targets is not None)</div>
+</div>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="module-utils.datasetProcessing">
 <span id="utils"></span><h2>Utils/<a class="headerlink" href="#module-utils.datasetProcessing" title="Permalink to this headline">¶</a></h2>
@@ -616,6 +702,25 @@ precision: The precision curve (list).</div></blockquote>
 <div class="line-block">
 <div class="line"><em>path:</em> Absolute path to the dataset directory</div>
 </div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.zerocenter_class_indices">
+<code class="descclassname">utils.utils.</code><code class="descname">zerocenter_class_indices</code><span class="sig-paren">(</span><em>classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#zerocenter_class_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.zerocenter_class_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes a list of N elements with M&lt;N unique labels, and relabels them such that the labels are 0,1,…,M-1. Note that this function assumes that all class labels of interest appear at least once in classes.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>classes:</em> N-list of original class indices.</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>classes_zeroed:</em> N-list of classes relabeled such that the labels are 0…M-1  </div>
+</div>
+<div class="line">e.g., [5,9,7,12,7,9] –&gt; [0,2,1,3,1,2]</div>
 </div>
 </dd></dl>
 

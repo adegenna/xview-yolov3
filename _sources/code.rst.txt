@@ -3,7 +3,7 @@ Code Docs
 
 Src/
 ---------------------
-.. automodule:: src.train2
+.. automodule:: src.train
    :members:
       
 .. automodule:: src.detect
@@ -22,15 +22,12 @@ Src/
    :members: Target, fcn_sigma_rejection, per_class_stats
 
 .. automodule:: src.datasets
-   :members: ListDataset, datasetTransformations, ImageFolder
+   :members: ListDataset, ImageFolder, pickRandomPoints, augmentHSV, resize_square, random_affine
 
 
 Utils/
 ---------------------
 .. automodule:: utils.datasetProcessing
-   :members:
-
-.. automodule:: utils.datasets
    :members:
 
 .. automodule:: utils.utils
