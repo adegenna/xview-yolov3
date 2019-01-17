@@ -173,35 +173,35 @@ def score(path_predictions, path_groundtruth, path_output, iou_threshold=.5):
 
     for file in tqdm(os.listdir(path_predictions)):
         fname = file.split(".txt")[0]
-        pchips.append(fname)
+        if ((path_predictions+file).split('.')[-1] != 'jpg'):
+            pchips.append(fname)
+            with open(path_predictions + file, 'r') as f:
+                arr = np.array(list(csv.reader(f, delimiter=" ")))
+                if arr.shape[0] == 0:
+                    # If the file is empty, we fill it in with an array of zeros
+                    boxes_dict[fname] = np.array([[0, 0, 0, 0, 0, 0]])
+                    num_preds += 1
+                else:
+                    arr = arr[:, :6].astype(np.float64)
+                    threshold = 0
+                    arr = arr[arr[:, 5] > threshold]
+                    stclasses += list(arr[:, 4])
+                    num_preds += arr.shape[0]
 
-        with open(path_predictions + file, 'r') as f:
-            arr = np.array(list(csv.reader(f, delimiter=" ")))
-            if arr.shape[0] == 0:
-                # If the file is empty, we fill it in with an array of zeros
-                boxes_dict[fname] = np.array([[0, 0, 0, 0, 0, 0]])
-                num_preds += 1
-            else:
-                arr = arr[:, :6].astype(np.float64)
-                threshold = 0
-                arr = arr[arr[:, 5] > threshold]
-                stclasses += list(arr[:, 4])
-                num_preds += arr.shape[0]
+                    if np.any(arr[:, :4] < 0):
+                        raise ValueError('Bounding boxes cannot be negative.')
 
-                if np.any(arr[:, :4] < 0):
-                    raise ValueError('Bounding boxes cannot be negative.')
+                    if np.any(arr[:, 5] < 0) or np.any(arr[:, 5] > 1):
+                        raise ValueError('Confidence scores should be between 0 and 1.')
 
-                if np.any(arr[:, 5] < 0) or np.any(arr[:, 5] > 1):
-                    raise ValueError('Confidence scores should be between 0 and 1.')
-
-                boxes_dict[fname] = arr[:, :6]
+                    boxes_dict[fname] = arr[:, :6]
 
     pchips = sorted(pchips)
     stclasses = np.unique(stclasses).astype(np.int64)
 
     # gt_coords, gt_chips, gt_classes = get_labels(path_groundtruth)
     # scipy.io.savemat('ground_truth.mat',{'gt_coords':gt_coords,'gt_chips':gt_chips,'gt_classes':gt_classes})
-    mat = scipy.io.loadmat('scoring/ground_truth.mat')
+    mat = scipy.io.loadmat('../scoring/ground_truth.mat')
     gt_coords, gt_chips, gt_classes = mat['gt_coords'], mat['gt_chips'], mat['gt_classes']
 
     gt_unique = np.unique(gt_classes.astype(np.int64))
@@ -291,7 +291,7 @@ def score(path_predictions, path_groundtruth, path_output, iou_threshold=.5):
     }
 
     n = [ 11.0, 12.0, 13.0, 15.0, 17.0, 18.0, 19.0, 20.0, 21.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 32.0, 33.0, 34.0, 35.0, 36.0, 37.0, 38.0, 40.0, 41.0, 42.0, 44.0, 45.0, 47.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0, 56.0, 57.0, 59.0, 60.0, 61.0, 62.0, 63.0, 64.0, 65.0, 66.0, 71.0, 72.0, 73.0, 74.0, 76.0, 77.0, 79.0, 83.0, 84.0, 86.0, 89.0, 91.0, 93.0, 94.0]
-    with open('data/xview.names') as f:
+    with open('../data/xview.names') as f:
         lines = f.readlines()
 
     map_dict = {}

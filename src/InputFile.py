@@ -19,7 +19,6 @@ class InputFile():
     |    *targetspath:* Absolute path to target file
     |    *targetfiletype:* Type of target file
     |    *traindir:* Type of target file
-    |    *targetfiletype:* Type of target file
 
     | **Options (Train-Specific):**
     |    *traindir:* Type of target file
@@ -38,6 +37,7 @@ class InputFile():
     |    *plotflag:* Flag for plotting
     |    *secondary_classifier:* Boolean value specifying whether to use a secondary classifier
     |    *networkcfg:* Network architecture file
+    |    *networksavefile:* Trained YOLOv3 network file, saved by PyTorch (.pt)
     |    *class_path:* Absolute path to class
     |    *conf_thres:* Confidence threshold for detection
     |    *nms_thres:* NMS threshold
@@ -106,8 +106,9 @@ class InputFile():
         secondary_classifier       = inputfilestream.readline().strip().split('= ')[1];
         self.secondary_classifier  = ((secondary_classifier == "True") | (secondary_classifier == "true"));
         self.networkcfg      = inputfilestream.readline().strip().split('= ')[1];
+        self.networksavefile = inputfilestream.readline().strip().split('= ')[1];
         self.class_path      = inputfilestream.readline().strip().split('= ')[1];
         self.conf_thres      = float(inputfilestream.readline().strip().split('= ')[1]);
         self.nms_thres       = float(inputfilestream.readline().strip().split('= ')[1]);
         self.batch_size      = int(inputfilestream.readline().strip().split('= ')[1]);
-        self.img_size        = int(inputfilestream.readline().strip().split('= ')[1]);
+        self.imgsize         = int(inputfilestream.readline().strip().split('= ')[1]);

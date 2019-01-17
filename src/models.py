@@ -359,3 +359,40 @@ def calculate_number_of_yolo_filters(n_anchors,n_classes):
         n_anchors -= mod3
     num_yolo_filters = (n_classes + 5)*(n_anchors // 3)
     return num_yolo_filters,n_anchors
+
+
+class ConvNetb(nn.Module):
+    def __init__(self, num_classes=60):
+        super(ConvNetb, self).__init__()
+        n = 64  # initial convolution size
+        self.layer1 = nn.Sequential(
+            nn.Conv2d(3, n, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(n),
+            nn.LeakyReLU())
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(n, n * 2, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(n * 2),
+            nn.LeakyReLU())
+        self.layer3 = nn.Sequential(
+            nn.Conv2d(n * 2, n * 4, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(n * 4),
+            nn.LeakyReLU())
+        self.layer4 = nn.Sequential(
+            nn.Conv2d(n * 4, n * 8, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(n * 8),
+            nn.LeakyReLU())
+        self.layer5 = nn.Sequential(
+            nn.Conv2d(n * 8, n * 16, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(n * 16),
+            nn.LeakyReLU())
+
+        self.fully_conv = nn.Conv2d(n * 16, 60, kernel_size=4, stride=1, padding=0, bias=True)
+
+    def forward(self, x):  # 500 x 1 x 64 x 64
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+        x = self.layer5(x)
+        x = self.fully_conv(x)
+        return x.squeeze()  # 500 x 60

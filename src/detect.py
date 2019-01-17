@@ -5,8 +5,22 @@ from sys import platform
 from models import *
 from datasets import *
 from utils.utils import *
+from InputFile import *
+import torch
 
-def detect(opt):
+def detect():
+    """
+    Main driver script for testing the YOLOv3 network.
+
+    | **Inputs:**
+    |    *args:* command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.
+
+    | **Outputs:**
+    |    *inputs.outdir/metrics.txt:* output metrics for specified test image given by inputs.imagepath
+    |    *inputs.loaddir/<inputs.imagepath>.jpg:* test image with detected bounding boxes, classes and confidence scores
+    |    *inputs.loaddir/<inputs.imagepath>.tif.txt:*  text file with bounding boxes, classes and confidence scores for all detections
+    """
+
     # Problem setup: read input file
     parser  = argparse.ArgumentParser(description='Input filename');
     parser.add_argument('inputfilename',\
@@ -14,65 +28,25 @@ def detect(opt):
                         help='Filename of the input file')
     args   = parser.parse_args()
     opt    = InputFile(args);
-    opt.printInputs();
-    
-    if opt.plot_flag:
-        os.system('rm -rf ' + opt.outdir + '_img')
-        os.makedirs(opt.outdir + '_img', exist_ok=True)
     os.system('rm -rf ' + opt.outdir)
     os.makedirs(opt.outdir, exist_ok=True)
-    device = torch.device('cuda:0' if cuda else 'cpu')
-
+    opt.printInputs();
+    
     # Load model 1
-    model = Darknet(opt.networkcfg, opt.img_size)
-    checkpoint = torch.load('checkpoints/best.pt', map_location='cpu')
-
+    model      = Darknet(opt)
+    checkpoint = torch.load(opt.networksavefile, map_location='cpu')
     model.load_state_dict(checkpoint['model'])
-    model.to(device).eval()
     del checkpoint
 
-    # current = model.state_dict()
-    # saved = checkpoint['model']
-    # # 1. filter out unnecessary keys
-    # saved = {k: v for k, v in saved.items() if ((k in current) and (current[k].shape == v.shape))}
-    # # 2. overwrite entries in the existing state dict
-    # current.update(saved)
-    # # 3. load the new state dict
-    # model.load_state_dict(current)
-    # model.to(device).eval()
-    # del checkpoint, current, saved
-
-    # Load model 2
-    if opt.secondary_classifier:
-        model2 = ConvNetb()
-        checkpoint = torch.load('checkpoints/classifier.pt', map_location='cpu')
-
-        model2.load_state_dict(checkpoint['model'])
-        model2.to(device).eval()
-        del checkpoint
-
-        # current = model2.state_dict()
-        # saved = checkpoint['model']
-        # # 1. filter out unnecessary keys
-        # saved = {k: v for k, v in saved.items() if ((k in current) and (current[k].shape == v.shape))}
-        # # 2. overwrite entries in the existing state dict
-        # current.update(saved)
-        # # 3. load the new state dict
-        # model2.load_state_dict(current)
-        # model2.to(device).eval()
-        # del checkpoint, current, saved
-    else:
-        model2 = None
-
     # Set Dataloader
-    classes = load_classes(opt.class_path)  # Extracts class labels from file
-    dataloader = ImageFolder(opt.imagepath, batch_size=opt.batch_size, img_size=opt.img_size)
+    classes    = load_classes(opt.class_path)  # Extracts class labels from file
+    dataloader = ImageFolder(opt.imagepath, batch_size=opt.batch_size, img_size=opt.imgsize)
 
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
     prev_time = time.time()
     detections = None
-    mat_priors = scipy.io.loadmat(opt.targets_path)
+    mat_priors = scipy.io.loadmat(opt.targetspath)
     for batch_i, (img_paths, img) in enumerate(dataloader):
         print('\n', batch_i, img.shape, end=' ')
 
@@ -80,7 +54,7 @@ def detect(opt):
         img_lr = np.ascontiguousarray(np.flip(img, axis=2))
 
         preds = []
-        length = opt.img_size
+        length = opt.imgsize
         ni = int(math.ceil(img.shape[1] / length))  # up-down
         nj = int(math.ceil(img.shape[2] / length))  # left-right
         for i in range(ni):  # for i in range(ni - 1):
@@ -98,43 +72,16 @@ def detect(opt):
                 # Get detections
                 with torch.no_grad():
                     # Normal orientation
-                    chip = torch.from_numpy(img[:, y1:y2, x1:x2]).unsqueeze(0).to(device)
+                    chip = torch.from_numpy(img[:, y1:y2, x1:x2]).unsqueeze(0)
                     pred = model(chip)
                     pred = pred[pred[:, :, 4] > opt.conf_thres]
-                    # if (j > 0) & (len(pred) > 0):
-                    #     pred = pred[(pred[:, 0] - pred[:, 2] / 2 > 2)]  # near left border
-                    # if (j < nj) & (len(pred) > 0):
-                    #     pred = pred[(pred[:, 0] + pred[:, 2] / 2 < 606)]  # near right border
-                    # if (i > 0) & (len(pred) > 0):
-                    #     pred = pred[(pred[:, 1] - pred[:, 3] / 2 > 2)]  # near top border
-                    # if (i < ni) & (len(pred) > 0):
-                    #     pred = pred[(pred[:, 1] + pred[:, 3] / 2 < 606)]  # near bottom border
                     if len(pred) > 0:
                         pred[:, 0] += x1
                         pred[:, 1] += y1
                         preds.append(pred.unsqueeze(0))
 
-                    # # Flipped Up-Down
-                    # chip = torch.from_numpy(img_ud[:, y1:y2, x1:x2]).unsqueeze(0).to(device)
-                    # pred = model(chip)
-                    # pred = pred[pred[:, :, 4] > opt.conf_thres]
-                    # if len(pred) > 0:
-                    #     pred[:, 0] += x1
-                    #     pred[:, 1] = img.shape[1] - (pred[:, 1] + y1)
-                    #     preds.append(pred.unsqueeze(0))
-
-                    # # Flipped Left-Right
-                    # chip = torch.from_numpy(img_lr[:, y1:y2, x1:x2]).unsqueeze(0).to(device)
-                    # pred = model(chip)
-                    # pred = pred[pred[:, :, 4] > opt.conf_thres]
-                    # if len(pred) > 0:
-                    #     pred[:, 0] = img.shape[2] - (pred[:, 0] + x1)
-                    #     pred[:, 1] += y1
-                    #     preds.append(pred.unsqueeze(0))
-
         if len(preds) > 0:
-            detections = non_max_suppression(torch.cat(preds, 1), opt.conf_thres, opt.nms_thres, mat_priors, img,
-                                             model2, device)
+            detections = non_max_suppression(torch.cat(preds, 1), opt.conf_thres, opt.nms_thres, mat_priors, img)
             img_detections.extend(detections)
             imgs.extend(img_paths)
 
@@ -154,13 +101,6 @@ def detect(opt):
         if opt.plot_flag:
             img = cv2.imread(path)
 
-        # # The amount of padding that was added
-        # pad_x = max(img.shape[0] - img.shape[1], 0) * (opt.img_size / max(img.shape))
-        # pad_y = max(img.shape[1] - img.shape[0], 0) * (opt.img_size / max(img.shape))
-        # # Image height and width after padding is removed
-        # unpad_h = opt.img_size - pad_y
-        # unpad_w = opt.img_size - pad_x
-
         # Draw bounding boxes and labels of detections
         if detections is not None:
             unique_classes = detections[:, -1].cpu().unique()
@@ -171,25 +111,17 @@ def detect(opt):
             if os.path.isfile(results_path + '.txt'):
                 os.remove(results_path + '.txt')
 
-            results_img_path = os.path.join(opt.outdir + '_img', path.split('/')[-1])
+            results_img_path = os.path.join(opt.outdir , path.split('/')[-1])
             with open(results_path.replace('.bmp', '.tif') + '.txt', 'a') as file:
                 for i in unique_classes:
                     n = (detections[:, -1].cpu() == i).sum()
                     print('%g %ss' % (n, classes[int(i)]))
 
                 for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
-                    # Rescale coordinates to original dimensions
-                    # box_h = ((y2 - y1) / unpad_h) * img.shape[0]
-                    # box_w = ((x2 - x1) / unpad_w) * img.shape[1]
-                    # y1 = (((y1 - pad_y // 2) / unpad_h) * img.shape[0]).round().item()
-                    # x1 = (((x1 - pad_x // 2) / unpad_w) * img.shape[1]).round().item()
-                    # x2 = (x1 + box_w).round().item()
-                    # y2 = (y1 + box_h).round().item()
                     x1, y1, x2, y2 = max(x1, 0), max(y1, 0), max(x2, 0), max(y2, 0)
 
                     # write to file
                     xvc = xview_indices2classes(int(cls_pred))  # xview class
-                    # if (xvc != 21) & (xvc != 72):
                     file.write(('%g %g %g %g %g %g \n') % (x1, y1, x2, y2, xvc, cls_conf * conf))
 
                     if opt.plot_flag:
@@ -204,54 +136,9 @@ def detect(opt):
 
     if opt.plot_flag:
         from scoring import score
-        score.score(opt.outdir + '/', '/Users/glennjocher/Downloads/DATA/xview/xView_train.geojson', '.')
-
-
-class ConvNetb(nn.Module):
-    def __init__(self, num_classes=60):
-        super(ConvNetb, self).__init__()
-        n = 64  # initial convolution size
-        self.layer1 = nn.Sequential(
-            nn.Conv2d(3, n, kernel_size=3, stride=1, padding=1, bias=False),
-            nn.BatchNorm2d(n),
-            nn.LeakyReLU())
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(n, n * 2, kernel_size=3, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(n * 2),
-            nn.LeakyReLU())
-        self.layer3 = nn.Sequential(
-            nn.Conv2d(n * 2, n * 4, kernel_size=3, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(n * 4),
-            nn.LeakyReLU())
-        self.layer4 = nn.Sequential(
-            nn.Conv2d(n * 4, n * 8, kernel_size=3, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(n * 8),
-            nn.LeakyReLU())
-        self.layer5 = nn.Sequential(
-            nn.Conv2d(n * 8, n * 16, kernel_size=3, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(n * 16),
-            nn.LeakyReLU())
-        # self.layer6 = nn.Sequential(
-        #     nn.Conv2d(n * 16, n * 32, kernel_size=3, stride=2, padding=1, bias=False),
-        #     nn.BatchNorm2d(n * 32),
-        #     nn.LeakyReLU())
-
-        # self.fc = nn.Linear(int(8192), num_classes)  # 64 pixels, 4 layer, 64 filters
-        self.fully_conv = nn.Conv2d(n * 16, 60, kernel_size=4, stride=1, padding=0, bias=True)
-
-    def forward(self, x):  # 500 x 1 x 64 x 64
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
-        x = self.layer5(x)
-        # x = self.layer6(x)
-        # x = self.fc(x.reshape(x.size(0), -1))
-        x = self.fully_conv(x)
-        return x.squeeze()  # 500 x 60
-
+        score.score(opt.outdir, '/home/adegennaro/Projects/OGA/cat/data/xview/labels/xView_train.geojson', opt.outdir)
 
 if __name__ == '__main__':
     torch.cuda.empty_cache()
-    detect(opt)
+    detect()
     torch.cuda.empty_cache()
