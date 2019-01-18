@@ -225,9 +225,9 @@ class Target():
         self.__filtered_AR            = np.maximum(self.__filtered_w/self.__filtered_h, self.__filtered_h/self.__filtered_w);
         self.__filtered_coords        = concatenate_xy_to_coords(self.__filtered_x1,self.__filtered_y1,self.__filtered_x2,self.__filtered_y2)
 
-    def compute_image_weights_with_filtered_data(self):
+    def compute_class_weights_with_filtered_data(self):
         """
-        Method to compute image weights from filtered data. Weight is simply inverse of class frequency.
+        Method to compute class weights from filtered data. Weight is simply inverse of class frequency.
         """
         try:
             assert(self.__filtered_classes is not None)
@@ -240,6 +240,19 @@ class Target():
         weights          /= np.sum(weights)
         self.__filtered_class_freq    = num_class_objects
         self.__filtered_class_weights = weights
+
+    def compute_image_weights_with_filtered_data(self):
+        """
+        Method to compute image weights from filtered data. Weight is simply inverse of class frequency.
+        """
+        try:
+            assert(self.__filtered_classes is not None)
+        except AssertionError as e:
+            e.args += ('Filtered data elements must be computed prior to using this function',)
+            raise
+        object_weights       = self.__filtered_class_weights[self.__filtered_classes]
+        image_weights        = np.bincount(self.__filtered_chips , weights=object_weights)
+        self.__image_weights = image_weights/np.sum(image_weights)
 
     def compute_bounding_box_clusters_using_kmeans(self,n_clusters):
         """
@@ -262,6 +275,7 @@ class Target():
         self.compute_cropped_data()
         self.compute_filtered_data_mask()
         self.apply_mask_to_filtered_data()
+        self.compute_class_weights_with_filtered_data()
         self.compute_image_weights_with_filtered_data()
         if (self.__inputs.computeboundingboxclusters == True):
             self.compute_bounding_box_clusters_using_kmeans(self.__inputs.boundingboxclusters)
