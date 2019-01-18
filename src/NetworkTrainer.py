@@ -53,7 +53,6 @@ class NetworkTrainer():
         nGT       = sum([len(x) for x in targets_j])
         if nGT < 1:
             flagContinue = True;
-            return;
         else:
             loss = self.model(imgs_j, targets_j, requestPrecision=True,
                               weight=self.class_weights, epoch=epoch)
@@ -61,6 +60,7 @@ class NetworkTrainer():
             loss.backward()
             self.optimizer.step()
             flagContinue = False;
+        return flagContinue;
 
     def updateMetricsLoss(self):
         self.__ui += 1
