@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 from targets.fcn_sigma_rejection import *
 from targets.per_class_stats import *
 from utils.datasetProcessing import *
-from utils.utils import convert_tif2bmp, readBmpDataset
+from utils.utils import convert_tif2bmp, readBmpDataset, zerocenter_class_indices
 
 # This is a python-conversion of utils/analysis.m and all related target preprocessing
 
@@ -251,10 +251,13 @@ class Target():
             e.args += ('Filtered data elements must be computed prior to using this function',)
             raise
         self.__image_weights = np.zeros(len(self.__files))
+        zerocentered_classes = np.array(zerocenter_class_indices(self.__filtered_class_labels))
         for i in range(len(self.__files)):
-            idx_label_i     = np.where( self.__filtered_chips == self.__files[i] )[0]
-            classes_image_i = self.__filtered_classes[idx_label_i]
-            weight_image_i  = np.sum( self.__filtered_class_weights[classes_image_i] )
+            idx_label_i      = np.where( self.__filtered_chips == self.__files[i] )[0]
+            classes_image_i  = self.__filtered_classes[idx_label_i].astype(int)
+            zerocentered_idx = np.where(self.__filtered_class_labels == classes_image_i[:,None])[1]
+            classes_image_i  = zerocentered_classes[zerocentered_idx]
+            weight_image_i   = np.sum( self.__filtered_class_weights[classes_image_i] )
             self.__image_weights[i] = weight_image_i
         self.__image_weights /= np.sum(self.__image_weights)
 
