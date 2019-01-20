@@ -243,16 +243,20 @@ class Target():
 
     def compute_image_weights_with_filtered_data(self):
         """
-        Method to compute image weights from filtered data. Weight is simply inverse of class frequency.
+        Method to compute image weights from filtered data. Weight for a given image is the sum of the class weights for each of the objects present in that given image.
         """
         try:
             assert(self.__filtered_classes is not None)
         except AssertionError as e:
             e.args += ('Filtered data elements must be computed prior to using this function',)
             raise
-        object_weights       = self.__filtered_class_weights[self.__filtered_classes]
-        image_weights        = np.bincount(self.__filtered_chips , weights=object_weights)
-        self.__image_weights = image_weights/np.sum(image_weights)
+        self.__image_weights = np.zeros(len(self.__files))
+        for i in range(len(self.__files)):
+            idx_label_i     = np.where( self.__filtered_chips == self.__files[i] )[0]
+            classes_image_i = self.__filtered_classes[idx_label_i]
+            weight_image_i  = np.sum( self.__filtered_class_weights[classes_image_i] )
+            self.__image_weights[i] = weight_image_i
+        self.__image_weights /= np.sum(self.__image_weights)
 
     def compute_bounding_box_clusters_using_kmeans(self,n_clusters):
         """

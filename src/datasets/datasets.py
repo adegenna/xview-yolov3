@@ -94,7 +94,10 @@ class ListDataset():  # for training
 
     def __iter__(self):
         self.count = -1
-        self.shuffled_vector = np.random.permutation(self.nF)  # shuffled vector
+        image_labels =  vars(targets)['_Target__files']
+        image_weights = vars(targets)['_Target__image_weights']
+        self.shuffled_vector = np.random.choice(image_labels, self.nF, p=image_weights)
+        #self.shuffled_vector = np.random.permutation(self.nF)  # Uniform image weights
         #self.shuffled_vector = np.random.choice(self.mat['image_numbers'].ravel(), self.nF,
         #                                        p=self.mat['image_weights'].ravel())
         return self        
@@ -116,7 +119,8 @@ class ListDataset():  # for training
         for index, files_index in enumerate(range(ia, ib)):
             # img_path = self.files[self.shuffled_vector[files_index]]  # BGR
             # img_path = '%s%g.bmp' % (self.path, self.shuffled_vector[files_index])
-            img_path = self.files[self.shuffled_vector[files_index]]
+            img_path = self.shuffled_vector[files_index]
+            #img_path = self.files[self.shuffled_vector[files_index]] # Uniform image weights
 
             img0 = cv2.imread(img_path)
             if img0 is None:
