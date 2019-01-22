@@ -256,7 +256,8 @@ class Target():
             idx_label_i      = np.where( self.__filtered_chips == self.__files[i] )[0]
             classes_image_i  = self.__filtered_classes[idx_label_i].astype(int)
             zerocentered_idx = np.where(self.__filtered_class_labels == classes_image_i[:,None])[1]
-            classes_image_i  = zerocentered_classes[zerocentered_idx]
+            classes_image_i  = zerocentered_idx
+            #classes_image_i  = zerocentered_classes[zerocentered_idx]
             weight_image_i   = np.sum( self.__filtered_class_weights[classes_image_i] )
             self.__image_weights[i] = weight_image_i
         self.__image_weights /= np.sum(self.__image_weights)
