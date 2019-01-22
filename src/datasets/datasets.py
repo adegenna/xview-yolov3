@@ -32,6 +32,7 @@ class ListDataset():  # for training
         self.height     = inputs.imgsize
         self.targets_path   = inputs.targetspath
         self.targetfiletype = inputs.targetfiletype
+        self.__inputs       = inputs
         print('Successfully loaded ' + str(self.nF) + ' images.')
         self.labels   = None
         self.labels1  = None
@@ -94,8 +95,8 @@ class ListDataset():  # for training
 
     def __iter__(self):
         self.count = -1
-        image_labels =  vars(targets)['_Target__files']
-        image_weights = vars(targets)['_Target__image_weights']
+        image_labels =  vars(self.targets_metadata)['_Target__files']
+        image_weights = vars(self.targets_metadata)['_Target__image_weights']
         self.shuffled_vector = np.random.choice(image_labels, self.nF, p=image_weights)
         #self.shuffled_vector = np.random.permutation(self.nF)  # Uniform image weights
         #self.shuffled_vector = np.random.choice(self.mat['image_numbers'].ravel(), self.nF,
@@ -119,7 +120,7 @@ class ListDataset():  # for training
         for index, files_index in enumerate(range(ia, ib)):
             # img_path = self.files[self.shuffled_vector[files_index]]  # BGR
             # img_path = '%s%g.bmp' % (self.path, self.shuffled_vector[files_index])
-            img_path = self.shuffled_vector[files_index]
+            img_path = self.__inputs.traindir + str(self.shuffled_vector[files_index]) + '.bmp'
             #img_path = self.files[self.shuffled_vector[files_index]] # Uniform image weights
 
             img0 = cv2.imread(img_path)
