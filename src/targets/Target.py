@@ -260,7 +260,7 @@ class Target():
             #classes_image_i  = zerocentered_classes[zerocentered_idx]
             weight_image_i   = np.sum( self.__filtered_class_weights[classes_image_i] )
             self.__image_weights[i] = weight_image_i
-        self.__image_weights /= np.sum(self.__image_weights)
+        self.__image_weights /= np.sum(self.__image_weights)        
 
     def compute_bounding_box_clusters_using_kmeans(self,n_clusters):
         """
