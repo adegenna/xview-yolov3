@@ -338,6 +338,16 @@ def create_yolo_config_file(template_file_path,output_config_file_path,n_anchors
         lineidx += 1
     write_string_list_to_config_file(lines,output_config_file_path)
 
+def read_yolo_config_file_anchors(cfg_path):
+    """Reads the anchor coordinates from a specified YOLO configuration file"""
+    lines  = read_config_file_to_string_list(cfg_path)
+    for line in lines:
+        if line.startswith('anchors = '):
+            anchors = line[10:]
+            anchors = np.array(anchors.split(',')).astype(float)
+            break
+    return anchors
+    
 def read_config_file_to_string_list(path):
     file  = open(path, 'r')
     lines = file.read().split('\n')

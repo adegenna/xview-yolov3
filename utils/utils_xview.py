@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 
 def xview_class2name(classes):
-    with open('data/xview.names', 'r') as f:
+    with open('../data/xview.names', 'r') as f:
         x = f.readlines()
     return x[classes].replace('\n', '')
 

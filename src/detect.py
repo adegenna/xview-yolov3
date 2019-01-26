@@ -35,7 +35,7 @@ def detect():
     
     # Setup testing problem
     model      = Darknet(opt)
-    dataloader = ImageFolder(opt.imagepath, batch_size=opt.batch_size, img_size=opt.imgsize)
+    dataloader = ImageFolder(opt)
     tester     = NetworkTester(model,dataloader,opt)
     
     # Object detection on test dataset

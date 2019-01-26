@@ -238,6 +238,8 @@ class Target():
         num_class_objects = np.unique(self.__filtered_classes,return_counts=True)[1]
         weights           = 1./num_class_objects
         weights          /= np.sum(weights)
+        np.savetxt(self.__inputs.outdir + 'training_class_mean.out'   , class_mu    , delimiter = ',')
+        np.savetxt(self.__inputs.outdir + 'training_class_sigma.out'  , class_sigma , delimiter = ',')
         self.__filtered_class_freq    = num_class_objects
         self.__filtered_class_weights = weights
 

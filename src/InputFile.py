@@ -43,6 +43,9 @@ class InputFile():
     |    *nms_thres:* NMS threshold
     |    *batch_size:* Desired batchsize
     |    *img_size:* Desired cropped image size
+    |    *rgb_mean:* Dataset RGB mean file
+    |    *rgb_std:* Dataset RGB standard deviation file
+
     """
     
     def __init__(self,args=[]):
@@ -112,3 +115,6 @@ class InputFile():
         self.nms_thres       = float(inputfilestream.readline().strip().split('= ')[1]);
         self.batch_size      = int(inputfilestream.readline().strip().split('= ')[1]);
         self.imgsize         = int(inputfilestream.readline().strip().split('= ')[1]);
+        self.rgb_mean        = inputfilestream.readline().strip().split('= ')[1];
+        self.rgb_std         = inputfilestream.readline().strip().split('= ')[1];
+        

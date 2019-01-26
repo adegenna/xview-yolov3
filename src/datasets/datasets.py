@@ -70,6 +70,9 @@ class ListDataset():  # for training
         rgb_mean,rgb_std = compute_dataset_rgb_stats(self.files)
         self.rgb_mean = np.array(rgb_mean , dtype=np.float32).reshape((1, 3, 1, 1))
         self.rgb_std  = np.array(rgb_std  , dtype=np.float32).reshape((1, 3, 1, 1))
+        np.savetxt(self.__inputs.outdir + 'training_rgb_mean.out' , rgb_mean , delimiter = ',')
+        np.savetxt(self.__inputs.outdir + 'training_rgb_std.out'  , rgb_std  , delimiter = ',')
+        
         
         # self.rgb_mean = np.array([60.134, 49.697, 40.746], dtype=np.float32).reshape((1, 3, 1, 1))
         # self.rgb_std = np.array([29.99, 24.498, 22.046], dtype=np.float32).reshape((1, 3, 1, 1))
