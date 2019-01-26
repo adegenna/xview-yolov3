@@ -26,8 +26,8 @@ class ImageFolder():  # for eval-only
         assert self.nF > 0, 'No images found in path %s' % path
 
         # RGB normalization values
-        rgb_mean = np.loadtxt(self.__inputs.rgb_mean , delimiter = ',')
-        rgb_std  = np.loadtxt(self.__inputs.rgb_std  , delimiter = ',')
+        rgb_mean = np.loadtxt(inputs.rgb_mean , delimiter = ',')
+        rgb_std  = np.loadtxt(inputs.rgb_std  , delimiter = ',')
         self.rgb_mean = np.array(rgb_mean , dtype=np.float32).reshape((3, 1, 1))
         self.rgb_std  = np.array(rgb_std  , dtype=np.float32).reshape((3, 1, 1))
         

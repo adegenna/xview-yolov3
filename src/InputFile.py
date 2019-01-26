@@ -117,4 +117,5 @@ class InputFile():
         self.imgsize         = int(inputfilestream.readline().strip().split('= ')[1]);
         self.rgb_mean        = inputfilestream.readline().strip().split('= ')[1];
         self.rgb_std         = inputfilestream.readline().strip().split('= ')[1];
-        
+        self.class_mean      = inputfilestream.readline().strip().split('= ')[1];
+        self.class_sigma     = inputfilestream.readline().strip().split('= ')[1];

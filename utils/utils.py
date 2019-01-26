@@ -268,7 +268,7 @@ def build_targets(pred_boxes, pred_conf, pred_cls, target, anchor_wh, nA, nC, nG
     return tx, ty, tw, th, tconf, tcls, TP, FP, FN, TC
 
 
-def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4, mat=None, img=None, model2=None, device='cpu'):
+def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4, mat=None, opt=None, img=None, model2=None, device='cpu'):
     prediction = prediction.cpu()
 
     """
@@ -330,8 +330,14 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4, mat=None, img
 
         # Gather bbox priors
         srl = 6  # sigma rejection level
-        mu = mat['class_mu'][class_pred].T
-        sigma = mat['class_sigma'][class_pred].T * srl
+        if ((opt == None) & (mat != None)):
+            mu    = mat['class_mu'][class_pred].T
+            sigma = mat['class_sigma'][class_pred].T * srl
+        elif ((opt != None) & (mat == None)):
+            mu    = np.loadtxt(opt.class_mean  , delimiter = ',')
+            sigma = np.loadtxt(opt.class_sigma , delimiter = ',')
+        else:
+            sys.exit('Must provide either at matlab .mat file or csv-delimted file for class stats')
 
         v = ((pred[:, 4] > conf_thres) & (class_prob > .3)).numpy()
         v *= (a > 20) & (w > 4) & (h > 4) & (ar < 10) & (ar > 1 / 10)

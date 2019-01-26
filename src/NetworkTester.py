@@ -76,7 +76,6 @@ class NetworkTester():
         img_detections = []  # Stores detections for each image index
         prev_time      = time.time()
         detections     = None
-        mat_priors     = scipy.io.loadmat(self.__inputs.targetspath)
         for batch_i, (img_paths, img) in enumerate(self.__dataloader):
             print('\n', batch_i, img.shape, end=' ')
 
@@ -111,7 +110,7 @@ class NetworkTester():
                             preds.append(pred.unsqueeze(0))
 
             if len(preds) > 0:
-                detections = non_max_suppression(torch.cat(preds, 1), self.__inputs.conf_thres, self.__inputs.nms_thres, mat_priors, img)
+                detections = non_max_suppression(torch.cat(preds, 1), self.__inputs.conf_thres, self.__inputs.nms_thres, opt=self.__inputs, img=img)
                 img_detections.extend(detections)
                 imgs.extend(img_paths)
 

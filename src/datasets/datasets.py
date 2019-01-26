@@ -72,26 +72,6 @@ class ListDataset():  # for training
         self.rgb_std  = np.array(rgb_std  , dtype=np.float32).reshape((1, 3, 1, 1))
         np.savetxt(self.__inputs.outdir + 'training_rgb_mean.out' , rgb_mean , delimiter = ',')
         np.savetxt(self.__inputs.outdir + 'training_rgb_std.out'  , rgb_std  , delimiter = ',')
-        
-        
-        # self.rgb_mean = np.array([60.134, 49.697, 40.746], dtype=np.float32).reshape((1, 3, 1, 1))
-        # self.rgb_std = np.array([29.99, 24.498, 22.046], dtype=np.float32).reshape((1, 3, 1, 1))
-        
-        # RGB normalization of HSV-equalized images
-        # self.rgb_mean = np.array([122.367, 107.586, 86.987], dtype=np.float32).reshape((1, 3, 1, 1))
-        # self.rgb_std = np.array([65.914, 55.797, 47.340], dtype=np.float32).reshape((1, 3, 1, 1))
-
-        # RGB normalization of YUV-equalized images clipped at 5
-        # self.rgb_mean = np.array([100.931, 90.863, 82.412], dtype=np.float32).reshape((1, 3, 1, 1))
-        # self.rgb_std = np.array([52.022, 47.313, 44.845], dtype=np.float32).reshape((1, 3, 1, 1))
-
-        # RGB normalization of YUV-equalized images clipped at 3
-        # self.rgb_mean = np.array([45.068, 40.035, 37.538], dtype=np.float32).reshape((1, 3, 1, 1))
-        # self.rgb_std = np.array([89.836, 79.490, 71.011], dtype=np.float32).reshape((1, 3, 1, 1))
-
-        # RGB normalization of YUV-equalized images no clipping
-        # self.rgb_mean = np.array([137.513, 127.813, 119.410], dtype=np.float32).reshape((1, 3, 1, 1))
-        # self.rgb_std = np.array([69.095, 66.369, 64.236], dtype=np.float32).reshape((1, 3, 1, 1))
 
         print('**************************************************************')
         print('\n');

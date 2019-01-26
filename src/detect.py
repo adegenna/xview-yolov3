@@ -29,7 +29,7 @@ def detect():
                         help='Filename of the input file')
     args   = parser.parse_args()
     opt    = InputFile(args);
-    os.system('rm -rf ' + opt.outdir)
+    #os.system('rm -rf ' + opt.outdir)
     os.makedirs(opt.outdir, exist_ok=True)
     opt.printInputs();
     
