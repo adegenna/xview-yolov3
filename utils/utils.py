@@ -332,10 +332,10 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4, mat=None, opt
         srl = 6  # sigma rejection level
         if ((opt == None) & (mat != None)):
             mu    = mat['class_mu'][class_pred].T
-            sigma = mat['class_sigma'][class_pred].T * srl
+            sigma = mat['class_sigma'][class_pred].T * srl            
         elif ((opt != None) & (mat == None)):
-            mu    = np.loadtxt(opt.class_mean  , delimiter = ',')
-            sigma = np.loadtxt(opt.class_sigma , delimiter = ',')
+            mu    = np.loadtxt(opt.class_mean  , delimiter = ',')[class_pred].T
+            sigma = np.loadtxt(opt.class_sigma , delimiter = ',')[class_pred].T * srl
         else:
             sys.exit('Must provide either at matlab .mat file or csv-delimted file for class stats')
 
