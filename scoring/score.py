@@ -173,7 +173,8 @@ def score(path_predictions, path_groundtruth, path_output, iou_threshold=.5):
 
     for file in tqdm(os.listdir(path_predictions)):
         fname = file.split(".txt")[0]
-        if ((path_predictions+file).split('.')[-1] != 'jpg'):
+        if ( ((path_predictions+file).split('.')[-1] != 'jpg') & ((path_predictions+file).split('.')[-1] != 'out') & (fname != 'metrics')):
+            print(fname)
             pchips.append(fname)
             with open(path_predictions + file, 'r') as f:
                 arr = np.array(list(csv.reader(f, delimiter=" ")))
