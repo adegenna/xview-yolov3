@@ -45,7 +45,7 @@ def detect():
     # Metrics
     if opt.plot_flag:
         from scoring import score
-        score.score(opt.outdir, '/home/adegennaro/Projects/OGA/cat/data/xview/labels/xView_train.geojson', opt.outdir)
+        score.score(opt.outdir, opt.targetspath, opt.outdir)
 
 if __name__ == '__main__':
     torch.cuda.empty_cache()
