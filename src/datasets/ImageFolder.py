@@ -10,13 +10,15 @@ import numpy as np
 import scipy.io
 import torch
 
+# NOTE: hard assumption made that data are .bmp (change this)
+
 class ImageFolder():  # for eval-only
     def __init__(self, inputs):
         path       = inputs.imagepath
         batch_size = inputs.batch_size
         img_size   = inputs.imgsize
         if os.path.isdir(path):
-            self.files = sorted(glob.glob('%s/*.*' % path))
+            self.files = sorted(glob.glob('%s/*.bmp*' % path))
         elif os.path.isfile(path):
             self.files = [path]
         self.nF = len(self.files)  # number of image files
