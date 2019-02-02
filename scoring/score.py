@@ -165,6 +165,7 @@ def score(path_predictions, path_groundtruth, path_output, iou_threshold=.5):
     """
     assert (iou_threshold < 1 and iou_threshold > 0)
 
+    print('Computing mAP and associated metrics on test data...')
     ttime = time.time()
     boxes_dict = {}
     pchips = []
@@ -173,8 +174,8 @@ def score(path_predictions, path_groundtruth, path_output, iou_threshold=.5):
 
     for file in tqdm(os.listdir(path_predictions)):
         fname = file.split(".txt")[0]
-        fext  = path_predictions+file).split('.')[-1] 
-        if ( ((fext != 'jpg') & ((fext != 'out') & (fext != tif) & (fname != 'metrics')):
+        fext  = (path_predictions+file).split('.')[-1] 
+        if ( (fext != 'jpg') & (fext != 'out') & (fext != 'tif') & (fname != 'metrics')):
             print(fname)
             pchips.append(fname)
             with open(path_predictions + file, 'r') as f:
