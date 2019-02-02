@@ -7,6 +7,13 @@ from utils.utils import *
 from InputFile import *
 
 class NetworkTester():
+    """
+    Class for handling testing and assessing the performance of a trained YOLOv3 model.
+    | **Inputs:**
+    |    *model:* trained YOLOv3 network (PyTorch .pt file).
+    |    *dataloader:* dataloader object (usually an instantiation of the ImageFolder class)
+    |    *inputs:* input file with various user-specified options
+    """
     def __init__(self, model, dataloader, inputs):
         self.__inputs      = inputs;
         self.__dataloader  = dataloader;
@@ -16,6 +23,9 @@ class NetworkTester():
         self.loadClasses()
 
     def setupCuda(self):
+        """
+        Basic method to setup GPU/cuda support, if available 
+        """
         cuda          = torch.cuda.is_available()
         self.__device = torch.device('cuda:0' if cuda else 'cpu')
         random.seed(0)
@@ -29,10 +39,16 @@ class NetworkTester():
             print('Using ', torch.cuda.device_count(), ' GPUs')
         
     def loadSavedModels(self):
+        """
+        Method to load a saved YOLOv3 model from a PyTorch (.pt) file.
+        """
         checkpoint = torch.load(self.__inputs.networksavefile, map_location='cpu')
         self.model.load_state_dict(checkpoint['model'])
 
     def loadClasses(self):
+        """
+        Method to load class names from specified path in user-input file. 
+        """
         self.__classes = load_classes(self.__inputs.class_path)
 
     def updateMetricsLoss(self):
