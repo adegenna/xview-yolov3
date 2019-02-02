@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; YOLOv3 0.3 documentation</title>
+  <title>Index &mdash; YOLOv3 0.4 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                0.3
+                0.4
               </div>
             
           
@@ -163,14 +163,17 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  | <a href="#Y"><strong>Y</strong></a>
  | <a href="#Z"><strong>Z</strong></a>
  
@@ -178,10 +181,14 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.score.ap_from_pr">ap_from_pr() (in module scoring.score)</a>
+</li>
       <li><a href="code.html#src.targets.Target.apply_mask_to_filtered_data">apply_mask_to_filtered_data() (src.targets.Target method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.rectangle.Rectangle.area">area() (scoring.rectangle.Rectangle method)</a>
+</li>
       <li><a href="code.html#src.datasets.augmentHSV">augmentHSV() (in module src.datasets)</a>
 </li>
   </ul></td>
@@ -202,9 +209,13 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.matching.cartesian">cartesian() (in module scoring.matching)</a>
+</li>
       <li><a href="code.html#utils.utils.compute_ap">compute_ap() (in module utils.utils)</a>
 </li>
       <li><a href="code.html#src.targets.Target.compute_bounding_box_clusters_using_kmeans">compute_bounding_box_clusters_using_kmeans() (src.targets.Target method)</a>
+</li>
+      <li><a href="code.html#src.targets.Target.compute_class_weights_with_filtered_data">compute_class_weights_with_filtered_data() (src.targets.Target method)</a>
 </li>
       <li><a href="code.html#src.targets.Target.compute_cropped_data">compute_cropped_data() (src.targets.Target method)</a>
 </li>
@@ -218,9 +229,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.targets.Target.compute_image_weights_with_filtered_data">compute_image_weights_with_filtered_data() (src.targets.Target method)</a>
 </li>
+      <li><a href="code.html#scoring.rectangle.Rectangle.contains">contains() (scoring.rectangle.Rectangle method)</a>
+</li>
       <li><a href="code.html#utils.utils.convert_tif2bmp">convert_tif2bmp() (in module utils.utils)</a>
 </li>
-      <li><a href="code.html#src.detect.ConvNetb">ConvNetb (class in src.detect)</a>
+      <li><a href="code.html#scoring.score.convert_to_rectangle_list">convert_to_rectangle_list() (in module scoring.score)</a>
+</li>
+      <li><a href="code.html#src.models.ConvNetb">ConvNetb (class in src.models)</a>
 </li>
       <li><a href="code.html#src.models.create_modules">create_modules() (in module src.models)</a>
 </li>
@@ -238,10 +253,16 @@
 </li>
       <li><a href="code.html#tests.unittests.DataProcessingTests">DataProcessingTests (class in tests.unittests)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#tests.unittests.DatasetTests">DatasetTests (class in tests.unittests)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#src.detect.detect">detect() (in module src.detect)</a>
+
+      <ul>
+        <li><a href="code.html#src.NetworkTester.NetworkTester.detect">(src.NetworkTester.NetworkTester method)</a>
+</li>
+      </ul></li>
       <li><a href="code.html#src.targets.Target.detect_nonexistent_chip">detect_nonexistent_chip() (src.targets.Target method)</a>
 </li>
   </ul></td>
@@ -264,7 +285,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.targets.fcn_sigma_rejection">fcn_sigma_rejection() (in module src.targets)</a>
 </li>
-      <li><a href="code.html#src.detect.ConvNetb.forward">forward() (src.detect.ConvNetb method)</a>
+      <li><a href="code.html#src.models.ConvNetb.forward">forward() (src.models.ConvNetb method)</a>
 
       <ul>
         <li><a href="code.html#src.models.Darknet.forward">(src.models.Darknet method)</a>
@@ -278,7 +299,19 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.score.get_labels">get_labels() (in module scoring.score)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#tests.unittests.GPUtests">GPUtests (class in tests.unittests)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.rectangle.Rectangle.height">height() (scoring.rectangle.Rectangle method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -288,6 +321,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.InputFile.InputFile">InputFile (class in src.InputFile)</a>
 </li>
+      <li><a href="code.html#scoring.rectangle.Rectangle.intersect">intersect() (scoring.rectangle.Rectangle method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.rectangle.Rectangle.intersect_over_union">intersect_over_union() (scoring.rectangle.Rectangle method)</a>
+</li>
+      <li><a href="code.html#scoring.rectangle.Rectangle.intersects">intersects() (scoring.rectangle.Rectangle method)</a>
+</li>
+      <li><a href="code.html#scoring.rectangle.Rectangle.is_empty">is_empty() (scoring.rectangle.Rectangle method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -296,11 +339,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.datasets.ListDataset">ListDataset (class in src.datasets)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#utils.utils.load_classes">load_classes() (in module utils.utils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.targets.Target.load_target_file">load_target_file() (src.targets.Target method)</a>
+</li>
+      <li><a href="code.html#src.NetworkTester.NetworkTester.loadClasses">loadClasses() (src.NetworkTester.NetworkTester method)</a>
+</li>
+      <li><a href="code.html#src.NetworkTester.NetworkTester.loadSavedModels">loadSavedModels() (src.NetworkTester.NetworkTester method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -310,11 +357,21 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.train.main">main() (in module src.train)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.targets.Target.manual_dimension_requirements">manual_dimension_requirements() (src.targets.Target method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.matching.Matching">Matching (class in scoring.matching)</a>
+</li>
       <li><a href="code.html#tests.unittests.ModelsTests">ModelsTests (class in tests.unittests)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#src.NetworkTester.NetworkTester">NetworkTester (class in src.NetworkTester)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -326,9 +383,11 @@
 </li>
       <li><a href="code.html#src.targets.per_class_stats">per_class_stats() (in module src.targets)</a>
 </li>
+      <li><a href="code.html#src.datasets.pickRandomPoints">pickRandomPoints() (in module src.datasets)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.datasets.pickRandomPoints">pickRandomPoints() (in module src.datasets)</a>
+      <li><a href="code.html#src.NetworkTester.NetworkTester.plotDetection">plotDetection() (src.NetworkTester.NetworkTester method)</a>
 </li>
       <li><a href="code.html#src.InputFile.InputFile.printInputs">printInputs() (src.InputFile.InputFile method)</a>
 </li>
@@ -342,6 +401,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.datasets.random_affine">random_affine() (in module src.datasets)</a>
 </li>
+      <li><a href="code.html#src.models.read_yolo_config_file_anchors">read_yolo_config_file_anchors() (in module src.models)</a>
+</li>
       <li><a href="code.html#utils.utils.readBmpDataset">readBmpDataset() (in module utils.utils)</a>
 </li>
       <li><a href="code.html#src.InputFile.InputFile.readDetectInputfile">readDetectInputfile() (src.InputFile.InputFile method)</a>
@@ -349,6 +410,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#src.InputFile.InputFile.readTrainingInputfile">readTrainingInputfile() (src.InputFile.InputFile method)</a>
+</li>
+      <li><a href="code.html#scoring.rectangle.Rectangle">Rectangle (class in scoring.rectangle)</a>
 </li>
       <li><a href="code.html#src.targets.Target.remove_nonexistent_chips_from_database">remove_nonexistent_chips_from_database() (src.targets.Target method)</a>
 </li>
@@ -360,6 +423,14 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.score.score">score() (in module scoring.score)</a>
+</li>
+      <li><a href="code.html#module-scoring.matching">scoring.matching (module)</a>
+</li>
+      <li><a href="code.html#module-scoring.rectangle">scoring.rectangle (module)</a>
+</li>
+      <li><a href="code.html#module-scoring.score">scoring.score (module)</a>
+</li>
       <li><a href="code.html#src.targets.Target.set_image_w_and_h">set_image_w_and_h() (src.targets.Target method)</a>
 </li>
       <li><a href="code.html#tests.unittests.DataProcessingTests.setUp">setUp() (tests.unittests.DataProcessingTests method)</a>
@@ -374,10 +445,12 @@
         <li><a href="code.html#tests.unittests.TargetTests.setUp">(tests.unittests.TargetTests method)</a>
 </li>
       </ul></li>
-      <li><a href="code.html#src.targets.Target.sigma_rejection_indices">sigma_rejection_indices() (src.targets.Target method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#src.NetworkTester.NetworkTester.setupCuda">setupCuda() (src.NetworkTester.NetworkTester method)</a>
+</li>
+      <li><a href="code.html#src.targets.Target.sigma_rejection_indices">sigma_rejection_indices() (src.targets.Target method)</a>
+</li>
       <li><a href="code.html#module-src.datasets">src.datasets (module)</a>
 </li>
       <li><a href="code.html#module-src.detect">src.detect (module)</a>
@@ -385,6 +458,8 @@
       <li><a href="code.html#module-src.InputFile">src.InputFile (module)</a>
 </li>
       <li><a href="code.html#module-src.models">src.models (module)</a>
+</li>
+      <li><a href="code.html#module-src.NetworkTester">src.NetworkTester (module)</a>
 </li>
       <li><a href="code.html#module-src.NetworkTrainer">src.NetworkTrainer (module)</a>
 </li>
@@ -471,6 +546,14 @@
       <li><a href="code.html#module-utils.utils">utils.utils (module)</a>
 </li>
       <li><a href="code.html#module-utils.utils_xview">utils.utils_xview (module)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#scoring.rectangle.Rectangle.width">width() (scoring.rectangle.Rectangle method)</a>
 </li>
   </ul></td>
 </tr></table>

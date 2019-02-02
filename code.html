@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Code Docs &mdash; YOLOv3 0.3 documentation</title>
+  <title>Code Docs &mdash; YOLOv3 0.4 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.3
+                0.4
               </div>
             
           
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Docs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.train">Src/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-scoring.score">Scoring/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.datasetProcessing">Utils/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tests.unittests">Tests/</a></li>
 </ul>
@@ -185,23 +186,24 @@
 </div>
 </dd></dl>
 
-<span class="target" id="module-src.detect"></span><dl class="class">
-<dt id="src.detect.ConvNetb">
-<em class="property">class </em><code class="descclassname">src.detect.</code><code class="descname">ConvNetb</code><span class="sig-paren">(</span><em>num_classes=60</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#ConvNetb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.ConvNetb" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="src.detect.ConvNetb.forward">
-<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#ConvNetb.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.ConvNetb.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
+<span class="target" id="module-src.detect"></span><dl class="function">
+<dt id="src.detect.detect">
+<code class="descclassname">src.detect.</code><code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main driver script for testing the YOLOv3 network.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>args:</em> command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</div>
 </div>
-</dd></dl>
-
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>inputs.outdir/metrics.txt:</em> output metrics for specified test image given by inputs.imagepath</div>
+<div class="line"><em>inputs.loaddir/&lt;inputs.imagepath&gt;.jpg:</em> test image with detected bounding boxes, classes and confidence scores</div>
+<div class="line"><em>inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt:</em>  text file with bounding boxes, classes and confidence scores for all detections</div>
+</div>
+</div>
 </dd></dl>
 
 <span class="target" id="module-src.InputFile"></span><dl class="class">
@@ -225,7 +227,6 @@ registered hooks while the latter silently ignores them.</p>
 <div class="line"><em>targetspath:</em> Absolute path to target file</div>
 <div class="line"><em>targetfiletype:</em> Type of target file</div>
 <div class="line"><em>traindir:</em> Type of target file</div>
-<div class="line"><em>targetfiletype:</em> Type of target file</div>
 </div>
 </div>
 <div class="line-block">
@@ -250,11 +251,14 @@ registered hooks while the latter silently ignores them.</p>
 <div class="line"><em>plotflag:</em> Flag for plotting</div>
 <div class="line"><em>secondary_classifier:</em> Boolean value specifying whether to use a secondary classifier</div>
 <div class="line"><em>networkcfg:</em> Network architecture file</div>
+<div class="line"><em>networksavefile:</em> Trained YOLOv3 network file, saved by PyTorch (.pt)</div>
 <div class="line"><em>class_path:</em> Absolute path to class</div>
 <div class="line"><em>conf_thres:</em> Confidence threshold for detection</div>
 <div class="line"><em>nms_thres:</em> NMS threshold</div>
 <div class="line"><em>batch_size:</em> Desired batchsize</div>
 <div class="line"><em>img_size:</em> Desired cropped image size</div>
+<div class="line"><em>rgb_mean:</em> Dataset RGB mean file</div>
+<div class="line"><em>rgb_std:</em> Dataset RGB standard deviation file</div>
 </div>
 </div>
 <dl class="method">
@@ -290,6 +294,25 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <span class="target" id="module-src.models"></span><dl class="class">
+<dt id="src.models.ConvNetb">
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">ConvNetb</code><span class="sig-paren">(</span><em>num_classes=60</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#ConvNetb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.ConvNetb" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="src.models.ConvNetb.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#ConvNetb.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.ConvNetb.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="src.models.Darknet">
 <em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
 <dd><p>YOLOv3 object detection model</p>
@@ -358,7 +381,53 @@ registered hooks while the latter silently ignores them.</p>
 <dd><p>Parses the yolo-v3 layer configuration file and returns module definitions</p>
 </dd></dl>
 
-<span class="target" id="module-src.NetworkTrainer"></span><span class="target" id="module-src.targets"></span><dl class="class">
+<dl class="function">
+<dt id="src.models.read_yolo_config_file_anchors">
+<code class="descclassname">src.models.</code><code class="descname">read_yolo_config_file_anchors</code><span class="sig-paren">(</span><em>cfg_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#read_yolo_config_file_anchors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.read_yolo_config_file_anchors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the anchor coordinates from a specified YOLO configuration file</p>
+</dd></dl>
+
+<span class="target" id="module-src.NetworkTrainer"></span><span class="target" id="module-src.NetworkTester"></span><dl class="class">
+<dt id="src.NetworkTester.NetworkTester">
+<em class="property">class </em><code class="descclassname">src.NetworkTester.</code><code class="descname">NetworkTester</code><span class="sig-paren">(</span><em>model</em>, <em>dataloader</em>, <em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for handling testing and assessing the performance of a trained YOLOv3 model.
+| <strong>Inputs:</strong>
+|    <em>model:</em> trained YOLOv3 network (PyTorch .pt file).
+|    <em>dataloader:</em> dataloader object (usually an instantiation of the ImageFolder class)
+|    <em>inputs:</em> input file with various user-specified options</p>
+<dl class="method">
+<dt id="src.NetworkTester.NetworkTester.detect">
+<code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute object detections over testing dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.NetworkTester.NetworkTester.loadClasses">
+<code class="descname">loadClasses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.loadClasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.loadClasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to load class names from specified path in user-input file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.NetworkTester.NetworkTester.loadSavedModels">
+<code class="descname">loadSavedModels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.loadSavedModels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.loadSavedModels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to load a saved YOLOv3 model from a PyTorch (.pt) file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.NetworkTester.NetworkTester.plotDetection">
+<code class="descname">plotDetection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.plotDetection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.plotDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to plot and display all detected objects in the testing dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.NetworkTester.NetworkTester.setupCuda">
+<code class="descname">setupCuda</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.setupCuda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.setupCuda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic method to setup GPU/cuda support, if available</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-src.targets"></span><dl class="class">
 <dt id="src.targets.Target">
 <em class="property">class </em><code class="descclassname">src.targets.</code><code class="descname">Target</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for handling target pre-processing tasks.</p>
@@ -380,6 +449,12 @@ registered hooks while the latter silently ignores them.</p>
 <div class="line"><em>n_clusters:</em> number of desired kmeans clusters</div>
 </div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.compute_class_weights_with_filtered_data">
+<code class="descname">compute_class_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_class_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute class weights from filtered data. Weight is simply inverse of class frequency.</p>
 </dd></dl>
 
 <dl class="method">
@@ -409,7 +484,7 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="method">
 <dt id="src.targets.Target.compute_image_weights_with_filtered_data">
 <code class="descname">compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to compute image weights from filtered data. Weight is simply inverse of class frequency.</p>
+<dd><p>Method to compute image weights from filtered data. Weight for a given image is the sum of the class weights for each of the objects present in that given image.</p>
 </dd></dl>
 
 <dl class="method">
@@ -643,6 +718,195 @@ registered hooks while the latter silently ignores them.</p>
 <div class="line"><em>M:</em> affine transformation used (if targets is not None)</div>
 </div>
 </div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-scoring.score">
+<span id="scoring"></span><h2>Scoring/<a class="headerlink" href="#module-scoring.score" title="Permalink to this headline">¶</a></h2>
+<p>Copyright 2018 Defense Innovation Unit Experimental
+All rights reserved.</p>
+<p>Licensed under the Apache License, Version 2.0 (the “License”);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+<dl class="function">
+<dt id="scoring.score.get_labels">
+<code class="descclassname">scoring.score.</code><code class="descname">get_labels</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#get_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.score.get_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a WorldView3 GEOJSON file</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>fname: filepath to the GeoJson file.</dd>
+<dt>Outputs:</dt>
+<dd>Bounding box coordinate array, Chip-name array, and Classes array</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="scoring.score.convert_to_rectangle_list">
+<code class="descclassname">scoring.score.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.score.convert_to_rectangle_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a list of coordinates to a list of rectangles</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>coordinates: a flattened list of bounding box coordinates in format</dt>
+<dd>(xmin,ymin,xmax,ymax)</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt>
+<dd>A list of rectangles</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="scoring.score.ap_from_pr">
+<code class="descclassname">scoring.score.</code><code class="descname">ap_from_pr</code><span class="sig-paren">(</span><em>p</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#ap_from_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.score.ap_from_pr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates AP from precision and recall values as specified in
+the PASCAL VOC devkit.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>p: an array of precision values
+r: an array of recall values</dd>
+<dt>Outputs:</dt>
+<dd>An average precision value</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="scoring.score.score">
+<code class="descclassname">scoring.score.</code><code class="descname">score</code><span class="sig-paren">(</span><em>path_predictions</em>, <em>path_groundtruth</em>, <em>path_output</em>, <em>iou_threshold=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.score.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute metrics on a number of prediction files, given a folder of prediction files
+and a ground truth.  Primary metric is mean average precision (mAP).</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first docutils">
+<dt>path_predictions: a folder path of prediction files.</dt>
+<dd>Prediction files should have filename format ‘XYZ.tif.txt’,
+where ‘XYZ.tif’ is the xView TIFF file being predicted on.
+Prediction files should be in space-delimited csv format, with each
+line like (xmin ymin xmax ymax class_prediction score_prediction)</dd>
+</dl>
+<p>path_groundtruth: a file path to a single ground truth geojson</p>
+<p>path_output: a folder path for output scoring files</p>
+<dl class="last docutils">
+<dt>iou_threshold: a float between 0 and 1 indicating the percentage</dt>
+<dd>iou required to count a prediction as a true positive</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt>
+<dd>Writes two files to the ‘path_output’ parameter folder: ‘score.txt’ and ‘metrics.txt’
+‘score.txt’ contains a single floating point value output: mAP
+‘metrics.txt’ contains the remaining metrics in per-line format (metric/class_num: score_float)</dd>
+<dt>Raises:</dt>
+<dd><dl class="first last docutils">
+<dt>ValueError: if there are files in the prediction folder that are not in the ground truth geojson.</dt>
+<dd>EG a prediction file is titled ‘15.tif.txt’, but the file ‘15.tif’ is not in the ground truth.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-scoring.matching"></span><p>Copyright 2018 Defense Innovation Unit Experimental
+All rights reserved.</p>
+<p>Licensed under the Apache License, Version 2.0 (the “License”);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+<dl class="class">
+<dt id="scoring.matching.Matching">
+<em class="property">class </em><code class="descclassname">scoring.matching.</code><code class="descname">Matching</code><span class="sig-paren">(</span><em>groundtruth_rects</em>, <em>rects</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/matching.html#Matching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.matching.Matching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matching class.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="scoring.matching.cartesian">
+<code class="descclassname">scoring.matching.</code><code class="descname">cartesian</code><span class="sig-paren">(</span><em>arrays</em>, <em>out=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/matching.html#cartesian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.matching.cartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a cartesian product of input arrays.</p>
+<dl class="docutils">
+<dt>arrays <span class="classifier-delimiter">:</span> <span class="classifier">list of array-like</span></dt>
+<dd>1-D arrays to form the cartesian product of.</dd>
+<dt>out <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Array to place the cartesian product in.</dd>
+</dl>
+<dl class="docutils">
+<dt>out <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>2-D array of shape (M, len(arrays)) containing cartesian products
+formed of input arrays.</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-scoring.rectangle"></span><p>Copyright 2018 Defense Innovation Unit Experimental
+All rights reserved.</p>
+<p>Licensed under the Apache License, Version 2.0 (the “License”);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+<dl class="class">
+<dt id="scoring.rectangle.Rectangle">
+<em class="property">class </em><code class="descclassname">scoring.rectangle.</code><code class="descname">Rectangle</code><span class="sig-paren">(</span><em>xmin</em>, <em>ymin</em>, <em>xmax</em>, <em>ymax</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle class.</p>
+<dl class="method">
+<dt id="scoring.rectangle.Rectangle.area">
+<code class="descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the area of the Rectangle instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scoring.rectangle.Rectangle.contains">
+<code class="descname">contains</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point is inside or on any of the edges of the rectangle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scoring.rectangle.Rectangle.height">
+<code class="descname">height</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the height of the Rectangle instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scoring.rectangle.Rectangle.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the intersection of this rectangle with the other rectangle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scoring.rectangle.Rectangle.intersect_over_union">
+<code class="descname">intersect_over_union</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersect_over_union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.intersect_over_union" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the intersection over union ratio of this and other rectangle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scoring.rectangle.Rectangle.intersects">
+<code class="descname">intersects</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.intersects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if this rectangle has an intersection with another rectangle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scoring.rectangle.Rectangle.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the Rectangle instance is valid or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scoring.rectangle.Rectangle.width">
+<code class="descname">width</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the width of the Rectangle instance.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>

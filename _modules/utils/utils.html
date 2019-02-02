@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>utils.utils &mdash; YOLOv3 0.3 documentation</title>
+  <title>utils.utils &mdash; YOLOv3 0.4 documentation</title>
   
 
   
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                0.3
+                0.4
               </div>
             
           
@@ -422,7 +422,7 @@
     <span class="k">return</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">tconf</span><span class="p">,</span> <span class="n">tcls</span><span class="p">,</span> <span class="n">TP</span><span class="p">,</span> <span class="n">FP</span><span class="p">,</span> <span class="n">FN</span><span class="p">,</span> <span class="n">TC</span></div>
 
 
-<span class="k">def</span> <span class="nf">non_max_suppression</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">conf_thres</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">nms_thres</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">non_max_suppression</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">conf_thres</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">nms_thres</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
     <span class="n">prediction</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
@@ -484,8 +484,14 @@
 
         <span class="c1"># Gather bbox priors</span>
         <span class="n">srl</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># sigma rejection level</span>
-        <span class="n">mu</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;class_mu&#39;</span><span class="p">][</span><span class="n">class_pred</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;class_sigma&#39;</span><span class="p">][</span><span class="n">class_pred</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">srl</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">opt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mat</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)):</span>
+            <span class="n">mu</span>    <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;class_mu&#39;</span><span class="p">][</span><span class="n">class_pred</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;class_sigma&#39;</span><span class="p">][</span><span class="n">class_pred</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">srl</span>            
+        <span class="k">elif</span> <span class="p">((</span><span class="n">opt</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mat</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)):</span>
+            <span class="n">mu</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">class_mean</span>  <span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="n">class_pred</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">class_sigma</span> <span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="n">class_pred</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">srl</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Must provide either at matlab .mat file or csv-delimted file for class stats&#39;</span><span class="p">)</span>
 
         <span class="n">v</span> <span class="o">=</span> <span class="p">((</span><span class="n">pred</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">conf_thres</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">class_prob</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">v</span> <span class="o">*=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">w</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ar</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ar</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>

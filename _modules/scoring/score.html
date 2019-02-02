@@ -1,0 +1,554 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>scoring.score &mdash; YOLOv3 0.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> YOLOv3
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../inheritance.html">Dependency Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">YOLOv3</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>scoring.score</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for scoring.score</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright 2018 Defense Innovation Unit Experimental</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="sd">you may not use this file except in compliance with the License.</span>
+<span class="sd">You may obtain a copy of the License at</span>
+
+<span class="sd">http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="sd">Unless required by applicable law or agreed to in writing, software</span>
+<span class="sd">distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="sd">See the License for the specific language governing permissions and</span>
+<span class="sd">limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">scoring.matching</span> <span class="k">import</span> <span class="n">Matching</span>
+<span class="kn">from</span> <span class="nn">scoring.rectangle</span> <span class="k">import</span> <span class="n">Rectangle</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Scoring code to calculate per-class precision and mean average precision.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">      predictions: a folder path of prediction files.</span>
+<span class="sd">        Prediction files should have filename format &#39;XYZ.tif.txt&#39;,</span>
+<span class="sd">        where &#39;XYZ.tif&#39; is the xView TIFF file being predicted on.</span>
+<span class="sd">        Prediction files should be in space-delimited csv format, with each</span>
+<span class="sd">        line like (xmin ymin xmax ymax class_prediction score_prediction).</span>
+<span class="sd">        ie (&quot;predictions/&quot;)</span>
+
+<span class="sd">      groundtruth: a filepath to ground truth labels (GeoJSON format)</span>
+<span class="sd">        ie (&quot;ground_truth.geojson&quot;)</span>
+
+<span class="sd">      output (-o): a folder path where output metrics are saved</span>
+<span class="sd">        ie (&quot;scores/&quot;)</span>
+
+<span class="sd">  Outputs:</span>
+<span class="sd">    Writes two files to the &#39;output&#39; parameter folder: &#39;score.txt&#39; and &#39;metrics.txt&#39;</span>
+<span class="sd">    &#39;score.txt&#39; contains a single floating point value output: mAP</span>
+<span class="sd">    &#39;metrics.txt&#39; contains the remaining metrics in per-line format (metric/class_num: score_float)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#@profile</span>
+<div class="viewcode-block" id="get_labels"><a class="viewcode-back" href="../../code.html#scoring.score.get_labels">[docs]</a><span class="k">def</span> <span class="nf">get_labels</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Processes a WorldView3 GEOJSON file</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">          fname: filepath to the GeoJson file.</span>
+
+<span class="sd">      Outputs:</span>
+<span class="sd">        Bounding box coordinate array, Chip-name array, and Classes array</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">chips</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">])),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">)</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">])))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]))):</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;bounds_imcoords&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">b_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;image_id&#39;</span><span class="p">]</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;bounds_imcoords&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+            <span class="n">chips</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">b_id</span>
+            <span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;A bounding box should have 4 entries!&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">chips</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
+
+    <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">chips</span><span class="p">,</span> <span class="n">classes</span></div>
+
+
+<div class="viewcode-block" id="convert_to_rectangle_list"><a class="viewcode-back" href="../../code.html#scoring.score.convert_to_rectangle_list">[docs]</a><span class="k">def</span> <span class="nf">convert_to_rectangle_list</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Converts a list of coordinates to a list of rectangles</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">          coordinates: a flattened list of bounding box coordinates in format</span>
+<span class="sd">            (xmin,ymin,xmax,ymax)</span>
+
+<span class="sd">      Outputs:</span>
+<span class="sd">        A list of rectangles</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rectangle_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">number_of_rects</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_rects</span><span class="p">):</span>
+        <span class="n">rectangle_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span>
+            <span class="n">coordinates</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span>
+            <span class="n">coordinates</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">rectangle_list</span></div>
+
+
+<div class="viewcode-block" id="ap_from_pr"><a class="viewcode-back" href="../../code.html#scoring.score.ap_from_pr">[docs]</a><span class="k">def</span> <span class="nf">ap_from_pr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Calculates AP from precision and recall values as specified in</span>
+<span class="sd">      the PASCAL VOC devkit.</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">          p: an array of precision values</span>
+<span class="sd">          r: an array of recall values</span>
+
+<span class="sd">      Outputs:</span>
+<span class="sd">        An average precision value</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="n">r</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="n">p</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">r</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">ap</span></div>
+
+<span class="c1"># @profile</span>
+<div class="viewcode-block" id="score"><a class="viewcode-back" href="../../code.html#scoring.score.score">[docs]</a><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">path_predictions</span><span class="p">,</span> <span class="n">path_groundtruth</span><span class="p">,</span> <span class="n">path_output</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="o">=.</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Compute metrics on a number of prediction files, given a folder of prediction files</span>
+<span class="sd">      and a ground truth.  Primary metric is mean average precision (mAP).</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">          path_predictions: a folder path of prediction files.</span>
+<span class="sd">            Prediction files should have filename format &#39;XYZ.tif.txt&#39;,</span>
+<span class="sd">            where &#39;XYZ.tif&#39; is the xView TIFF file being predicted on.</span>
+<span class="sd">            Prediction files should be in space-delimited csv format, with each</span>
+<span class="sd">            line like (xmin ymin xmax ymax class_prediction score_prediction)</span>
+
+<span class="sd">          path_groundtruth: a file path to a single ground truth geojson</span>
+
+<span class="sd">          path_output: a folder path for output scoring files</span>
+
+<span class="sd">          iou_threshold: a float between 0 and 1 indicating the percentage</span>
+<span class="sd">            iou required to count a prediction as a true positive</span>
+
+<span class="sd">      Outputs:</span>
+<span class="sd">        Writes two files to the &#39;path_output&#39; parameter folder: &#39;score.txt&#39; and &#39;metrics.txt&#39;</span>
+<span class="sd">        &#39;score.txt&#39; contains a single floating point value output: mAP</span>
+<span class="sd">        &#39;metrics.txt&#39; contains the remaining metrics in per-line format (metric/class_num: score_float)</span>
+
+<span class="sd">      Raises:</span>
+<span class="sd">        ValueError: if there are files in the prediction folder that are not in the ground truth geojson.</span>
+<span class="sd">          EG a prediction file is titled &#39;15.tif.txt&#39;, but the file &#39;15.tif&#39; is not in the ground truth.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">iou_threshold</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">iou_threshold</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Computing mAP and associated metrics on test data...&#39;</span><span class="p">)</span>
+    <span class="n">ttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">boxes_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">pchips</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">stclasses</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_preds</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path_predictions</span><span class="p">)):</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.txt&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">fext</span>  <span class="o">=</span> <span class="p">(</span><span class="n">path_predictions</span><span class="o">+</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+        <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">fext</span> <span class="o">!=</span> <span class="s1">&#39;jpg&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fext</span> <span class="o">!=</span> <span class="s1">&#39;out&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fext</span> <span class="o">!=</span> <span class="s1">&#39;tif&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fname</span> <span class="o">!=</span> <span class="s1">&#39;metrics&#39;</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+            <span class="n">pchips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_predictions</span> <span class="o">+</span> <span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># If the file is empty, we fill it in with an array of zeros</span>
+                    <span class="n">boxes_dict</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+                    <span class="n">num_preds</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                    <span class="n">threshold</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span>
+                    <span class="n">stclasses</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">])</span>
+                    <span class="n">num_preds</span> <span class="o">+=</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Bounding boxes cannot be negative.&#39;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Confidence scores should be between 0 and 1.&#39;</span><span class="p">)</span>
+
+                    <span class="n">boxes_dict</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+
+    <span class="n">pchips</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">pchips</span><span class="p">)</span>
+    <span class="n">stclasses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">stclasses</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+
+    <span class="n">gt_coords</span><span class="p">,</span> <span class="n">gt_chips</span><span class="p">,</span> <span class="n">gt_classes</span> <span class="o">=</span> <span class="n">get_labels</span><span class="p">(</span><span class="n">path_groundtruth</span><span class="p">)</span>
+    <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">savemat</span><span class="p">(</span><span class="s1">&#39;ground_truth.mat&#39;</span><span class="p">,{</span><span class="s1">&#39;gt_coords&#39;</span><span class="p">:</span><span class="n">gt_coords</span><span class="p">,</span><span class="s1">&#39;gt_chips&#39;</span><span class="p">:</span><span class="n">gt_chips</span><span class="p">,</span><span class="s1">&#39;gt_classes&#39;</span><span class="p">:</span><span class="n">gt_classes</span><span class="p">})</span>
+    <span class="c1">#mat = scipy.io.loadmat(&#39;../scoring/ground_truth.mat&#39;)</span>
+    <span class="c1">#gt_coords, gt_chips, gt_classes = mat[&#39;gt_coords&#39;], mat[&#39;gt_chips&#39;], mat[&#39;gt_classes&#39;]</span>
+
+    <span class="n">gt_unique</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">gt_classes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">))</span>
+    <span class="n">max_gt_cls</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">pchips</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">gt_unique</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The prediction files {</span><span class="si">%s</span><span class="s1">} are not in the ground truth.&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pchips</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">gt_unique</span><span class="p">))))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of Predictions: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">num_preds</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of GT: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gt_classes</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+    <span class="n">per_file_class_data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gt_unique</span><span class="p">:</span>
+        <span class="n">per_file_class_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[],</span> <span class="p">[]]</span>
+
+    <span class="n">num_gt_per_cls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">max_gt_cls</span><span class="p">))</span>
+
+    <span class="n">attempted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">file_ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pchips</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">pchips</span><span class="p">[</span><span class="n">file_ind</span><span class="p">])</span>
+        <span class="n">det_box</span> <span class="o">=</span> <span class="n">boxes_dict</span><span class="p">[</span><span class="n">pchips</span><span class="p">[</span><span class="n">file_ind</span><span class="p">]][:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">det_scores</span> <span class="o">=</span> <span class="n">boxes_dict</span><span class="p">[</span><span class="n">pchips</span><span class="p">[</span><span class="n">file_ind</span><span class="p">]][:,</span> <span class="mi">5</span><span class="p">]</span>
+        <span class="n">det_cls</span> <span class="o">=</span> <span class="n">boxes_dict</span><span class="p">[</span><span class="n">pchips</span><span class="p">[</span><span class="n">file_ind</span><span class="p">]][:,</span> <span class="mi">4</span><span class="p">]</span>
+
+        <span class="n">gt_box</span> <span class="o">=</span> <span class="n">gt_coords</span><span class="p">[(</span><span class="n">gt_chips</span> <span class="o">==</span> <span class="n">pchips</span><span class="p">[</span><span class="n">file_ind</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()]</span>
+        <span class="n">gt_cls</span> <span class="o">=</span> <span class="n">gt_classes</span><span class="p">[(</span><span class="n">gt_chips</span> <span class="o">==</span> <span class="n">pchips</span><span class="p">[</span><span class="n">file_ind</span><span class="p">])]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gt_unique</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">det_scores</span><span class="p">[</span><span class="n">det_cls</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">ssort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">s</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">per_file_class_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">s</span><span class="p">[</span><span class="n">ssort</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+            <span class="n">gt_box_i_cls</span> <span class="o">=</span> <span class="n">gt_box</span><span class="p">[</span><span class="n">gt_cls</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">det_box_i_cls</span> <span class="o">=</span> <span class="n">det_box</span><span class="p">[</span><span class="n">det_cls</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">det_box_i_cls</span> <span class="o">=</span> <span class="n">det_box_i_cls</span><span class="p">[</span><span class="n">ssort</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+            <span class="n">gt_rects</span> <span class="o">=</span> <span class="n">convert_to_rectangle_list</span><span class="p">(</span><span class="n">gt_box_i_cls</span><span class="p">)</span>
+            <span class="n">rects</span> <span class="o">=</span> <span class="n">convert_to_rectangle_list</span><span class="p">(</span><span class="n">det_box_i_cls</span><span class="p">)</span>
+
+            <span class="n">attempted</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rects</span><span class="p">)</span>
+            <span class="n">matching</span> <span class="o">=</span> <span class="n">Matching</span><span class="p">(</span><span class="n">gt_rects</span><span class="p">,</span> <span class="n">rects</span><span class="p">)</span>
+            <span class="n">rects_matched</span><span class="p">,</span> <span class="n">gt_matched</span> <span class="o">=</span> <span class="n">matching</span><span class="o">.</span><span class="n">greedy_match</span><span class="p">(</span><span class="n">iou_threshold</span><span class="p">)</span>
+
+            <span class="c1"># we aggregate confidence scores, rectangles, and num_gt across classes</span>
+            <span class="c1"># per_file_class_data[i][0] += det_scores[det_cls == i].tolist()</span>
+            <span class="n">per_file_class_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rects_matched</span>
+            <span class="n">num_gt_per_cls</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gt_matched</span><span class="p">)</span>
+
+    <span class="n">average_precision_per_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">max_gt_cls</span><span class="p">)</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+    <span class="n">per_class_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">max_gt_cls</span><span class="p">)</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+    <span class="n">per_class_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">max_gt_cls</span><span class="p">)</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+    <span class="n">per_class_rcount</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">max_gt_cls</span><span class="p">)</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gt_unique</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">per_file_class_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">rects_matched</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">per_file_class_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">num_gt_per_cls</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">scores</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">tp_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">rects_matched</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">])</span>
+            <span class="n">fp_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">rects_matched</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]))</span>
+            <span class="n">precision</span> <span class="o">=</span> <span class="n">tp_sum</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp_sum</span> <span class="o">+</span> <span class="n">fp_sum</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">recall</span> <span class="o">=</span> <span class="n">tp_sum</span> <span class="o">/</span> <span class="n">num_gt_per_cls</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">per_class_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rects_matched</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rects_matched</span><span class="p">)</span>
+            <span class="n">per_class_r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rects_matched</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_gt_per_cls</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">per_class_rcount</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rects_matched</span><span class="p">)</span>
+            <span class="n">ap</span> <span class="o">=</span> <span class="n">ap_from_pr</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ap</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">average_precision_per_class</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ap</span>
+
+    <span class="c1"># metric splits</span>
+    <span class="n">metric_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="s1">&#39;map/small&#39;</span><span class="p">,</span> <span class="s1">&#39;map/medium&#39;</span><span class="p">,</span> <span class="s1">&#39;map/large&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;map/common&#39;</span><span class="p">,</span> <span class="s1">&#39;map/rare&#39;</span><span class="p">]</span>
+
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;map/small&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span>
+                      <span class="mi">62</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">66</span><span class="p">,</span> <span class="mi">91</span><span class="p">],</span>
+        <span class="s1">&#39;map/medium&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span>
+                       <span class="mi">47</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">93</span><span class="p">,</span> <span class="mi">94</span><span class="p">],</span>
+        <span class="s1">&#39;map/large&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">89</span><span class="p">],</span>
+
+        <span class="s1">&#39;map/common&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span>
+                       <span class="mi">47</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">91</span><span class="p">],</span>
+        <span class="s1">&#39;map/rare&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span>
+                     <span class="mi">51</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">66</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">93</span><span class="p">,</span> <span class="mi">94</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">11.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="mf">19.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">21.0</span><span class="p">,</span> <span class="mf">23.0</span><span class="p">,</span> <span class="mf">24.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">26.0</span><span class="p">,</span> <span class="mf">27.0</span><span class="p">,</span> <span class="mf">28.0</span><span class="p">,</span> <span class="mf">29.0</span><span class="p">,</span> <span class="mf">32.0</span><span class="p">,</span> <span class="mf">33.0</span><span class="p">,</span> <span class="mf">34.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="mf">37.0</span><span class="p">,</span> <span class="mf">38.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">41.0</span><span class="p">,</span> <span class="mf">42.0</span><span class="p">,</span> <span class="mf">44.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="mf">47.0</span><span class="p">,</span> <span class="mf">49.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">51.0</span><span class="p">,</span> <span class="mf">52.0</span><span class="p">,</span> <span class="mf">53.0</span><span class="p">,</span> <span class="mf">54.0</span><span class="p">,</span> <span class="mf">55.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">57.0</span><span class="p">,</span> <span class="mf">59.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">61.0</span><span class="p">,</span> <span class="mf">62.0</span><span class="p">,</span> <span class="mf">63.0</span><span class="p">,</span> <span class="mf">64.0</span><span class="p">,</span> <span class="mf">65.0</span><span class="p">,</span> <span class="mf">66.0</span><span class="p">,</span> <span class="mf">71.0</span><span class="p">,</span> <span class="mf">72.0</span><span class="p">,</span> <span class="mf">73.0</span><span class="p">,</span> <span class="mf">74.0</span><span class="p">,</span> <span class="mf">76.0</span><span class="p">,</span> <span class="mf">77.0</span><span class="p">,</span> <span class="mf">79.0</span><span class="p">,</span> <span class="mf">83.0</span><span class="p">,</span> <span class="mf">84.0</span><span class="p">,</span> <span class="mf">86.0</span><span class="p">,</span> <span class="mf">89.0</span><span class="p">,</span> <span class="mf">91.0</span><span class="p">,</span> <span class="mf">93.0</span><span class="p">,</span> <span class="mf">94.0</span><span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../data/xview.names&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">map_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">60</span><span class="p">):</span>
+        <span class="n">map_dict</span><span class="p">[</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">average_precision_per_class</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">per_class_rcount</span><span class="p">),</span> <span class="n">map_dict</span><span class="p">)</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">average_precision_per_class</span><span class="p">)</span>
+    <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;map_score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">per_class_p</span><span class="p">)</span>
+    <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;mar_score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">per_class_r</span><span class="p">)</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">average_precision_per_class</span><span class="p">,</span> <span class="n">per_class_p</span><span class="p">,</span> <span class="n">per_class_r</span><span class="p">,</span> <span class="n">per_class_rcount</span><span class="p">,</span> <span class="n">num_gt_per_cls</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">splits</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">average_precision_per_class</span><span class="p">[</span><span class="n">splits</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">62</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gt_unique</span><span class="p">):</span>
+        <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">attempted</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">per_class_rcount</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_gt_per_cls</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">average_precision_per_class</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gt_unique</span><span class="p">:</span>
+        <span class="n">vals</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">average_precision_per_class</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+
+    <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;map_score&#39;</span><span class="p">]))</span>
+                      <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;mar_score&#39;</span><span class="p">])))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mAP: </span><span class="si">%f</span><span class="s2"> | mAP score: </span><span class="si">%f</span><span class="s2"> | mAR: </span><span class="si">%f</span><span class="s2"> | F1: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span>
+          <span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">],</span> <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;map_score&#39;</span><span class="p">],</span> <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;mar_score&#39;</span><span class="p">],</span> <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]))</span>
+
+    <span class="c1"># with open(path_output + &#39;/score.txt&#39;, &#39;w&#39;) as f:</span>
+    <span class="c1">#     f.write(str(&quot;%.8f&quot; % vals[&#39;map&#39;]))</span>
+    <span class="c1">#</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_output</span> <span class="o">+</span> <span class="s1">&#39;/metrics.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vals</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+           <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">vals</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+        <span class="c1"># for key in vals.keys():</span>
+        <span class="c1">#     f.write(&quot;%f\n&quot; % (vals[key]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v2</span><span class="p">)):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">((</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">, &#39;</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final time: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">ttime</span><span class="p">))</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/Users/glennjocher/Documents/PyCharmProjects/yolo/data/xview_predictions/&#39;</span>
+    <span class="n">score</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;/Users/glennjocher/Downloads/DATA/xview/xView_train.geojson&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony DeGennaro
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>src.InputFile &mdash; YOLOv3 0.3 documentation</title>
+  <title>src.InputFile &mdash; YOLOv3 0.4 documentation</title>
   
 
   
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                0.3
+                0.4
               </div>
             
           
@@ -173,7 +173,6 @@
 <span class="sd">    |    *targetspath:* Absolute path to target file</span>
 <span class="sd">    |    *targetfiletype:* Type of target file</span>
 <span class="sd">    |    *traindir:* Type of target file</span>
-<span class="sd">    |    *targetfiletype:* Type of target file</span>
 
 <span class="sd">    | **Options (Train-Specific):**</span>
 <span class="sd">    |    *traindir:* Type of target file</span>
@@ -192,11 +191,15 @@
 <span class="sd">    |    *plotflag:* Flag for plotting</span>
 <span class="sd">    |    *secondary_classifier:* Boolean value specifying whether to use a secondary classifier</span>
 <span class="sd">    |    *networkcfg:* Network architecture file</span>
+<span class="sd">    |    *networksavefile:* Trained YOLOv3 network file, saved by PyTorch (.pt)</span>
 <span class="sd">    |    *class_path:* Absolute path to class</span>
 <span class="sd">    |    *conf_thres:* Confidence threshold for detection</span>
 <span class="sd">    |    *nms_thres:* NMS threshold</span>
 <span class="sd">    |    *batch_size:* Desired batchsize</span>
 <span class="sd">    |    *img_size:* Desired cropped image size</span>
+<span class="sd">    |    *rgb_mean:* Dataset RGB mean file</span>
+<span class="sd">    |    *rgb_std:* Dataset RGB standard deviation file</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
@@ -260,11 +263,16 @@
         <span class="n">secondary_classifier</span>       <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">secondary_classifier</span>  <span class="o">=</span> <span class="p">((</span><span class="n">secondary_classifier</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">secondary_classifier</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">));</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">networkcfg</span>      <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">networksavefile</span> <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">class_path</span>      <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conf_thres</span>      <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]);</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span>       <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]);</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>      <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]);</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span>        <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]);</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span>         <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rgb_mean</span>        <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rgb_std</span>         <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_mean</span>      <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_sigma</span>     <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span></div></div>
 </pre></div>
 
            </div>
