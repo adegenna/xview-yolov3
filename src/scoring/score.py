@@ -295,12 +295,13 @@ def score(opt, iou_threshold=.5):
     }
     
     _, _, classes   = get_labels_geojson(opt.targetspath)
-    n               = np.setdiff1d( np.unique(classes) , opt.invalid_class_list )    
+    n               = np.setdiff1d( np.unique(classes) , opt.invalid_class_list )
+    num_classes     = len(n)
     with open(opt.class_path) as f:
         lines = f.readlines()
 
     map_dict = {}
-    for i in range(60):
+    for i in range(num_classes):
         map_dict[lines[i].replace('\n','')] = average_precision_per_class[int(n[i])]
 
     print(np.nansum(per_class_rcount), map_dict)
