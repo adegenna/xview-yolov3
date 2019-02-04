@@ -7,45 +7,87 @@ class InputFile():
     """
     Class for packaging all input/config file options together.
 
-    | **Inputs:**
-    |    *args:* (passed to constructor at runtime) command line arguments used in shell call for main driver script. args must have a inputfilename member that specifies the desired inputfile name. 
+    **Inputs**
 
-    | **Options:**
-    |    *inputtype:* Options are `train` or `detect`
-    |    *projdir:* Absolute path to project directory
-    |    *datadir:* Absolute path to data directory
-    |    *loaddir:* Absolute path to load directory
-    |    *outdir:* Absolute path to output directory
-    |    *targetspath:* Absolute path to target file
-    |    *targetfiletype:* Type of target file
-    |    *traindir:* Type of target file
+    ----------
+    args : command line arguments 
+        (passed to constructor at runtime) command line arguments used in shell call for main driver script. args must have a inputfilename member that specifies the desired inputfile name. 
 
-    | **Options (Train-Specific):**
-    |    *traindir:* Type of target file
-    |    *epochs:* Number of training epochs
-    |    *epochstart:* Starting epoch
-    |    *batchsize:* Training batch size
-    |    *networkcfg:* Network architecture file
-    |    *imgsize:* Base image crop size
-    |    *resume:* Boolean value specifying whether training is resuming from previous iteration
-    |    *invalid_class_list:* Comma-separated list of classes to be ignored from training data
-    |    *boundingboxclusters:* Desired number of bounding-box clusters for the YOLO architecture
-    |    *computeboundingboxclusters:* Boolean value specifying whether to compute bounding box clusters
+    **Options**
 
-    | **Options (Detect-Specific):**
-    |    *imagepath:* Image path
-    |    *plotflag:* Flag for plotting
-    |    *secondary_classifier:* Boolean value specifying whether to use a secondary classifier
-    |    *networkcfg:* Network architecture file
-    |    *networksavefile:* Trained YOLOv3 network file, saved by PyTorch (.pt)
-    |    *class_path:* Absolute path to class
-    |    *conf_thres:* Confidence threshold for detection
-    |    *nms_thres:* NMS threshold
-    |    *batch_size:* Desired batchsize
-    |    *img_size:* Desired cropped image size
-    |    *rgb_mean:* Dataset RGB mean file
-    |    *rgb_std:* Dataset RGB standard deviation file
+    ----------
+    inputtype : string
+        Options are `train` or `detect`
+    projdir : string
+        Absolute path to project directory
+    datadir : string
+        Absolute path to data directory
+    loaddir : string
+        Absolute path to load directory
+    outdir : string
+        Absolute path to output directory
+    targetspath : string
+        Absolute path to target file
+    targetfiletype : string
+        Type of target file
+    traindir : string
+        Type of target file
 
+    **Options (Train-Specific)**
+
+    ----------
+    traindir : string 
+        Type of target file
+    epochs : int
+        Number of training epochs
+    epochstart : int
+        Starting epoch
+    batchsize : int
+        Training batch size
+    networkcfg : string
+        Network architecture file
+    imgsize : int
+        Base image crop size
+    resume : bool
+        Boolean value specifying whether training is resuming from previous iteration
+    invalid_class_list : string (csv format)
+        Comma-separated list of classes to be ignored from training data
+    boundingboxclusters : int
+        Desired number of bounding-box clusters for the YOLO architecture
+    computeboundingboxclusters : bool
+        Boolean value specifying whether to compute bounding box clusters
+
+    **Options (Detect-Specific)**
+
+    ----------
+    imagepath : string
+        Image path
+    plotflag : bool
+        Flag for plotting
+    secondary_classifier : bool
+        Boolean value specifying whether to use a secondary classifier
+    networkcfg : string
+        Network architecture file
+    networksavefile : string
+        Absolute path to trained YOLOv3 network file, saved by PyTorch (.pt)
+    class_path : string
+        Absolute path to class
+    conf_thres : float
+        Confidence threshold for detection
+    nms_thres : float
+        NMS threshold
+    batch_size : int
+        Desired batchsize
+    img_size : int
+        Desired cropped image size
+    rgb_mean : string
+        Absolute path to dataset RGB mean file
+    rgb_std : string
+        Absolute path to dataset RGB standard deviation file
+    class_mean : string
+        Absolute path to class mean file
+    class_sigma : string
+        Absolute path to class standard deviation file
     """
     
     def __init__(self,args=[]):

@@ -13,13 +13,21 @@ def detect():
     """
     Main driver script for testing the YOLOv3 network.
 
-    | **Inputs:**
-    |    *args:* command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.
+    **Inputs**
 
-    | **Outputs:**
-    |    *inputs.outdir/metrics.txt:* output metrics for specified test image given by inputs.imagepath
-    |    *inputs.loaddir/<inputs.imagepath>.jpg:* test image with detected bounding boxes, classes and confidence scores
-    |    *inputs.loaddir/<inputs.imagepath>.tif.txt:*  text file with bounding boxes, classes and confidence scores for all detections
+    ----------
+    args : command line arguments
+        command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.
+
+    **Outputs**
+
+    ----------
+    inputs.outdir/metrics.txt : text file
+        output metrics for specified test image given by inputs.imagepath
+    inputs.loaddir/<inputs.imagepath>.jpg : jpeg image
+        test image with detected bounding boxes, classes and confidence scores
+    inputs.loaddir/<inputs.imagepath>.tif.txt : text file
+        text file with bounding boxes, classes and confidence scores for all detections
     """
 
     # Read input file options
@@ -44,8 +52,8 @@ def detect():
 
     # Metrics
     if opt.plot_flag:
-        from scoring import score
-        score.score(opt.outdir, opt.targetspath, opt.outdir)
+        import scoring
+        scoring.score(opt.outdir, opt.targetspath, opt.outdir)
 
 if __name__ == '__main__':
     torch.cuda.empty_cache()

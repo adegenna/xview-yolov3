@@ -19,14 +19,23 @@ def main():
     """
     Main driver script for training the YOLOv3 network.
 
-    | **Inputs:**
-    |    *args:* command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.
+    **Inputs**
 
-    | **Outputs:**
-    |    *inputs.outdir/results.txt:* output metrics for each training epoch
-    |    *inputs.loaddir/latest.pt:* checkpoint file for latest network configuration
-    |    *inputs.loaddir/best.pt:* checkpoint file for best current network configuration
-    |    *inputs.loaddir/backup.pt:* checkpoint file for backup purposes
+    ----------
+    args : command line arguments
+        Command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.
+
+    **Outputs**
+
+    -------
+    inputs.outdir/results.txt : text file 
+        output metrics for each training epoch
+    inputs.loaddir/latest.pt : YOLOv3 network PyTorch save file 
+        checkpoint file for latest network configuration
+    inputs.loaddir/best.pt : YOLOv3 network PyTorch save file 
+        checkpoint file for best current network configuration
+    inputs.loaddir/backup.pt : YOLOv3 network PyTorch save file 
+        checkpoint file for backup purposes
     """
 
     # Problem setup: read input file
