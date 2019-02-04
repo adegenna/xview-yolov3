@@ -88,6 +88,8 @@ class InputFile():
         Absolute path to class mean file
     class_sigma : string
         Absolute path to class standard deviation file
+    invalid_class_list : string (csv format)
+        Comma-separated list of classes to be ignored from training data
     """
     
     def __init__(self,args=[]):
@@ -161,3 +163,5 @@ class InputFile():
         self.rgb_std         = inputfilestream.readline().strip().split('= ')[1];
         self.class_mean      = inputfilestream.readline().strip().split('= ')[1];
         self.class_sigma     = inputfilestream.readline().strip().split('= ')[1];
+        invalid_class_list   = inputfilestream.readline().strip().split('= ')[1]
+        self.invalid_class_list  = np.array( invalid_class_list.split(',') , dtype='int' )

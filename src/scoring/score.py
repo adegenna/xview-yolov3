@@ -27,6 +27,7 @@ from tqdm import tqdm
 
 from scoring.matching import Matching
 from scoring.rectangle import Rectangle
+from utils.utils import determine_number_of_class_members, determine_common_and_rare_classes, zerocenter_class_indices
 
 """
   Scoring code to calculate per-class precision and mean average precision.
@@ -134,35 +135,36 @@ def ap_from_pr(p, r):
     return ap
 
 # @profile
-def score(path_predictions, path_groundtruth, path_output, iou_threshold=.5):
+def score(opt, iou_threshold=.5):
     """
       Compute metrics on a number of prediction files, given a folder of prediction files
       and a ground truth.  Primary metric is mean average precision (mAP).
 
-      Args:
-          path_predictions: a folder path of prediction files.
-            Prediction files should have filename format 'XYZ.tif.txt',
-            where 'XYZ.tif' is the xView TIFF file being predicted on.
-            Prediction files should be in space-delimited csv format, with each
-            line like (xmin ymin xmax ymax class_prediction score_prediction)
+      **Inputs**
 
-          path_groundtruth: a file path to a single ground truth geojson
+      ----------
+      opt : InputFile
+            InputFile member specifying all user options
 
-          path_output: a folder path for output scoring files
+      iou_threshold : float 
+            iou threshold (between 0 and 1) indicating the percentage iou required to count a prediction as a true positive
 
-          iou_threshold: a float between 0 and 1 indicating the percentage
-            iou required to count a prediction as a true positive
+      **Outputs**
 
-      Outputs:
-        Writes two files to the 'path_output' parameter folder: 'score.txt' and 'metrics.txt'
-        'score.txt' contains a single floating point value output: mAP
-        'metrics.txt' contains the remaining metrics in per-line format (metric/class_num: score_float)
+      -----------
+      opt.outdir/metrics.txt : text file
+          contains the scoring metrics in per-line format (metric/class_num: score_float)
 
-      Raises:
-        ValueError: if there are files in the prediction folder that are not in the ground truth geojson.
-          EG a prediction file is titled '15.tif.txt', but the file '15.tif' is not in the ground truth.
+      **Raises**
+    
+      ----------
+      ValueError 
+          Raised if there are files in the prediction folder that are not in the ground truth geojson. EG a prediction file is titled '15.tif.txt', but the file '15.tif' is not in the ground truth.
 
     """
+    path_predictions = opt.outdir
+    path_groundtruth = opt.targetspath
+    path_output      = opt.outdir
     assert (iou_threshold < 1 and iou_threshold > 0)
 
     print('Computing mAP and associated metrics on test data...')
@@ -277,24 +279,24 @@ def score(path_predictions, path_groundtruth, path_output, iou_threshold=.5):
         average_precision_per_class[i] = ap
 
     # metric splits
+    common_classes, rare_classes                 = determine_common_and_rare_classes(opt)
+    small_classes, medium_classes, large_classes = determine_small_medium_large_classes(opt)
+    
     metric_keys = ['map', 'map/small', 'map/medium', 'map/large',
                    'map/common', 'map/rare']
 
     splits = {
-        'map/small': [17, 18, 19, 20, 21, 23, 24, 26, 27, 28, 32, 41, 60,
-                      62, 63, 64, 65, 66, 91],
-        'map/medium': [11, 12, 15, 25, 29, 33, 34, 35, 36, 37, 38, 42, 44,
-                       47, 50, 53, 56, 59, 61, 71, 72, 73, 76, 84, 86, 93, 94],
-        'map/large': [13, 40, 45, 49, 51, 52, 54, 55, 57, 74, 77, 79, 83, 89],
+        'map/small': small_classes,
+        'map/medium': medium_classes,
+        'map/large': large_classes,
 
-        'map/common': [13, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 34, 35, 41,
-                       47, 60, 63, 64, 71, 72, 73, 76, 77, 79, 83, 86, 89, 91],
-        'map/rare': [11, 12, 15, 29, 32, 33, 36, 37, 38, 40, 42, 44, 45, 49, 50,
-                     51, 52, 53, 54, 55, 56, 57, 59, 61, 62, 65, 66, 74, 84, 93, 94]
+        'map/common': common_classes,
+        'map/rare': rare_classes
     }
-
-    n = [ 11.0, 12.0, 13.0, 15.0, 17.0, 18.0, 19.0, 20.0, 21.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 32.0, 33.0, 34.0, 35.0, 36.0, 37.0, 38.0, 40.0, 41.0, 42.0, 44.0, 45.0, 47.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0, 56.0, 57.0, 59.0, 60.0, 61.0, 62.0, 63.0, 64.0, 65.0, 66.0, 71.0, 72.0, 73.0, 74.0, 76.0, 77.0, 79.0, 83.0, 84.0, 86.0, 89.0, 91.0, 93.0, 94.0]
-    with open('../data/xview.names') as f:
+    
+    _, _, classes   = get_labels_geojson(opt.targetspath)
+    n               = np.setdiff1d( np.unique(classes) , opt.invalid_class_list )    
+    with open(opt.class_path) as f:
         lines = f.readlines()
 
     map_dict = {}
@@ -344,6 +346,4 @@ def score(path_predictions, path_groundtruth, path_output, iou_threshold=.5):
     print("Final time: %s" % str(time.time() - ttime))
 
 
-if __name__ == "__main__":
-    path = '/Users/glennjocher/Documents/PyCharmProjects/yolo/data/xview_predictions/'
-    score(path, '/Users/glennjocher/Downloads/DATA/xview/xView_train.geojson', '.')
+    

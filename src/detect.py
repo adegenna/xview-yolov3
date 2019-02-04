@@ -53,7 +53,7 @@ def detect():
     # Metrics
     if opt.plot_flag:
         import scoring
-        scoring.score(opt.outdir, opt.targetspath, opt.outdir)
+        scoring.score(opt)
 
 if __name__ == '__main__':
     torch.cuda.empty_cache()
