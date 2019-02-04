@@ -167,13 +167,21 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main driver script for testing the YOLOv3 network.</span>
 
-<span class="sd">    | **Inputs:**</span>
-<span class="sd">    |    *args:* command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</span>
+<span class="sd">    **Inputs**</span>
 
-<span class="sd">    | **Outputs:**</span>
-<span class="sd">    |    *inputs.outdir/metrics.txt:* output metrics for specified test image given by inputs.imagepath</span>
-<span class="sd">    |    *inputs.loaddir/&lt;inputs.imagepath&gt;.jpg:* test image with detected bounding boxes, classes and confidence scores</span>
-<span class="sd">    |    *inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt:*  text file with bounding boxes, classes and confidence scores for all detections</span>
+<span class="sd">    ----------</span>
+<span class="sd">    args : command line arguments</span>
+<span class="sd">        command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</span>
+
+<span class="sd">    **Outputs**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    inputs.outdir/metrics.txt : text file</span>
+<span class="sd">        output metrics for specified test image given by inputs.imagepath</span>
+<span class="sd">    inputs.loaddir/&lt;inputs.imagepath&gt;.jpg : jpeg image</span>
+<span class="sd">        test image with detected bounding boxes, classes and confidence scores</span>
+<span class="sd">    inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt : text file</span>
+<span class="sd">        text file with bounding boxes, classes and confidence scores for all detections</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Read input file options</span>
@@ -198,8 +206,8 @@
 
     <span class="c1"># Metrics</span>
     <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">plot_flag</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">scoring</span> <span class="k">import</span> <span class="n">score</span>
-        <span class="n">score</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">targetspath</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span></div>
+        <span class="kn">import</span> <span class="nn">scoring</span>
+        <span class="n">scoring</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">targetspath</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>

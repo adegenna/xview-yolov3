@@ -207,7 +207,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">#@profile</span>
-<div class="viewcode-block" id="get_labels"><a class="viewcode-back" href="../../code.html#scoring.score.get_labels">[docs]</a><span class="k">def</span> <span class="nf">get_labels</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+<div class="viewcode-block" id="get_labels"><a class="viewcode-back" href="../../code.html#src.scoring.get_labels">[docs]</a><span class="k">def</span> <span class="nf">get_labels</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Processes a WorldView3 GEOJSON file</span>
 
@@ -241,7 +241,7 @@
     <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">chips</span><span class="p">,</span> <span class="n">classes</span></div>
 
 
-<div class="viewcode-block" id="convert_to_rectangle_list"><a class="viewcode-back" href="../../code.html#scoring.score.convert_to_rectangle_list">[docs]</a><span class="k">def</span> <span class="nf">convert_to_rectangle_list</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_to_rectangle_list"><a class="viewcode-back" href="../../code.html#src.scoring.convert_to_rectangle_list">[docs]</a><span class="k">def</span> <span class="nf">convert_to_rectangle_list</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Converts a list of coordinates to a list of rectangles</span>
 
@@ -262,7 +262,7 @@
     <span class="k">return</span> <span class="n">rectangle_list</span></div>
 
 
-<div class="viewcode-block" id="ap_from_pr"><a class="viewcode-back" href="../../code.html#scoring.score.ap_from_pr">[docs]</a><span class="k">def</span> <span class="nf">ap_from_pr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<div class="viewcode-block" id="ap_from_pr"><a class="viewcode-back" href="../../code.html#src.scoring.ap_from_pr">[docs]</a><span class="k">def</span> <span class="nf">ap_from_pr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Calculates AP from precision and recall values as specified in</span>
 <span class="sd">      the PASCAL VOC devkit.</span>
@@ -288,7 +288,7 @@
     <span class="k">return</span> <span class="n">ap</span></div>
 
 <span class="c1"># @profile</span>
-<div class="viewcode-block" id="score"><a class="viewcode-back" href="../../code.html#scoring.score.score">[docs]</a><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">path_predictions</span><span class="p">,</span> <span class="n">path_groundtruth</span><span class="p">,</span> <span class="n">path_output</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="o">=.</span><span class="mi">5</span><span class="p">):</span>
+<div class="viewcode-block" id="score"><a class="viewcode-back" href="../../code.html#src.scoring.score">[docs]</a><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">path_predictions</span><span class="p">,</span> <span class="n">path_groundtruth</span><span class="p">,</span> <span class="n">path_output</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="o">=.</span><span class="mi">5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Compute metrics on a number of prediction files, given a folder of prediction files</span>
 <span class="sd">      and a ground truth.  Primary metric is mean average precision (mAP).</span>

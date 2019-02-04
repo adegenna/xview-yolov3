@@ -27,19 +27,8 @@ Src/
 .. automodule:: src.datasets
    :members: ListDataset, ImageFolder, pickRandomPoints, augmentHSV, resize_square, random_affine
 
-Scoring/
----------------------
-.. automodule:: scoring.score
-   :members: get_labels, convert_to_rectangle_list, ap_from_pr, score
-
-.. automodule:: scoring.evaluation
-   :members:
-
-.. automodule:: scoring.matching
-   :members:
-
-.. automodule:: scoring.rectangle
-   :members:
+.. automodule:: src.scoring
+   :members: get_labels, convert_to_rectangle_list, ap_from_pr, score, safe_divide, compute_statistics_given_rectangle_matches, compute_precision_recall_given_image_statistics_list, compute_average_precision_recall_given_precision_recall_dict, convert_to_rectangle_list, compute_average_precision_recall, Matching, cartesian, Rectangle
 	     
 Utils/
 ---------------------

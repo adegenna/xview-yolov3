@@ -90,7 +90,6 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Docs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.train">Src/</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-scoring.score">Scoring/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.datasetProcessing">Utils/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tests.unittests">Tests/</a></li>
 </ul>
@@ -169,98 +168,126 @@
 <dt id="src.train.main">
 <code class="descclassname">src.train.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/train.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.train.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main driver script for training the YOLOv3 network.</p>
-<div class="line-block">
-<div class="line"><strong>Inputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>args:</em> command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</div>
-</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>Outputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>inputs.outdir/results.txt:</em> output metrics for each training epoch</div>
-<div class="line"><em>inputs.loaddir/latest.pt:</em> checkpoint file for latest network configuration</div>
-<div class="line"><em>inputs.loaddir/best.pt:</em> checkpoint file for best current network configuration</div>
-<div class="line"><em>inputs.loaddir/backup.pt:</em> checkpoint file for backup purposes</div>
-</div>
-</div>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments</span></dt>
+<dd>Command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
+</dl>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>inputs.outdir/results.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file </span></dt>
+<dd>output metrics for each training epoch</dd>
+<dt>inputs.loaddir/latest.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
+<dd>checkpoint file for latest network configuration</dd>
+<dt>inputs.loaddir/best.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
+<dd>checkpoint file for best current network configuration</dd>
+<dt>inputs.loaddir/backup.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
+<dd>checkpoint file for backup purposes</dd>
+</dl>
 </dd></dl>
 
 <span class="target" id="module-src.detect"></span><dl class="function">
 <dt id="src.detect.detect">
 <code class="descclassname">src.detect.</code><code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main driver script for testing the YOLOv3 network.</p>
-<div class="line-block">
-<div class="line"><strong>Inputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>args:</em> command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</div>
-</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>Outputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>inputs.outdir/metrics.txt:</em> output metrics for specified test image given by inputs.imagepath</div>
-<div class="line"><em>inputs.loaddir/&lt;inputs.imagepath&gt;.jpg:</em> test image with detected bounding boxes, classes and confidence scores</div>
-<div class="line"><em>inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt:</em>  text file with bounding boxes, classes and confidence scores for all detections</div>
-</div>
-</div>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments</span></dt>
+<dd>command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
+</dl>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>inputs.outdir/metrics.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
+<dd>output metrics for specified test image given by inputs.imagepath</dd>
+<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.jpg <span class="classifier-delimiter">:</span> <span class="classifier">jpeg image</span></dt>
+<dd>test image with detected bounding boxes, classes and confidence scores</dd>
+<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
+<dd>text file with bounding boxes, classes and confidence scores for all detections</dd>
+</dl>
 </dd></dl>
 
 <span class="target" id="module-src.InputFile"></span><dl class="class">
 <dt id="src.InputFile.InputFile">
 <em class="property">class </em><code class="descclassname">src.InputFile.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>args=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for packaging all input/config file options together.</p>
-<div class="line-block">
-<div class="line"><strong>Inputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>args:</em> (passed to constructor at runtime) command line arguments used in shell call for main driver script. args must have a inputfilename member that specifies the desired inputfile name. </div>
-</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>Options:</strong></div>
-<div class="line-block">
-<div class="line"><em>inputtype:</em> Options are <cite>train</cite> or <cite>detect</cite></div>
-<div class="line"><em>projdir:</em> Absolute path to project directory</div>
-<div class="line"><em>datadir:</em> Absolute path to data directory</div>
-<div class="line"><em>loaddir:</em> Absolute path to load directory</div>
-<div class="line"><em>outdir:</em> Absolute path to output directory</div>
-<div class="line"><em>targetspath:</em> Absolute path to target file</div>
-<div class="line"><em>targetfiletype:</em> Type of target file</div>
-<div class="line"><em>traindir:</em> Type of target file</div>
-</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>Options (Train-Specific):</strong></div>
-<div class="line-block">
-<div class="line"><em>traindir:</em> Type of target file</div>
-<div class="line"><em>epochs:</em> Number of training epochs</div>
-<div class="line"><em>epochstart:</em> Starting epoch</div>
-<div class="line"><em>batchsize:</em> Training batch size</div>
-<div class="line"><em>networkcfg:</em> Network architecture file</div>
-<div class="line"><em>imgsize:</em> Base image crop size</div>
-<div class="line"><em>resume:</em> Boolean value specifying whether training is resuming from previous iteration</div>
-<div class="line"><em>invalid_class_list:</em> Comma-separated list of classes to be ignored from training data</div>
-<div class="line"><em>boundingboxclusters:</em> Desired number of bounding-box clusters for the YOLO architecture</div>
-<div class="line"><em>computeboundingboxclusters:</em> Boolean value specifying whether to compute bounding box clusters</div>
-</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>Options (Detect-Specific):</strong></div>
-<div class="line-block">
-<div class="line"><em>imagepath:</em> Image path</div>
-<div class="line"><em>plotflag:</em> Flag for plotting</div>
-<div class="line"><em>secondary_classifier:</em> Boolean value specifying whether to use a secondary classifier</div>
-<div class="line"><em>networkcfg:</em> Network architecture file</div>
-<div class="line"><em>networksavefile:</em> Trained YOLOv3 network file, saved by PyTorch (.pt)</div>
-<div class="line"><em>class_path:</em> Absolute path to class</div>
-<div class="line"><em>conf_thres:</em> Confidence threshold for detection</div>
-<div class="line"><em>nms_thres:</em> NMS threshold</div>
-<div class="line"><em>batch_size:</em> Desired batchsize</div>
-<div class="line"><em>img_size:</em> Desired cropped image size</div>
-<div class="line"><em>rgb_mean:</em> Dataset RGB mean file</div>
-<div class="line"><em>rgb_std:</em> Dataset RGB standard deviation file</div>
-</div>
-</div>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments </span></dt>
+<dd>(passed to constructor at runtime) command line arguments used in shell call for main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
+</dl>
+<p><strong>Options</strong></p>
+<dl class="docutils">
+<dt>inputtype <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Options are <cite>train</cite> or <cite>detect</cite></dd>
+<dt>projdir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to project directory</dd>
+<dt>datadir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to data directory</dd>
+<dt>loaddir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to load directory</dd>
+<dt>outdir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to output directory</dd>
+<dt>targetspath <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to target file</dd>
+<dt>targetfiletype <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Type of target file</dd>
+<dt>traindir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Type of target file</dd>
+</dl>
+<p><strong>Options (Train-Specific)</strong></p>
+<dl class="docutils">
+<dt>traindir <span class="classifier-delimiter">:</span> <span class="classifier">string </span></dt>
+<dd>Type of target file</dd>
+<dt>epochs <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of training epochs</dd>
+<dt>epochstart <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Starting epoch</dd>
+<dt>batchsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Training batch size</dd>
+<dt>networkcfg <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Network architecture file</dd>
+<dt>imgsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Base image crop size</dd>
+<dt>resume <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Boolean value specifying whether training is resuming from previous iteration</dd>
+<dt>invalid_class_list <span class="classifier-delimiter">:</span> <span class="classifier">string (csv format)</span></dt>
+<dd>Comma-separated list of classes to be ignored from training data</dd>
+<dt>boundingboxclusters <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Desired number of bounding-box clusters for the YOLO architecture</dd>
+<dt>computeboundingboxclusters <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Boolean value specifying whether to compute bounding box clusters</dd>
+</dl>
+<p><strong>Options (Detect-Specific)</strong></p>
+<dl class="docutils">
+<dt>imagepath <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Image path</dd>
+<dt>plotflag <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Flag for plotting</dd>
+<dt>secondary_classifier <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Boolean value specifying whether to use a secondary classifier</dd>
+<dt>networkcfg <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Network architecture file</dd>
+<dt>networksavefile <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to trained YOLOv3 network file, saved by PyTorch (.pt)</dd>
+<dt>class_path <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to class</dd>
+<dt>conf_thres <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Confidence threshold for detection</dd>
+<dt>nms_thres <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>NMS threshold</dd>
+<dt>batch_size <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Desired batchsize</dd>
+<dt>img_size <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Desired cropped image size</dd>
+<dt>rgb_mean <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to dataset RGB mean file</dd>
+<dt>rgb_std <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to dataset RGB standard deviation file</dd>
+<dt>class_mean <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to class mean file</dd>
+<dt>class_sigma <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to class standard deviation file</dd>
+</dl>
 <dl class="method">
 <dt id="src.InputFile.InputFile.printInputs">
 <code class="descname">printInputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.printInputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.printInputs" title="Permalink to this definition">¶</a></dt>
@@ -720,23 +747,9 @@ registered hooks while the latter silently ignores them.</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="module-scoring.score">
-<span id="scoring"></span><h2>Scoring/<a class="headerlink" href="#module-scoring.score" title="Permalink to this headline">¶</a></h2>
-<p>Copyright 2018 Defense Innovation Unit Experimental
-All rights reserved.</p>
-<p>Licensed under the Apache License, Version 2.0 (the “License”);
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at</p>
-<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
-<p>Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an “AS IS” BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.</p>
-<dl class="function">
-<dt id="scoring.score.get_labels">
-<code class="descclassname">scoring.score.</code><code class="descname">get_labels</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#get_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.score.get_labels" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-src.scoring"></span><dl class="function">
+<dt id="src.scoring.get_labels">
+<code class="descclassname">src.scoring.</code><code class="descname">get_labels</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#get_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.get_labels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a WorldView3 GEOJSON file</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -747,8 +760,8 @@ limitations under the License.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="scoring.score.convert_to_rectangle_list">
-<code class="descclassname">scoring.score.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.score.convert_to_rectangle_list" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.convert_to_rectangle_list">
+<code class="descclassname">src.scoring.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.convert_to_rectangle_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a list of coordinates to a list of rectangles</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -763,8 +776,8 @@ limitations under the License.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="scoring.score.ap_from_pr">
-<code class="descclassname">scoring.score.</code><code class="descname">ap_from_pr</code><span class="sig-paren">(</span><em>p</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#ap_from_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.score.ap_from_pr" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.ap_from_pr">
+<code class="descclassname">src.scoring.</code><code class="descname">ap_from_pr</code><span class="sig-paren">(</span><em>p</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#ap_from_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.ap_from_pr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates AP from precision and recall values as specified in
 the PASCAL VOC devkit.</p>
 <dl class="docutils">
@@ -777,8 +790,8 @@ r: an array of recall values</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="scoring.score.score">
-<code class="descclassname">scoring.score.</code><code class="descname">score</code><span class="sig-paren">(</span><em>path_predictions</em>, <em>path_groundtruth</em>, <em>path_output</em>, <em>iou_threshold=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.score.score" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.score">
+<code class="descclassname">src.scoring.</code><code class="descname">score</code><span class="sig-paren">(</span><em>path_predictions</em>, <em>path_groundtruth</em>, <em>path_output</em>, <em>iou_threshold=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute metrics on a number of prediction files, given a folder of prediction files
 and a ground truth.  Primary metric is mean average precision (mAP).</p>
 <dl class="docutils">
@@ -810,26 +823,138 @@ line like (xmin ymin xmax ymax class_prediction score_prediction)</dd>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-scoring.matching"></span><p>Copyright 2018 Defense Innovation Unit Experimental
-All rights reserved.</p>
-<p>Licensed under the Apache License, Version 2.0 (the “License”);
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at</p>
-<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
-<p>Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an “AS IS” BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.</p>
+<dl class="function">
+<dt id="src.scoring.safe_divide">
+<code class="descclassname">src.scoring.</code><code class="descname">safe_divide</code><span class="sig-paren">(</span><em>numerator</em>, <em>denominator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#safe_divide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.safe_divide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the safe division to avoid the divide by zero problem.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.scoring.compute_statistics_given_rectangle_matches">
+<code class="descclassname">src.scoring.</code><code class="descname">compute_statistics_given_rectangle_matches</code><span class="sig-paren">(</span><em>groundtruth_rects_matched</em>, <em>rects_matched</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#compute_statistics_given_rectangle_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.compute_statistics_given_rectangle_matches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the staticstics given the groundtruth_rects and rects matches.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">image_id: the image_id referring to the image to be evaluated.
+groundtruth_rects_matched: the groundtruth_rects_matched represents</p>
+<blockquote>
+<div>a list of integers returned from the Matching class instance to
+indicate the matched rectangle indices from rects for each of the
+groundtruth_rects.</div></blockquote>
+<dl class="last docutils">
+<dt>rects_matched: the rects_matched represents a list of integers returned</dt>
+<dd>from the Matching class instance to indicate the matched rectangle
+indices from groundtruth_rects for each of the rects.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>A dictionary holding the computed statistics as well as the inputs.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.scoring.compute_precision_recall_given_image_statistics_list">
+<code class="descclassname">src.scoring.</code><code class="descname">compute_precision_recall_given_image_statistics_list</code><span class="sig-paren">(</span><em>iou_threshold</em>, <em>image_statistics_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#compute_precision_recall_given_image_statistics_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.compute_precision_recall_given_image_statistics_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the precision recall numbers given iou_threshold and statistics.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>iou_threshold: the iou_threshold under which the statistics are computed.
+image_statistics_list: a list of the statistics computed and returned
+by the compute_statistics_given_rectangle_matches method for a list of
+images.</dd>
+<dt>Returns:</dt>
+<dd>A dictionary holding the precision, recall as well as the inputs.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.scoring.compute_average_precision_recall_given_precision_recall_dict">
+<code class="descclassname">src.scoring.</code><code class="descname">compute_average_precision_recall_given_precision_recall_dict</code><span class="sig-paren">(</span><em>precision_recall_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#compute_average_precision_recall_given_precision_recall_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.compute_average_precision_recall_given_precision_recall_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the average precision (AP) and average recall (AR).</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>precision_recall_dict: the precision_recall_dict holds the dictionary of
+precision and recall information returned by the
+compute_precision_recall_given_image_statistics_list method, which is
+calcualted under a range of iou_thresholds, where the iou_threshold is
+the key.</dd>
+<dt>Returns:</dt>
+<dd>average_precision, average_recall.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">src.scoring.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converts a list of coordinates to a list of rectangles</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>coordinates: a flattened list of bounding box coordinates in format</dt>
+<dd>(xmin,ymin,xmax,ymax)</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt>
+<dd>A list of rectangles</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.scoring.compute_average_precision_recall">
+<code class="descclassname">src.scoring.</code><code class="descname">compute_average_precision_recall</code><span class="sig-paren">(</span><em>groundtruth_coordinates</em>, <em>coordinates</em>, <em>iou_threshold</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#compute_average_precision_recall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.compute_average_precision_recall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the average precision (AP) and average recall (AR).</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>groundtruth_info_dict: the groundtruth_info_dict holds all the groundtruth</dt>
+<dd><p class="first">information for an evaluation dataset. The format of this groundtruth_info_dict is
+as follows:
+{‘image_id_0’:</p>
+<blockquote>
+<div>[xmin_0,ymin_0,xmax_0,ymax_0,…,xmin_N0,ymin_N0,xmax_N0,ymax_N0],
+…,
+‘image_id_M’:
+[xmin_0,ymin_0,xmax_0,ymax_0,…,xmin_NM,ymin_NM,xmax_NM,ymax_NM]},</div></blockquote>
+<dl class="last docutils">
+<dt>where</dt>
+<dd><p class="first">image_id_* is an image_id that has the groundtruth rectangles labeled.
+xmin_*,ymin_*,xmax_*,ymax_* is the top-left and bottom-right corners</p>
+<blockquote class="last">
+<div>of one groundtruth rectangle.</div></blockquote>
+</dd>
+</dl>
+</dd>
+<dt>test_info_dict: the test_info_dict holds all the test information for an</dt>
+<dd><dl class="first docutils">
+<dt>evaluation dataset.</dt>
+<dd>The format of this test_info_dict is the same</dd>
+</dl>
+<p class="last">as the above groundtruth_info_dict.</p>
+</dd>
+<dt>iou_threshold_range: the IOU threshold range to compute the average</dt>
+<dd>precision (AP) and average recall (AR). For example:
+iou_threshold_range = [0.50:0.05:0.95]</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>average_precision, average_recall, as well as the precision_recall_dict,
+where precision_recall_dict holds the full precision/recall information
+for each of the iou_threshold in the iou_threshold_range.</dd>
+<dt>Raises:</dt>
+<dd>ValueError: if the input groundtruth_info_dict and test_info_dict show
+inconsistent information.</dd>
+</dl>
+</dd></dl>
+
 <dl class="class">
-<dt id="scoring.matching.Matching">
-<em class="property">class </em><code class="descclassname">scoring.matching.</code><code class="descname">Matching</code><span class="sig-paren">(</span><em>groundtruth_rects</em>, <em>rects</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/matching.html#Matching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.matching.Matching" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Matching">
+<em class="property">class </em><code class="descclassname">src.scoring.</code><code class="descname">Matching</code><span class="sig-paren">(</span><em>groundtruth_rects</em>, <em>rects</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/matching.html#Matching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Matching" title="Permalink to this definition">¶</a></dt>
 <dd><p>Matching class.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="scoring.matching.cartesian">
-<code class="descclassname">scoring.matching.</code><code class="descname">cartesian</code><span class="sig-paren">(</span><em>arrays</em>, <em>out=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/matching.html#cartesian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.matching.cartesian" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.cartesian">
+<code class="descclassname">src.scoring.</code><code class="descname">cartesian</code><span class="sig-paren">(</span><em>arrays</em>, <em>out=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/matching.html#cartesian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.cartesian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a cartesian product of input arrays.</p>
 <dl class="docutils">
 <dt>arrays <span class="classifier-delimiter">:</span> <span class="classifier">list of array-like</span></dt>
@@ -844,66 +969,55 @@ formed of input arrays.</dd>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-scoring.rectangle"></span><p>Copyright 2018 Defense Innovation Unit Experimental
-All rights reserved.</p>
-<p>Licensed under the Apache License, Version 2.0 (the “License”);
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at</p>
-<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
-<p>Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an “AS IS” BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.</p>
 <dl class="class">
-<dt id="scoring.rectangle.Rectangle">
-<em class="property">class </em><code class="descclassname">scoring.rectangle.</code><code class="descname">Rectangle</code><span class="sig-paren">(</span><em>xmin</em>, <em>ymin</em>, <em>xmax</em>, <em>ymax</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle">
+<em class="property">class </em><code class="descclassname">src.scoring.</code><code class="descname">Rectangle</code><span class="sig-paren">(</span><em>xmin</em>, <em>ymin</em>, <em>xmax</em>, <em>ymax</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rectangle class.</p>
 <dl class="method">
-<dt id="scoring.rectangle.Rectangle.area">
-<code class="descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.area" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle.area">
+<code class="descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the area of the Rectangle instance.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scoring.rectangle.Rectangle.contains">
-<code class="descname">contains</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.contains" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle.contains">
+<code class="descname">contains</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.contains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests if a point is inside or on any of the edges of the rectangle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scoring.rectangle.Rectangle.height">
-<code class="descname">height</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.height" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle.height">
+<code class="descname">height</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.height" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the height of the Rectangle instance.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scoring.rectangle.Rectangle.intersect">
-<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.intersect" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.intersect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the intersection of this rectangle with the other rectangle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scoring.rectangle.Rectangle.intersect_over_union">
-<code class="descname">intersect_over_union</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersect_over_union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.intersect_over_union" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle.intersect_over_union">
+<code class="descname">intersect_over_union</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersect_over_union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.intersect_over_union" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the intersection over union ratio of this and other rectangle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scoring.rectangle.Rectangle.intersects">
-<code class="descname">intersects</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.intersects" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle.intersects">
+<code class="descname">intersects</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.intersects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests if this rectangle has an intersection with another rectangle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scoring.rectangle.Rectangle.is_empty">
-<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.is_empty" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.is_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if the Rectangle instance is valid or not.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scoring.rectangle.Rectangle.width">
-<code class="descname">width</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.rectangle.Rectangle.width" title="Permalink to this definition">¶</a></dt>
+<dt id="src.scoring.Rectangle.width">
+<code class="descname">width</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.width" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the width of the Rectangle instance.</p>
 </dd></dl>
 

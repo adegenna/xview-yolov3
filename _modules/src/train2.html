@@ -158,7 +158,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">models</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">utils.datasets</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">datasets</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">utils.utils</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">InputFile</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">NetworkTrainer</span> <span class="k">import</span> <span class="o">*</span>
@@ -169,12 +169,12 @@
 <span class="c1"># batch_size 2: 32*35 = 1120 (1.40 vs 800, 2.06 cumulative)</span>
 <span class="c1"># batch_size 1: 32*49 = 1568 (1.40 vs 1120, 2.88 cumulative)</span>
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../index.html#src.train2.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../code.html#src.train2.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main driver script for training the YOLOv3 network.</span>
 
 <span class="sd">    | **Inputs:**</span>
-<span class="sd">    |    *inputs:* an input file formatted according to the InputFile class</span>
+<span class="sd">    |    *args:* command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</span>
 
 <span class="sd">    | **Outputs:**</span>
 <span class="sd">    |    *inputs.outdir/results.txt:* output metrics for each training epoch</span>
@@ -193,16 +193,18 @@
     <span class="n">inputs</span><span class="o">.</span><span class="n">printInputs</span><span class="p">();</span>
     <span class="c1"># Problem setup</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">loaddir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">model</span>      <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">imgsize</span><span class="p">)</span>
-    <span class="n">modelinfo</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="n">dataloader</span> <span class="o">=</span> <span class="n">ListDataset</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">computeboundingboxclusters</span><span class="p">:</span>
+        <span class="n">networkcfg</span>        <span class="o">=</span> <span class="n">create_yolo_architecture</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">dataloader</span><span class="o">.</span><span class="n">targets_metadata</span><span class="p">)</span>
+        <span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span> <span class="o">=</span> <span class="n">networkcfg</span>
+    <span class="n">model</span>      <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
     <span class="n">trainer</span>    <span class="o">=</span> <span class="n">NetworkTrainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">inputs</span><span class="p">);</span>
     <span class="c1"># Start training</span>
     <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">();</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
-    <span class="n">main</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">main</span><span class="p">()</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
 </pre></div>
 
