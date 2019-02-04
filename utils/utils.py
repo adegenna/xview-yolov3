@@ -634,3 +634,5 @@ def convert_tif2bmp(p):
         img = cv2.imread(f)
         cv2.imwrite(f.replace('.tif', '.bmp'), img)
         #os.system('rm -rf ' + f)
+
+    
