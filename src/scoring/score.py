@@ -162,7 +162,7 @@ def extract_detections_from_file(path_predictions):
 
 class Scoring_Data():
     """
-    Structure to package various intermediate data together for scoring purposes.
+    Structure to package various intermediate data/calculations together for scoring purposes.
     """
     def __init__(self):
         self.boxes_dict    = None
@@ -173,39 +173,37 @@ class Scoring_Data():
         self.gt_classes    = None
         self.gt_chips      = None
         self.iou_threshold = None
-
         
-def parse_predictions(scoring_data):
-    per_file_class_data = {}
-    for i in scoring_data.gt_unique:
-        per_file_class_data[i] = [[], []]
-    num_gt_per_cls = np.zeros((scoring_data.max_gt_cls))
-    attempted      = np.zeros(scoring_data.max_gt_cls)
-    for file_ind in range(len(scoring_data.pchips)):
-        print(scoring_data.pchips[file_ind])
-        det_box    = scoring_data.boxes_dict[scoring_data.pchips[file_ind]][:, :4]
-        det_scores = scoring_data.boxes_dict[scoring_data.pchips[file_ind]][:, 5]
-        det_cls    = scoring_data.boxes_dict[scoring_data.pchips[file_ind]][:, 4]
-        gt_box     = scoring_data.gt_coords[(scoring_data.gt_chips == scoring_data.pchips[file_ind]).flatten()]
-        gt_cls     = scoring_data.gt_classes[(scoring_data.gt_chips == scoring_data.pchips[file_ind])]
-        for i in scoring_data.gt_unique:
-            s                          = det_scores[det_cls == i]
-            ssort                      = np.argsort(s)[::-1]
-            per_file_class_data[i][0] += s[ssort].tolist()
-            gt_box_i_cls               = gt_box[gt_cls == i].flatten().tolist()
-            det_box_i_cls              = det_box[det_cls == i]
-            det_box_i_cls              = det_box_i_cls[ssort].flatten().tolist()
-            gt_rects                   = convert_to_rectangle_list(gt_box_i_cls)
-            rects                      = convert_to_rectangle_list(det_box_i_cls)
-            attempted[i]              += len(rects)
-            matching                   = Matching(gt_rects, rects)
-            rects_matched, gt_matched  = matching.greedy_match(scoring_data.iou_threshold)
-            # we aggregate confidence scores, rectangles, and num_gt across classes
-            # per_file_class_data[i][0] += det_scores[det_cls == i].tolist()
-            per_file_class_data[i][1] += rects_matched
-            num_gt_per_cls[i]         += len(gt_matched)
-    return per_file_class_data, num_gt_per_cls, attempted
-
+    def parse_predictions(self):
+        per_file_class_data = {}
+        for i in self.gt_unique:
+            per_file_class_data[i] = [[], []]
+        num_gt_per_cls = np.zeros((self.max_gt_cls))
+        attempted      = np.zeros(self.max_gt_cls)
+        for file_ind in range(len(self.pchips)):
+            print(self.pchips[file_ind])
+            det_box    = self.boxes_dict[self.pchips[file_ind]][:, :4]
+            det_scores = self.boxes_dict[self.pchips[file_ind]][:, 5]
+            det_cls    = self.boxes_dict[self.pchips[file_ind]][:, 4]
+            gt_box     = self.gt_coords[(self.gt_chips == self.pchips[file_ind]).flatten()]
+            gt_cls     = self.gt_classes[(self.gt_chips == self.pchips[file_ind])]
+            for i in self.gt_unique:
+                s                          = det_scores[det_cls == i]
+                ssort                      = np.argsort(s)[::-1]
+                per_file_class_data[i][0] += s[ssort].tolist()
+                gt_box_i_cls               = gt_box[gt_cls == i].flatten().tolist()
+                det_box_i_cls              = det_box[det_cls == i]
+                det_box_i_cls              = det_box_i_cls[ssort].flatten().tolist()
+                gt_rects                   = convert_to_rectangle_list(gt_box_i_cls)
+                rects                      = convert_to_rectangle_list(det_box_i_cls)
+                attempted[i]              += len(rects)
+                matching                   = Matching(gt_rects, rects)
+                rects_matched, gt_matched  = matching.greedy_match(self.iou_threshold)
+                # we aggregate confidence scores, rectangles, and num_gt across classes
+                # per_file_class_data[i][0] += det_scores[det_cls == i].tolist()
+                per_file_class_data[i][1] += rects_matched
+                num_gt_per_cls[i]         += len(gt_matched)
+        return per_file_class_data, num_gt_per_cls, attempted
 
 # @profile
 def score(opt, iou_threshold=.5):
@@ -261,7 +259,7 @@ def score(opt, iou_threshold=.5):
     scoring_data.gt_chips      = gt_chips
     scoring_data.iou_threshold = iou_threshold
 
-    per_file_class_data, num_gt_per_cls, attempted = parse_predictions(scoring_data)
+    per_file_class_data, num_gt_per_cls, attempted = scoring_data.parse_predictions()
 
     average_precision_per_class = np.ones(max_gt_cls) * float('nan')
     per_class_p                 = np.ones(max_gt_cls) * float('nan')
