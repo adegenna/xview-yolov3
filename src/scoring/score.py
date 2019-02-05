@@ -20,14 +20,12 @@ import json
 import os
 import time
 import scipy.io
-
-
 import numpy as np
 from tqdm import tqdm
 
 from scoring.matching import Matching
 from scoring.rectangle import Rectangle
-from utils.utils import determine_number_of_class_members, determine_common_and_rare_classes, zerocenter_class_indices
+from utils.datasetProcessing import *
 
 """
   Scoring code to calculate per-class precision and mean average precision.
@@ -134,6 +132,81 @@ def ap_from_pr(p, r):
 
     return ap
 
+
+def extract_detections_from_file(path_predictions):
+    boxes_dict = {}
+    pchips     = []
+    num_preds  = 0
+    for file in os.listdir(path_predictions):
+        fname = file.split(".txt")[0]
+        if ( file.endswith(".tif.txt") ):
+            pchips.append(fname)
+            with open(path_predictions + file, 'r') as f:
+                arr = np.array(list(csv.reader(f, delimiter=" ")))
+                if arr.shape[0] == 0:
+                    # If the file is empty, we fill it in with an array of zeros
+                    boxes_dict[fname] = np.array([[0, 0, 0, 0, 0, 0]])
+                    num_preds += 1
+                else:
+                    arr = arr[:, :6].astype(np.float64)
+                    threshold = 0
+                    arr = arr[arr[:, 5] > threshold]
+                    num_preds += arr.shape[0]
+                    if np.any(arr[:, :4] < 0):
+                        raise ValueError('Bounding boxes cannot be negative.')
+                    if np.any(arr[:, 5] < 0) or np.any(arr[:, 5] > 1):
+                        raise ValueError('Confidence scores should be between 0 and 1.')
+                    boxes_dict[fname] = arr[:, :6]
+    pchips = sorted(pchips)
+    return boxes_dict, pchips, num_preds
+
+class Scoring_Data():
+    """
+    Structure to package various intermediate data together for scoring purposes.
+    """
+    def __init__(self):
+        self.boxes_dict    = None
+        self.pchips        = None
+        self.gt_unique     = None
+        self.max_gt_cls    = None
+        self.gt_coords     = None
+        self.gt_classes    = None
+        self.gt_chips      = None
+        self.iou_threshold = None
+
+        
+def parse_predictions(scoring_data):
+    per_file_class_data = {}
+    for i in scoring_data.gt_unique:
+        per_file_class_data[i] = [[], []]
+    num_gt_per_cls = np.zeros((scoring_data.max_gt_cls))
+    attempted      = np.zeros(scoring_data.max_gt_cls)
+    for file_ind in range(len(scoring_data.pchips)):
+        print(scoring_data.pchips[file_ind])
+        det_box    = scoring_data.boxes_dict[scoring_data.pchips[file_ind]][:, :4]
+        det_scores = scoring_data.boxes_dict[scoring_data.pchips[file_ind]][:, 5]
+        det_cls    = scoring_data.boxes_dict[scoring_data.pchips[file_ind]][:, 4]
+        gt_box     = scoring_data.gt_coords[(scoring_data.gt_chips == scoring_data.pchips[file_ind]).flatten()]
+        gt_cls     = scoring_data.gt_classes[(scoring_data.gt_chips == scoring_data.pchips[file_ind])]
+        for i in scoring_data.gt_unique:
+            s                          = det_scores[det_cls == i]
+            ssort                      = np.argsort(s)[::-1]
+            per_file_class_data[i][0] += s[ssort].tolist()
+            gt_box_i_cls               = gt_box[gt_cls == i].flatten().tolist()
+            det_box_i_cls              = det_box[det_cls == i]
+            det_box_i_cls              = det_box_i_cls[ssort].flatten().tolist()
+            gt_rects                   = convert_to_rectangle_list(gt_box_i_cls)
+            rects                      = convert_to_rectangle_list(det_box_i_cls)
+            attempted[i]              += len(rects)
+            matching                   = Matching(gt_rects, rects)
+            rects_matched, gt_matched  = matching.greedy_match(scoring_data.iou_threshold)
+            # we aggregate confidence scores, rectangles, and num_gt across classes
+            # per_file_class_data[i][0] += det_scores[det_cls == i].tolist()
+            per_file_class_data[i][1] += rects_matched
+            num_gt_per_cls[i]         += len(gt_matched)
+    return per_file_class_data, num_gt_per_cls, attempted
+
+
 # @profile
 def score(opt, iou_threshold=.5):
     """
@@ -166,99 +239,34 @@ def score(opt, iou_threshold=.5):
     path_groundtruth = opt.targetspath
     path_output      = opt.outdir
     assert (iou_threshold < 1 and iou_threshold > 0)
-
     print('Computing mAP and associated metrics on test data...')
     ttime = time.time()
-    boxes_dict = {}
-    pchips = []
-    stclasses = []
-    num_preds = 0
-
-    for file in tqdm(os.listdir(path_predictions)):
-        fname = file.split(".txt")[0]
-        fext  = (path_predictions+file).split('.')[-1] 
-        if ( (fext != 'jpg') & (fext != 'out') & (fext != 'tif') & (fname != 'metrics')):
-            print(fname)
-            pchips.append(fname)
-            with open(path_predictions + file, 'r') as f:
-                arr = np.array(list(csv.reader(f, delimiter=" ")))
-                if arr.shape[0] == 0:
-                    # If the file is empty, we fill it in with an array of zeros
-                    boxes_dict[fname] = np.array([[0, 0, 0, 0, 0, 0]])
-                    num_preds += 1
-                else:
-                    arr = arr[:, :6].astype(np.float64)
-                    threshold = 0
-                    arr = arr[arr[:, 5] > threshold]
-                    stclasses += list(arr[:, 4])
-                    num_preds += arr.shape[0]
-
-                    if np.any(arr[:, :4] < 0):
-                        raise ValueError('Bounding boxes cannot be negative.')
-
-                    if np.any(arr[:, 5] < 0) or np.any(arr[:, 5] > 1):
-                        raise ValueError('Confidence scores should be between 0 and 1.')
-
-                    boxes_dict[fname] = arr[:, :6]
-
-    pchips = sorted(pchips)
-    stclasses = np.unique(stclasses).astype(np.int64)
-
+    boxes_dict, pchips, num_preds   = extract_detections_from_file(path_predictions)
     gt_coords, gt_chips, gt_classes = get_labels(path_groundtruth)
-    scipy.io.savemat('ground_truth.mat',{'gt_coords':gt_coords,'gt_chips':gt_chips,'gt_classes':gt_classes})
-    #mat = scipy.io.loadmat('../scoring/ground_truth.mat')
-    #gt_coords, gt_chips, gt_classes = mat['gt_coords'], mat['gt_chips'], mat['gt_classes']
-
-    gt_unique = np.unique(gt_classes.astype(np.int64))
+    gt_unique  = np.unique(gt_classes.astype(np.int64))
     max_gt_cls = 100
 
     if set(pchips).issubset(set(gt_unique)):
         raise ValueError('The prediction files {%s} are not in the ground truth.' % str(set(pchips) - (set(gt_unique))))
-
     print("Number of Predictions: %d" % num_preds)
     print("Number of GT: %d" % np.sum(gt_classes.shape))
 
-    per_file_class_data = {}
-    for i in gt_unique:
-        per_file_class_data[i] = [[], []]
+    scoring_data               = Scoring_Data()
+    scoring_data.boxes_dict    = boxes_dict
+    scoring_data.pchips        = pchips
+    scoring_data.gt_unique     = gt_unique
+    scoring_data.max_gt_cls    = max_gt_cls
+    scoring_data.gt_coords     = gt_coords
+    scoring_data.gt_classes    = gt_classes
+    scoring_data.gt_chips      = gt_chips
+    scoring_data.iou_threshold = iou_threshold
 
-    num_gt_per_cls = np.zeros((max_gt_cls))
-
-    attempted = np.zeros(100)
-    for file_ind in range(len(pchips)):
-        print(pchips[file_ind])
-        det_box = boxes_dict[pchips[file_ind]][:, :4]
-        det_scores = boxes_dict[pchips[file_ind]][:, 5]
-        det_cls = boxes_dict[pchips[file_ind]][:, 4]
-
-        gt_box = gt_coords[(gt_chips == pchips[file_ind]).flatten()]
-        gt_cls = gt_classes[(gt_chips == pchips[file_ind])]
-
-        for i in gt_unique:
-            s = det_scores[det_cls == i]
-            ssort = np.argsort(s)[::-1]
-            per_file_class_data[i][0] += s[ssort].tolist()
-
-            gt_box_i_cls = gt_box[gt_cls == i].flatten().tolist()
-            det_box_i_cls = det_box[det_cls == i]
-            det_box_i_cls = det_box_i_cls[ssort].flatten().tolist()
-
-            gt_rects = convert_to_rectangle_list(gt_box_i_cls)
-            rects = convert_to_rectangle_list(det_box_i_cls)
-
-            attempted[i] += len(rects)
-            matching = Matching(gt_rects, rects)
-            rects_matched, gt_matched = matching.greedy_match(iou_threshold)
-
-            # we aggregate confidence scores, rectangles, and num_gt across classes
-            # per_file_class_data[i][0] += det_scores[det_cls == i].tolist()
-            per_file_class_data[i][1] += rects_matched
-            num_gt_per_cls[i] += len(gt_matched)
+    per_file_class_data, num_gt_per_cls, attempted = parse_predictions(scoring_data)
 
     average_precision_per_class = np.ones(max_gt_cls) * float('nan')
-    per_class_p = np.ones(max_gt_cls) * float('nan')
-    per_class_r = np.ones(max_gt_cls) * float('nan')
-    per_class_rcount = np.ones(max_gt_cls) * float('nan')
+    per_class_p                 = np.ones(max_gt_cls) * float('nan')
+    per_class_r                 = np.ones(max_gt_cls) * float('nan')
+    per_class_rcount            = np.ones(max_gt_cls) * float('nan')
 
     for i in gt_unique:
         scores = np.array(per_file_class_data[i][0])
@@ -311,12 +319,12 @@ def score(opt, iou_threshold=.5):
     vals['mar_score'] = np.nanmean(per_class_r)
 
     a = np.concatenate(
-        (average_precision_per_class, per_class_p, per_class_r, per_class_rcount, num_gt_per_cls)).reshape(5, 100)
+        (average_precision_per_class, per_class_p, per_class_r, per_class_rcount, num_gt_per_cls)).reshape(5, max_gt_cls)
 
     for i in splits.keys():
         vals[i] = np.nanmean(average_precision_per_class[splits[i]])
-
-    v2 = np.zeros((62, 5))
+    
+    v2 = np.zeros((len(gt_unique), 5))
     for i, j in enumerate(gt_unique):
         v2[i, 0] = j
         v2[i, 1] = attempted[j]

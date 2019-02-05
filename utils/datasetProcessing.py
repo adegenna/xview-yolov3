@@ -83,9 +83,9 @@ def determine_common_and_rare_classes(opt):
     """
     unique_classes, num_members = determine_number_of_class_members(opt)
     k_classes                   = KMeans(2,random_state=0).fit(num_members.reshape(-1,1))
-    rare_classes                = unique_classes[ np.where(k_classes.labels_ == 0)[0] ]
-    common_classes              = unique_classes[ np.where(k_classes.labels_ == 1)[0] ]
-    return common_classes, rare_classes
+    rare_classes                = unique_classes[ np.where(k_classes.labels_ == 0)[0] ].astype(int)
+    common_classes              = unique_classes[ np.where(k_classes.labels_ == 1)[0] ].astype(int)
+    return list(common_classes), list(rare_classes)
 
 def determine_small_medium_large_classes(opt):
     """
@@ -99,7 +99,7 @@ def determine_small_medium_large_classes(opt):
         idx_i               = np.where( classes == unique_classes[i] )[0]
         avg_size_classes[i] = np.sum(area[idx_i])/len(idx_i)
     k_areas                     = KMeans(3,random_state=0).fit(avg_size_classes.reshape(-1,1))
-    small_classes               = unique_classes[ np.where(k_areas.labels_ == 0)[0] ]
-    medium_classes              = unique_classes[ np.where(k_areas.labels_ == 1)[0] ]
-    large_classes               = unique_classes[ np.where(k_areas.labels_ == 2)[0] ]
-    return small_classes, medium_classes, large_classes
+    small_classes               = unique_classes[ np.where(k_areas.labels_ == 0)[0] ].astype(int)
+    medium_classes              = unique_classes[ np.where(k_areas.labels_ == 1)[0] ].astype(int)
+    large_classes               = unique_classes[ np.where(k_areas.labels_ == 2)[0] ].astype(int)
+    return list(small_classes), list(medium_classes), list(large_classes)
