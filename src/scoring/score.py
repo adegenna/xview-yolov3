@@ -51,41 +51,6 @@ from utils.datasetProcessing import *
 
 """
 
-#@profile
-def get_labels(fname):
-    """
-      Processes a WorldView3 GEOJSON file
-
-      Args:
-          fname: filepath to the GeoJson file.
-
-      Outputs:
-        Bounding box coordinate array, Chip-name array, and Classes array
-
-    """
-    with open(fname) as f:
-        data = json.load(f)
-
-    coords = np.zeros((len(data['features']), 4))
-    chips = np.zeros((len(data['features'])), dtype="object")
-    classes = np.zeros((len(data['features'])))
-
-    for i in tqdm(range(len(data['features']))):
-        if data['features'][i]['properties']['bounds_imcoords'] != []:
-            b_id = data['features'][i]['properties']['image_id']
-            val = np.array([int(num) for num in data['features'][i]['properties']['bounds_imcoords'].split(",")])
-            chips[i] = b_id
-            classes[i] = data['features'][i]['properties']['type_id']
-            if val.shape[0] != 4:
-                raise ValueError('A bounding box should have 4 entries!')
-            else:
-                coords[i] = val
-        else:
-            chips[i] = 'None'
-
-    return coords, chips, classes
-
-
 def convert_to_rectangle_list(coordinates):
     """
       Converts a list of coordinates to a list of rectangles
@@ -133,33 +98,6 @@ def ap_from_pr(p, r):
     return ap
 
 
-def extract_detections_from_file(path_predictions):
-    boxes_dict = {}
-    pchips     = []
-    num_preds  = 0
-    for file in os.listdir(path_predictions):
-        fname = file.split(".txt")[0]
-        if ( file.endswith(".tif.txt") ):
-            pchips.append(fname)
-            with open(path_predictions + file, 'r') as f:
-                arr = np.array(list(csv.reader(f, delimiter=" ")))
-                if arr.shape[0] == 0:
-                    # If the file is empty, we fill it in with an array of zeros
-                    boxes_dict[fname] = np.array([[0, 0, 0, 0, 0, 0]])
-                    num_preds += 1
-                else:
-                    arr = arr[:, :6].astype(np.float64)
-                    threshold = 0
-                    arr = arr[arr[:, 5] > threshold]
-                    num_preds += arr.shape[0]
-                    if np.any(arr[:, :4] < 0):
-                        raise ValueError('Bounding boxes cannot be negative.')
-                    if np.any(arr[:, 5] < 0) or np.any(arr[:, 5] > 1):
-                        raise ValueError('Confidence scores should be between 0 and 1.')
-                    boxes_dict[fname] = arr[:, :6]
-    pchips = sorted(pchips)
-    return boxes_dict, pchips, num_preds
-
 class Scoring_Data():
     """
     Structure to package various intermediate data/calculations together for scoring purposes.
@@ -173,6 +111,14 @@ class Scoring_Data():
         self.gt_classes    = None
         self.gt_chips      = None
         self.iou_threshold = None
+        self.average_precision_per_class = None
+        self.per_class_p                 = None
+        self.per_class_r                 = None
+        self.per_class_rcount            = None
+        self.per_file_class_data         = None
+        self.num_gt_per_cls              = None
+        self.attempted                   = None
+        self.num_preds                   = None
         
     def parse_predictions(self):
         per_file_class_data = {}
@@ -203,7 +149,103 @@ class Scoring_Data():
                 # per_file_class_data[i][0] += det_scores[det_cls == i].tolist()
                 per_file_class_data[i][1] += rects_matched
                 num_gt_per_cls[i]         += len(gt_matched)
-        return per_file_class_data, num_gt_per_cls, attempted
+        # Set three main results
+        self.per_file_class_data               = per_file_class_data
+        self.num_gt_per_cls                    = num_gt_per_cls
+        self.attempted                         = attempted
+
+    def calculate_per_class_metrics(self):
+        average_precision_per_class = np.ones(self.max_gt_cls) * float('nan')
+        per_class_p                 = np.ones(self.max_gt_cls) * float('nan')
+        per_class_r                 = np.ones(self.max_gt_cls) * float('nan')
+        per_class_rcount            = np.ones(self.max_gt_cls) * float('nan')
+        for i in self.gt_unique:
+            scores        = np.array(self.per_file_class_data[i][0])
+            rects_matched = np.array(self.per_file_class_data[i][1])
+            if self.num_gt_per_cls[i] != 0:
+                sorted_indices = np.argsort(scores)[::-1]
+                tp_sum         = np.cumsum(rects_matched[sorted_indices])
+                fp_sum         = np.cumsum(np.logical_not(rects_matched[sorted_indices]))
+                precision      = tp_sum / (tp_sum + fp_sum + np.spacing(1))
+                recall         = tp_sum / self.num_gt_per_cls[i]
+                per_class_p[i] = np.sum(rects_matched) / len(rects_matched)
+                per_class_r[i] = np.sum(rects_matched) / self.num_gt_per_cls[i]
+                per_class_rcount[i] = np.sum(rects_matched)
+                ap                  = ap_from_pr(precision, recall)
+            else:
+                ap = 0
+            average_precision_per_class[i] = ap
+        # Set main results
+        self.average_precision_per_class = average_precision_per_class
+        self.per_class_p                 = per_class_p
+        self.per_class_r                 = per_class_r
+        self.per_class_rcount            = per_class_rcount
+
+    def extract_detections_from_file(self,path_predictions):
+        boxes_dict = {}
+        pchips     = []
+        num_preds  = 0
+        for file in os.listdir(path_predictions):
+            fname = file.split(".txt")[0]
+            if ( file.endswith(".tif.txt") ):
+                pchips.append(fname)
+                with open(path_predictions + file, 'r') as f:
+                    arr = np.array(list(csv.reader(f, delimiter=" ")))
+                    if arr.shape[0] == 0:
+                        # If the file is empty, we fill it in with an array of zeros
+                        boxes_dict[fname] = np.array([[0, 0, 0, 0, 0, 0]])
+                        num_preds += 1
+                    else:
+                        arr = arr[:, :6].astype(np.float64)
+                        threshold = 0
+                        arr = arr[arr[:, 5] > threshold]
+                        num_preds += arr.shape[0]
+                        if np.any(arr[:, :4] < 0):
+                            raise ValueError('Bounding boxes cannot be negative.')
+                        if np.any(arr[:, 5] < 0) or np.any(arr[:, 5] > 1):
+                            raise ValueError('Confidence scores should be between 0 and 1.')
+                        boxes_dict[fname] = arr[:, :6]
+        pchips = sorted(pchips)
+        # Set main results
+        self.boxes_dict = boxes_dict
+        self.pchips     = pchips
+        self.num_preds  = num_preds
+
+    def calculate_dataset_splits(self,opt):
+        common_classes, rare_classes                 = determine_common_and_rare_classes(opt)
+        small_classes, medium_classes, large_classes = determine_small_medium_large_classes(opt)
+        # Set main results
+        self.splits = {
+            'map/small': small_classes,
+            'map/medium': medium_classes,
+            'map/large': large_classes,
+            'map/common': common_classes,
+            'map/rare': rare_classes
+        }
+
+    def compute_final_statistical_metrics(self):
+        vals = {}
+        vals['map']       = np.nanmean(self.average_precision_per_class)
+        vals['map_score'] = np.nanmean(self.per_class_p)
+        vals['mar_score'] = np.nanmean(self.per_class_r)
+        a = np.concatenate(
+            (self.average_precision_per_class, self.per_class_p, self.per_class_r, self.per_class_rcount, self.num_gt_per_cls)).reshape(5, self.max_gt_cls)
+        for i in self.splits.keys():
+            vals[i] = np.nanmean(self.average_precision_per_class[self.splits[i]])
+        v2 = np.zeros((len(self.gt_unique), 5))
+        for i, j in enumerate(self.gt_unique):
+            v2[i, 0] = j
+            v2[i, 1] = self.attempted[j]
+            v2[i, 2] = self.per_class_rcount[j]
+            v2[i, 3] = self.num_gt_per_cls[j]
+            v2[i, 4] = self.average_precision_per_class[j]
+        for i in self.gt_unique:
+            vals[int(i)] = self.average_precision_per_class[int(i)]
+        vals['f1'] = 2 / ((1 / (np.spacing(1) + vals['map_score']))
+                          + (1 / (np.spacing(1) + vals['mar_score'])))
+        return vals,v2
+
+
 
 # @profile
 def score(opt, iou_threshold=.5):
@@ -239,109 +281,41 @@ def score(opt, iou_threshold=.5):
     assert (iou_threshold < 1 and iou_threshold > 0)
     print('Computing mAP and associated metrics on test data...')
     ttime = time.time()
-    boxes_dict, pchips, num_preds   = extract_detections_from_file(path_predictions)
-    gt_coords, gt_chips, gt_classes = get_labels(path_groundtruth)
-    gt_unique  = np.unique(gt_classes.astype(np.int64))
-    max_gt_cls = 100
 
-    if set(pchips).issubset(set(gt_unique)):
-        raise ValueError('The prediction files {%s} are not in the ground truth.' % str(set(pchips) - (set(gt_unique))))
-    print("Number of Predictions: %d" % num_preds)
-    print("Number of GT: %d" % np.sum(gt_classes.shape))
-
-    scoring_data               = Scoring_Data()
-    scoring_data.boxes_dict    = boxes_dict
-    scoring_data.pchips        = pchips
-    scoring_data.gt_unique     = gt_unique
-    scoring_data.max_gt_cls    = max_gt_cls
-    scoring_data.gt_coords     = gt_coords
-    scoring_data.gt_classes    = gt_classes
-    scoring_data.gt_chips      = gt_chips
+    scoring_data                    = Scoring_Data()
+    scoring_data.extract_detections_from_file(path_predictions)
+    gt_coords, gt_chips, gt_classes = get_labels_geojson(path_groundtruth)
+    
+    scoring_data.gt_coords  = gt_coords
+    scoring_data.gt_chips   = gt_chips
+    scoring_data.gt_classes = gt_classes
+    scoring_data.gt_unique  = np.unique(gt_classes.astype(np.int64))
+    scoring_data.max_gt_cls = 100
     scoring_data.iou_threshold = iou_threshold
 
-    per_file_class_data, num_gt_per_cls, attempted = scoring_data.parse_predictions()
+    if set(scoring_data.pchips).issubset(set(scoring_data.gt_unique)):
+        raise ValueError('The prediction files {%s} are not in the ground truth.' % str(set(scoring_data.pchips) - (set(scoring_data.gt_unique))))
+    print("Number of Predictions: %d" % scoring_data.num_preds)
+    print("Number of GT: %d" % np.sum(scoring_data.gt_classes.shape))
 
-    average_precision_per_class = np.ones(max_gt_cls) * float('nan')
-    per_class_p                 = np.ones(max_gt_cls) * float('nan')
-    per_class_r                 = np.ones(max_gt_cls) * float('nan')
-    per_class_rcount            = np.ones(max_gt_cls) * float('nan')
-
-    for i in gt_unique:
-        scores = np.array(per_file_class_data[i][0])
-        rects_matched = np.array(per_file_class_data[i][1])
-
-        if num_gt_per_cls[i] != 0:
-            sorted_indices = np.argsort(scores)[::-1]
-            tp_sum = np.cumsum(rects_matched[sorted_indices])
-            fp_sum = np.cumsum(np.logical_not(rects_matched[sorted_indices]))
-            precision = tp_sum / (tp_sum + fp_sum + np.spacing(1))
-            recall = tp_sum / num_gt_per_cls[i]
-            per_class_p[i] = np.sum(rects_matched) / len(rects_matched)
-            per_class_r[i] = np.sum(rects_matched) / num_gt_per_cls[i]
-            per_class_rcount[i] = np.sum(rects_matched)
-            ap = ap_from_pr(precision, recall)
-        else:
-            ap = 0
-        average_precision_per_class[i] = ap
-
-    # metric splits
-    common_classes, rare_classes                 = determine_common_and_rare_classes(opt)
-    small_classes, medium_classes, large_classes = determine_small_medium_large_classes(opt)
-    
-    metric_keys = ['map', 'map/small', 'map/medium', 'map/large',
-                   'map/common', 'map/rare']
-
-    splits = {
-        'map/small': small_classes,
-        'map/medium': medium_classes,
-        'map/large': large_classes,
-
-        'map/common': common_classes,
-        'map/rare': rare_classes
-    }
-    
+    scoring_data.parse_predictions()
+    scoring_data.calculate_per_class_metrics()
+    scoring_data.calculate_dataset_splits(opt)
+        
     _, _, classes   = get_labels_geojson(opt.targetspath)
     n               = np.setdiff1d( np.unique(classes) , opt.invalid_class_list )
     num_classes     = len(n)
     with open(opt.class_path) as f:
         lines = f.readlines()
-
     map_dict = {}
     for i in range(num_classes):
-        map_dict[lines[i].replace('\n','')] = average_precision_per_class[int(n[i])]
+        map_dict[lines[i].replace('\n','')] = scoring_data.average_precision_per_class[int(n[i])]
+    print(np.nansum(scoring_data.per_class_rcount), map_dict)
+    vals,v2 = scoring_data.compute_final_statistical_metrics()
 
-    print(np.nansum(per_class_rcount), map_dict)
-    vals = {}
-    vals['map'] = np.nanmean(average_precision_per_class)
-    vals['map_score'] = np.nanmean(per_class_p)
-    vals['mar_score'] = np.nanmean(per_class_r)
-
-    a = np.concatenate(
-        (average_precision_per_class, per_class_p, per_class_r, per_class_rcount, num_gt_per_cls)).reshape(5, max_gt_cls)
-
-    for i in splits.keys():
-        vals[i] = np.nanmean(average_precision_per_class[splits[i]])
-    
-    v2 = np.zeros((len(gt_unique), 5))
-    for i, j in enumerate(gt_unique):
-        v2[i, 0] = j
-        v2[i, 1] = attempted[j]
-        v2[i, 2] = per_class_rcount[j]
-        v2[i, 3] = num_gt_per_cls[j]
-        v2[i, 4] = average_precision_per_class[j]
-
-    for i in gt_unique:
-        vals[int(i)] = average_precision_per_class[int(i)]
-
-    vals['f1'] = 2 / ((1 / (np.spacing(1) + vals['map_score']))
-                      + (1 / (np.spacing(1) + vals['mar_score'])))
-
+    # Output results
     print("mAP: %f | mAP score: %f | mAR: %f | F1: %f" %
           (vals['map'], vals['map_score'], vals['mar_score'], vals['f1']))
-
-    # with open(path_output + '/score.txt', 'w') as f:
-    #     f.write(str("%.8f" % vals['map']))
-    #
     with open(path_output + '/metrics.txt', 'w') as f:
         for key in vals.keys():
            f.write("%s %f\n" % (str(key), vals[key]))
@@ -349,7 +323,6 @@ def score(opt, iou_threshold=.5):
         #     f.write("%f\n" % (vals[key]))
         for i in range(len(v2)):
             f.write(('%g, ' * 5 + '\n') % (v2[i, 0], v2[i, 1], v2[i, 2], v2[i, 3], v2[i, 4]))
-
     print("Final time: %s" % str(time.time() - ttime))
 
 

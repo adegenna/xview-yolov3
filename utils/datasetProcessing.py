@@ -30,9 +30,16 @@ def get_dataset_filenames(datadir,extension):
     return files
 
 def get_labels_geojson(fname="xView_train.geojson"):
-    # Processes an xView GeoJSON file
-    # INPUT: filepath to the GeoJSON file
-    # OUTPUT: Bounding box coordinate array, Chip-name array, and Class-id array
+    """
+      Processes a WorldView3 GEOJSON file
+
+      Args:
+          fname: filepath to the GeoJson file.
+
+      Outputs:
+        Bounding box coordinate array, Chip-name array, and Classes array
+
+    """
     with open(fname) as f:
         data = json.load(f)
     coords = np.zeros((len(data['features']),4))
