@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Dependency Graphs" href="inheritance.html" />
+    <link rel="next" title="Flow Diagrams" href="flowdiagrams.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 
   
@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-tests.unittests">Tests/</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="flowdiagrams.html">Flow Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inheritance.html">Dependency Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 </ul>
@@ -287,6 +288,8 @@
 <dd>Absolute path to class mean file</dd>
 <dt>class_sigma <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>Absolute path to class standard deviation file</dd>
+<dt>invalid_class_list <span class="classifier-delimiter">:</span> <span class="classifier">string (csv format)</span></dt>
+<dd>Comma-separated list of classes to be ignored from training data</dd>
 </dl>
 <dl class="method">
 <dt id="src.InputFile.InputFile.printInputs">
@@ -748,20 +751,8 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <span class="target" id="module-src.scoring"></span><dl class="function">
-<dt id="src.scoring.get_labels">
-<code class="descclassname">src.scoring.</code><code class="descname">get_labels</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#get_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.get_labels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes a WorldView3 GEOJSON file</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>fname: filepath to the GeoJson file.</dd>
-<dt>Outputs:</dt>
-<dd>Bounding box coordinate array, Chip-name array, and Classes array</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="src.scoring.convert_to_rectangle_list">
-<code class="descclassname">src.scoring.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.convert_to_rectangle_list" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.scoring.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/scoringfunctions.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.convert_to_rectangle_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a list of coordinates to a list of rectangles</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -777,7 +768,7 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="function">
 <dt id="src.scoring.ap_from_pr">
-<code class="descclassname">src.scoring.</code><code class="descname">ap_from_pr</code><span class="sig-paren">(</span><em>p</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#ap_from_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.ap_from_pr" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.scoring.</code><code class="descname">ap_from_pr</code><span class="sig-paren">(</span><em>p</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/scoringfunctions.html#ap_from_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.ap_from_pr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates AP from precision and recall values as specified in
 the PASCAL VOC devkit.</p>
 <dl class="docutils">
@@ -791,35 +782,25 @@ r: an array of recall values</dd>
 
 <dl class="function">
 <dt id="src.scoring.score">
-<code class="descclassname">src.scoring.</code><code class="descname">score</code><span class="sig-paren">(</span><em>path_predictions</em>, <em>path_groundtruth</em>, <em>path_output</em>, <em>iou_threshold=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.score" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.scoring.</code><code class="descname">score</code><span class="sig-paren">(</span><em>opt</em>, <em>iou_threshold=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute metrics on a number of prediction files, given a folder of prediction files
 and a ground truth.  Primary metric is mean average precision (mAP).</p>
+<p><strong>Inputs</strong></p>
 <dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first docutils">
-<dt>path_predictions: a folder path of prediction files.</dt>
-<dd>Prediction files should have filename format ‘XYZ.tif.txt’,
-where ‘XYZ.tif’ is the xView TIFF file being predicted on.
-Prediction files should be in space-delimited csv format, with each
-line like (xmin ymin xmax ymax class_prediction score_prediction)</dd>
+<dt>opt <span class="classifier-delimiter">:</span> <span class="classifier">InputFile</span></dt>
+<dd>InputFile member specifying all user options. Note: prediction files in opt.outdir should have filename format ‘XYZ.tif.txt’, where ‘XYZ.tif’ is the xView TIFF file being predicted on. Prediction files should be in space-delimited csv format, with each line like (xmin ymin xmax ymax class_prediction score_prediction).</dd>
+<dt>iou_threshold <span class="classifier-delimiter">:</span> <span class="classifier">float </span></dt>
+<dd>iou threshold (between 0 and 1) indicating the percentage iou required to count a prediction as a true positive</dd>
 </dl>
-<p>path_groundtruth: a file path to a single ground truth geojson</p>
-<p>path_output: a folder path for output scoring files</p>
-<dl class="last docutils">
-<dt>iou_threshold: a float between 0 and 1 indicating the percentage</dt>
-<dd>iou required to count a prediction as a true positive</dd>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>opt.outdir/metrics.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
+<dd>contains the scoring metrics in per-line format (metric/class_num: score_float)</dd>
 </dl>
-</dd>
-<dt>Outputs:</dt>
-<dd>Writes two files to the ‘path_output’ parameter folder: ‘score.txt’ and ‘metrics.txt’
-‘score.txt’ contains a single floating point value output: mAP
-‘metrics.txt’ contains the remaining metrics in per-line format (metric/class_num: score_float)</dd>
-<dt>Raises:</dt>
-<dd><dl class="first last docutils">
-<dt>ValueError: if there are files in the prediction folder that are not in the ground truth geojson.</dt>
-<dd>EG a prediction file is titled ‘15.tif.txt’, but the file ‘15.tif’ is not in the ground truth.</dd>
-</dl>
-</dd>
+<p><strong>Raises</strong></p>
+<dl class="docutils">
+<dt>ValueError </dt>
+<dd>Raised if there are files in the prediction folder that are not in the ground truth geojson. EG a prediction file is titled ‘15.tif.txt’, but the file ‘15.tif’ is not in the ground truth.</dd>
 </dl>
 </dd></dl>
 
@@ -885,7 +866,7 @@ the key.</dd>
 
 <dl class="function">
 <dt>
-<code class="descclassname">src.scoring.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a></dt>
+<code class="descclassname">src.scoring.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/scoringfunctions.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Converts a list of coordinates to a list of rectangles</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -1026,6 +1007,36 @@ formed of input arrays.</dd>
 </div>
 <div class="section" id="module-utils.datasetProcessing">
 <span id="utils"></span><h2>Utils/<a class="headerlink" href="#module-utils.datasetProcessing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="utils.datasetProcessing.determine_common_and_rare_classes">
+<code class="descclassname">utils.datasetProcessing.</code><code class="descname">determine_common_and_rare_classes</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/datasetProcessing.html#determine_common_and_rare_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.datasetProcessing.determine_common_and_rare_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to determine the common and rare classes in a dataset using 2-means.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.datasetProcessing.determine_number_of_class_members">
+<code class="descclassname">utils.datasetProcessing.</code><code class="descname">determine_number_of_class_members</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/datasetProcessing.html#determine_number_of_class_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.datasetProcessing.determine_number_of_class_members" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to determine the number of elements in each class of a dataset.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.datasetProcessing.determine_small_medium_large_classes">
+<code class="descclassname">utils.datasetProcessing.</code><code class="descname">determine_small_medium_large_classes</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/datasetProcessing.html#determine_small_medium_large_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.datasetProcessing.determine_small_medium_large_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to determine the small/medium/large size classes in a dataset using 3-means.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.datasetProcessing.get_labels_geojson">
+<code class="descclassname">utils.datasetProcessing.</code><code class="descname">get_labels_geojson</code><span class="sig-paren">(</span><em>fname='xView_train.geojson'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/datasetProcessing.html#get_labels_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.datasetProcessing.get_labels_geojson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a WorldView3 GEOJSON file</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>fname: filepath to the GeoJson file.</dd>
+<dt>Outputs:</dt>
+<dd>Bounding box coordinate array, Chip-name array, and Classes array</dd>
+</dl>
+</dd></dl>
+
 <span class="target" id="module-utils.utils"></span><dl class="function">
 <dt id="utils.utils.bbox_iou">
 <code class="descclassname">utils.utils.</code><code class="descname">bbox_iou</code><span class="sig-paren">(</span><em>box1</em>, <em>box2</em>, <em>x1y1x2y2=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#bbox_iou"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.bbox_iou" title="Permalink to this definition">¶</a></dt>
@@ -1326,7 +1337,7 @@ precision: The precision curve (list).</div></blockquote>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="inheritance.html" class="btn btn-neutral float-right" title="Dependency Graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="flowdiagrams.html" class="btn btn-neutral float-right" title="Flow Diagrams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

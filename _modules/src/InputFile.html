@@ -87,6 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../inheritance.html">Dependency Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 </ul>
@@ -242,6 +243,8 @@
 <span class="sd">        Absolute path to class mean file</span>
 <span class="sd">    class_sigma : string</span>
 <span class="sd">        Absolute path to class standard deviation file</span>
+<span class="sd">    invalid_class_list : string (csv format)</span>
+<span class="sd">        Comma-separated list of classes to be ignored from training data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
@@ -314,7 +317,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">rgb_mean</span>        <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rgb_std</span>         <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">class_mean</span>      <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">class_sigma</span>     <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_sigma</span>     <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="n">invalid_class_list</span>   <span class="o">=</span> <span class="n">inputfilestream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invalid_class_list</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">invalid_class_list</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span> <span class="p">)</span></div></div>
 </pre></div>
 
            </div>

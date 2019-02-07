@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>utils.datasetProcessing &mdash; YOLOv3 0.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> YOLOv3
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../inheritance.html">Dependency Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">YOLOv3</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>utils.datasetProcessing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for utils.datasetProcessing</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="k">import</span> <span class="n">KMeans</span>
+
+<span class="c1"># Simple functions commonly used for (pre-)processing of datasets</span>
+
+<span class="k">def</span> <span class="nf">get_dataset_height_width_channels</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span><span class="n">extension</span><span class="p">):</span>
+    <span class="n">files</span>  <span class="o">=</span> <span class="n">get_dataset_filenames</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span><span class="n">extension</span><span class="p">)</span>
+    <span class="n">nfiles</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">HWC</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nfiles</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfiles</span><span class="p">):</span>
+        <span class="n">img</span>    <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">datadir</span> <span class="o">+</span> <span class="n">files</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">c</span>  <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">HWC</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">HWC</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="p">;</span>
+        <span class="n">HWC</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">files</span><span class="p">,</span> <span class="n">HWC</span>
+        
+<span class="k">def</span> <span class="nf">get_dataset_filenames</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span><span class="n">extension</span><span class="p">):</span>
+    <span class="n">files</span>    <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">datadir</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">extension</span><span class="p">):</span>
+            <span class="n">datum</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">files</span><span class="p">,</span><span class="n">datum</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">files</span>
+
+<div class="viewcode-block" id="get_labels_geojson"><a class="viewcode-back" href="../../code.html#utils.datasetProcessing.get_labels_geojson">[docs]</a><span class="k">def</span> <span class="nf">get_labels_geojson</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s2">&quot;xView_train.geojson&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Processes a WorldView3 GEOJSON file</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">          fname: filepath to the GeoJson file.</span>
+
+<span class="sd">      Outputs:</span>
+<span class="sd">        Bounding box coordinate array, Chip-name array, and Classes array</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]),</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">chips</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">])),</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">)</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">])))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">])):</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;bounds_imcoords&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">b_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;image_id&#39;</span><span class="p">]</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;bounds_imcoords&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+            <span class="n">chips</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">b_id</span>
+            <span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span>
+            <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">chips</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
+    <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">chips</span><span class="p">,</span> <span class="n">classes</span></div>
+
+<span class="k">def</span> <span class="nf">strip_image_number_from_filename</span><span class="p">(</span><span class="n">imgname</span><span class="p">,</span><span class="n">splitchar</span><span class="p">):</span>
+    <span class="c1"># Strips away file extension AND strings prepended to image number that are separated with splitchar</span>
+    <span class="c1"># e.g., train_image_1234.tif --&gt; 1234</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">imgname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">splitchar</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">num</span>
+
+<span class="k">def</span> <span class="nf">strip_geojson</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">ids</span><span class="p">):</span>
+    <span class="c1"># Strip away all data from geojson file except those images whose numbers are specified by ids</span>
+    <span class="n">datafeatureskeep</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)):</span>
+        <span class="n">datafeaturesI</span>    <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;image_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;.tif&#39;</span><span class="p">]</span>
+        <span class="n">datafeatureskeep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datafeatureskeep</span><span class="p">,</span><span class="n">datafeaturesI</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">datafeatureskeep</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+
+<div class="viewcode-block" id="determine_number_of_class_members"><a class="viewcode-back" href="../../code.html#utils.datasetProcessing.determine_number_of_class_members">[docs]</a><span class="k">def</span> <span class="nf">determine_number_of_class_members</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to determine the number of elements in each class of a dataset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">classes</span>   <span class="o">=</span> <span class="n">get_labels_geojson</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">targetspath</span><span class="p">)</span>
+    <span class="n">unique_classes</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span> <span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">invalid_class_list</span> <span class="p">)</span>
+    <span class="n">num_classes</span>     <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">)</span>
+    <span class="n">num_members</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">):</span>
+        <span class="n">num_members</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">classes</span> <span class="o">==</span> <span class="n">unique_classes</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">unique_classes</span><span class="p">,</span> <span class="n">num_members</span></div>
+
+<div class="viewcode-block" id="determine_common_and_rare_classes"><a class="viewcode-back" href="../../code.html#utils.datasetProcessing.determine_common_and_rare_classes">[docs]</a><span class="k">def</span> <span class="nf">determine_common_and_rare_classes</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to determine the common and rare classes in a dataset using 2-means.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unique_classes</span><span class="p">,</span> <span class="n">num_members</span> <span class="o">=</span> <span class="n">determine_number_of_class_members</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+    <span class="n">k_classes</span>                   <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">num_members</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">rare_classes</span>                <span class="o">=</span> <span class="n">unique_classes</span><span class="p">[</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">k_classes</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">common_classes</span>              <span class="o">=</span> <span class="n">unique_classes</span><span class="p">[</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">k_classes</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">common_classes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">rare_classes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="determine_small_medium_large_classes"><a class="viewcode-back" href="../../code.html#utils.datasetProcessing.determine_small_medium_large_classes">[docs]</a><span class="k">def</span> <span class="nf">determine_small_medium_large_classes</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to determine the small/medium/large size classes in a dataset using 3-means.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">coords</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">classes</span>          <span class="o">=</span> <span class="n">get_labels_geojson</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">targetspath</span><span class="p">)</span>
+    <span class="n">unique_classes</span><span class="p">,</span> <span class="n">num_members</span> <span class="o">=</span> <span class="n">determine_number_of_class_members</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+    <span class="n">area</span>                        <span class="o">=</span> <span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">avg_size_classes</span>            <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">)):</span>
+        <span class="n">idx_i</span>               <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="n">classes</span> <span class="o">==</span> <span class="n">unique_classes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">avg_size_classes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="n">idx_i</span><span class="p">])</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_i</span><span class="p">)</span>
+    <span class="n">k_areas</span>                     <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">avg_size_classes</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">small_classes</span>               <span class="o">=</span> <span class="n">unique_classes</span><span class="p">[</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">k_areas</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">medium_classes</span>              <span class="o">=</span> <span class="n">unique_classes</span><span class="p">[</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">k_areas</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">large_classes</span>               <span class="o">=</span> <span class="n">unique_classes</span><span class="p">[</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">k_areas</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">small_classes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">medium_classes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">large_classes</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony DeGennaro
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

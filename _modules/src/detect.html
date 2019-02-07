@@ -87,6 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../inheritance.html">Dependency Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 </ul>
@@ -201,13 +202,13 @@
     <span class="n">tester</span>     <span class="o">=</span> <span class="n">NetworkTester</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">dataloader</span><span class="p">,</span><span class="n">opt</span><span class="p">)</span>
     
     <span class="c1"># Object detection on test dataset</span>
-    <span class="n">tester</span><span class="o">.</span><span class="n">detect</span><span class="p">()</span>
-    <span class="n">tester</span><span class="o">.</span><span class="n">plotDetection</span><span class="p">()</span>
+    <span class="c1">#tester.detect()</span>
+    <span class="c1">#tester.plotDetection()</span>
 
     <span class="c1"># Metrics</span>
     <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">plot_flag</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">scoring</span>
-        <span class="n">scoring</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">targetspath</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span></div>
+        <span class="n">scoring</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>

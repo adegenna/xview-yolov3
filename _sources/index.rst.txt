@@ -15,6 +15,7 @@ Project repository: https://github.com/adegenna/xview-yolov3.
    requirements
    installation
    code
+   flowdiagrams
    inheritance
    contact
 
