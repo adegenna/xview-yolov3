@@ -7,3 +7,9 @@ train
 .. raw:: html
 
     <iframe src="flow_train.html" height="345px" width="100%"></iframe>
+
+detect
+---------------------
+.. raw:: html
+
+    <iframe src="flow_detect.html" height="345px" width="100%"></iframe>
