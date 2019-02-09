@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>src.detect &mdash; YOLOv3 0.4 documentation</title>
+  <title>src.detect &mdash; YOLOv3 0.5 documentation</title>
   
 
   
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                0.4
+                0.5
               </div>
             
           
@@ -202,8 +202,8 @@
     <span class="n">tester</span>     <span class="o">=</span> <span class="n">NetworkTester</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">dataloader</span><span class="p">,</span><span class="n">opt</span><span class="p">)</span>
     
     <span class="c1"># Object detection on test dataset</span>
-    <span class="c1">#tester.detect()</span>
-    <span class="c1">#tester.plotDetection()</span>
+    <span class="n">tester</span><span class="o">.</span><span class="n">detect</span><span class="p">()</span>
+    <span class="n">tester</span><span class="o">.</span><span class="n">plotDetection</span><span class="p">()</span>
 
     <span class="c1"># Metrics</span>
     <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">plot_flag</span><span class="p">:</span>
