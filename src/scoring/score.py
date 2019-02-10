@@ -33,7 +33,10 @@ def score(opt, iou_threshold=.5):
 
       ----------
       opt : InputFile
-            InputFile member specifying all user options. Note: prediction files in opt.outdir should have filename format 'XYZ.tif.txt', where 'XYZ.tif' is the xView TIFF file being predicted on. Prediction files should be in space-delimited csv format, with each line like (xmin ymin xmax ymax class_prediction score_prediction).
+            InputFile member specifying all user options. 
+      
+      .. note:: 
+         Prediction files in opt.outdir will have filename format 'XYZ.tif.txt', where 'XYZ.tif' is the .tif file used for prediction. Prediction files should be in space-delimited csv format; each line appears as: (xmin ymin xmax ymax class_prediction score_prediction).
 
       iou_threshold : float 
             iou threshold (between 0 and 1) indicating the percentage iou required to count a prediction as a true positive
@@ -48,7 +51,7 @@ def score(opt, iou_threshold=.5):
     
       ----------
       ValueError 
-          Raised if there are files in the prediction folder that are not in the ground truth geojson. EG a prediction file is titled '15.tif.txt', but the file '15.tif' is not in the ground truth.
+          Raised if there are files in the prediction folder that are not in the ground truth file. For example, a prediction file is titled '15.tif.txt', but the file '15.tif' is not in the ground truth.
 
     """
     path_predictions = opt.outdir
