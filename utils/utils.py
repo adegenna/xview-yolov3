@@ -536,18 +536,24 @@ def strip_optimizer_from_checkpoint(filename='checkpoints/best.pt'):
     torch.save(a, filename.replace('.pt', '_lite.pt'))
 
 
-def plotResults():
+def plotResults(resultsfilepath):
     # Plot YOLO training results
     import numpy as np
     import matplotlib.pyplot as plt
     plt.figure(figsize=(16, 8))
-    s = ['X', 'Y', 'Width', 'Height', 'Objectness', 'Classification', 'Total Loss', 'Precision', 'Recall']
-    for f in ('results.txt',):
+    s = ['X', 'Y', 'Width', 'Height', 'Objectness', 'Classification', 'Total Loss', 'Precision', 'Recall','PrecisionVsRecall']
+    for f in (resultsfilepath,):
         results = np.loadtxt(f, usecols=[2, 3, 4, 5, 6, 7, 8, 9, 10]).T
         for i in range(9):
             plt.subplot(2, 5, i + 1)
             plt.plot(results[i, :300], marker='.', label=f)
             plt.title(s[i])
+        # Last plot: PrecisionVsRecall
+        plt.subplot(2,5,10)
+        plt.plot(results[8, :300], results[7, :300], marker='.')
+        plt.plot([0,.6],[0,.6],'k--')
+        plt.gca().set_aspect('equal')
+        plt.title('PrecisionVsRecall')
         plt.legend()
     plt.show()
 
