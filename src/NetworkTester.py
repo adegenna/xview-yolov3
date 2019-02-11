@@ -176,7 +176,7 @@ class NetworkTester():
 
                         if self.__inputs.plot_flag:
                             # Add the bbox to the plot
-                            label = '%s %.2f' % (self.__classes[int(cls_pred)], cls_conf) if cls_conf > 0.05 else None
+                            label = '%s %.2f' % (self.__classes[int(cls_pred)], cls_conf) if cls_conf > self.__inputs.cls_thres else None
                             color = bbox_colors[int(np.where(unique_classes == int(cls_pred))[0])]
                             plot_one_box([x1, y1, x2, y2], img, label=label, color=color, line_thickness=1)
 

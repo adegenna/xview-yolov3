@@ -74,6 +74,8 @@ class InputFile():
         Absolute path to class
     conf_thres : float
         Confidence threshold for detection
+    cls_thres : float
+        Class threshold for detection
     nms_thres : float
         NMS threshold
     batch_size : int
@@ -156,6 +158,7 @@ class InputFile():
         self.networksavefile = inputfilestream.readline().strip().split('= ')[1];
         self.class_path      = inputfilestream.readline().strip().split('= ')[1];
         self.conf_thres      = float(inputfilestream.readline().strip().split('= ')[1]);
+        self.cls_thres       = float(inputfilestream.readline().strip().split('= ')[1]);
         self.nms_thres       = float(inputfilestream.readline().strip().split('= ')[1]);
         self.batch_size      = int(inputfilestream.readline().strip().split('= ')[1]);
         self.imgsize         = int(inputfilestream.readline().strip().split('= ')[1]);
