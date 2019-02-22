@@ -175,7 +175,6 @@ class NetworkTester():
 
                         # write to file
                         class_labels = self.__class_labels[int(cls_pred)]
-                        #xvc = xview_indices2classes(int(cls_pred))  # xview class
                         file.write(('%g %g %g %g %g %g \n') % (x1, y1, x2, y2, class_labels, cls_conf * conf))
 
                         if self.__inputs.plot_flag:

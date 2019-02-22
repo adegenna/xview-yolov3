@@ -20,7 +20,7 @@ def load_classes(xview_names_and_labels_filepath):
     """
     names  = []
     labels = []
-    with open(xview_outfile) as f:
+    with open(xview_names_and_labels_filepath) as f:
         for i,line in enumerate(f):
             name_i,label_i = line.split(',')
             names.append(name_i)
