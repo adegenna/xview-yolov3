@@ -32,14 +32,7 @@ def modelinfo(model):
     ngradients = sum(x.numel() for x in model.parameters() if x.requires_grad)
     print('\n%4s %70s %9s %12s %20s %12s %12s' % ('', 'name', 'gradient', 'parameters', 'shape', 'mu', 'sigma'))
     for i, (name, p) in enumerate(model.named_parameters()):
-        name = name.replace('module_list.', '')def load_classes(path):
-    """
-    Loads class labels at 'path'
-    """
-    fp = open(path, "r")
-    names = fp.read().split("\n")[:-1]
-    return names
-
+        name = name.replace('module_list.', '')
         print('%4g %70s %9s %12g %20s %12g %12g' % (
             i, name, p.requires_grad, p.numel(), list(p.shape), p.mean(), p.std()))
     print('\n%g layers, %g parameters, %g gradients' % (i + 1, nparams, ngradients))
