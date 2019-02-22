@@ -47,9 +47,12 @@ class NetworkTester():
 
     def loadClasses(self):
         """
-        Method to load class names from specified path in user-input file. 
+        Method to load class names from specified path in user-input file.
+        Format assumed shall be a csv list of (class_name , class_label)_i
         """
-        self.__classes = load_classes(self.__inputs.class_path)
+        class_names,class_labels = load_classes(self.__inputs.class_path)
+        self.__classes      = class_names
+        self.__class_labels = class_labels
 
     def updateMetricsLoss(self):
         self.__ui += 1
@@ -171,8 +174,9 @@ class NetworkTester():
                         x1, y1, x2, y2 = max(x1, 0), max(y1, 0), max(x2, 0), max(y2, 0)
 
                         # write to file
-                        xvc = xview_indices2classes(int(cls_pred))  # xview class
-                        file.write(('%g %g %g %g %g %g \n') % (x1, y1, x2, y2, xvc, cls_conf * conf))
+                        class_labels = self.__class_labels[int(cls_pred)]
+                        #xvc = xview_indices2classes(int(cls_pred))  # xview class
+                        file.write(('%g %g %g %g %g %g \n') % (x1, y1, x2, y2, class_labels, cls_conf * conf))
 
                         if self.__inputs.plot_flag:
                             # Add the bbox to the plot

@@ -13,15 +13,19 @@ import matplotlib.pyplot as plt
 torch.set_printoptions(linewidth=1320, precision=5, profile='long')
 np.set_printoptions(linewidth=320, formatter={'float_kind': '{:11.5g}'.format})  # format short g, %precision=5
 
-
-def load_classes(path):
+def load_classes(xview_names_and_labels_filepath):
     """
-    Loads class labels at 'path'
+    Loads class labels at 'xview_names_and_labels_filepath'
+    Format shall be assumed to be csv where one line is (name , label)_i
     """
-    fp = open(path, "r")
-    names = fp.read().split("\n")[:-1]
-    return names
-
+    names  = []
+    labels = []
+    with open(xview_outfile) as f:
+        for i,line in enumerate(f):
+            name_i,label_i = line.split(',')
+            names.append(name_i)
+            labels.append(int(label_i))
+    return names,labels
 
 def modelinfo(model):
     nparams = sum(x.numel() for x in model.parameters())
