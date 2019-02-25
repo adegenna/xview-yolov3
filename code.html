@@ -30,7 +30,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Flow Diagrams" href="flowdiagrams.html" />
-    <link rel="prev" title="Installation" href="running.html" /> 
+    <link rel="prev" title="User Instructions" href="running.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -88,7 +88,7 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="running.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">User Instructions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Docs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.train">Src/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.datasetProcessing">Utils/</a></li>
@@ -188,43 +188,21 @@
 </dl>
 </dd></dl>
 
-<span class="target" id="module-src.detect"></span><dl class="function">
-<dt id="src.detect.detect">
-<code class="descclassname">src.detect.</code><code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.detect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main driver script for testing the YOLOv3 network.</p>
-<p><strong>Inputs</strong></p>
-<dl class="docutils">
-<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments</span></dt>
-<dd>command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
-</dl>
-<p><strong>Outputs</strong></p>
-<dl class="docutils">
-<dt>inputs.outdir/metrics.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
-<dd>output metrics for specified test image given by inputs.imagepath</dd>
-<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.jpg <span class="classifier-delimiter">:</span> <span class="classifier">jpeg image</span></dt>
-<dd>test image with detected bounding boxes, classes and confidence scores</dd>
-<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
-<dd>text file with bounding boxes, classes and confidence scores for all detections</dd>
-</dl>
-</dd></dl>
-
 <span class="target" id="module-src.InputFile"></span><dl class="class">
 <dt id="src.InputFile.InputFile">
-<em class="property">class </em><code class="descclassname">src.InputFile.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>args=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">src.InputFile.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>inputfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for packaging all input/config file options together.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There are separate options required by InputFile depending on whether the intended goal is training or testing. The user must declare on the first line of the InputFile either <code class="docutils literal notranslate"><span class="pre">[TRAIN]</span></code> or <code class="docutils literal notranslate"><span class="pre">[TEST]</span></code>, depending on their desired objective.</p>
+</div>
 <p><strong>Inputs</strong></p>
 <dl class="docutils">
-<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments </span></dt>
-<dd>(passed to constructor at runtime) command line arguments used in shell call for main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
+<dt>inputfilename <span class="classifier-delimiter">:</span> <span class="classifier">string </span></dt>
+<dd>String specifying the desired inputfile name.</dd>
 </dl>
-<p><strong>Options</strong></p>
+<p><strong>Train Options</strong></p>
 <dl class="docutils">
-<dt>inputtype <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Options are <cite>train</cite> or <cite>detect</cite></dd>
-<dt>projdir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to project directory</dd>
-<dt>datadir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to data directory</dd>
 <dt>loaddir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>Absolute path to load directory</dd>
 <dt>outdir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
@@ -234,11 +212,6 @@
 <dt>targetfiletype <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>Type of target file</dd>
 <dt>traindir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Type of target file</dd>
-</dl>
-<p><strong>Options (Train-Specific)</strong></p>
-<dl class="docutils">
-<dt>traindir <span class="classifier-delimiter">:</span> <span class="classifier">string </span></dt>
 <dd>Type of target file</dd>
 <dt>epochs <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>Number of training epochs</dd>
@@ -259,11 +232,19 @@
 <dt>computeboundingboxclusters <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
 <dd>Boolean value specifying whether to compute bounding box clusters</dd>
 </dl>
-<p><strong>Options (Detect-Specific)</strong></p>
+<p><strong>Test Options</strong></p>
 <dl class="docutils">
+<dt>loaddir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to load directory</dd>
+<dt>outdir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to output directory</dd>
+<dt>targetspath <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to target file</dd>
+<dt>targetfiletype <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Type of target file</dd>
 <dt>imagepath <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>Image path</dd>
-<dt>plotflag <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dt>plot_flag <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
 <dd>Flag for plotting</dd>
 <dt>secondary_classifier <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
 <dd>Boolean value specifying whether to use a secondary classifier</dd>
@@ -281,7 +262,7 @@
 <dd>NMS threshold</dd>
 <dt>batch_size <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>Desired batchsize</dd>
-<dt>img_size <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dt>imgsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>Desired cropped image size</dd>
 <dt>rgb_mean <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>Absolute path to dataset RGB mean file</dd>
@@ -298,30 +279,6 @@
 <dt id="src.InputFile.InputFile.printInputs">
 <code class="descname">printInputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.printInputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.printInputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to print all config options.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.InputFile.InputFile.readDetectInputfile">
-<code class="descname">readDetectInputfile</code><span class="sig-paren">(</span><em>inputfilestream</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.readDetectInputfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.readDetectInputfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to read config options from a detection inputfile</p>
-<div class="line-block">
-<div class="line"><strong>Inputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>inputfilestream:</em> specified inputfilestream.</div>
-</div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.InputFile.InputFile.readTrainingInputfile">
-<code class="descname">readTrainingInputfile</code><span class="sig-paren">(</span><em>inputfilestream</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.readTrainingInputfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.readTrainingInputfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to read config options from a training inputfile.</p>
-<div class="line-block">
-<div class="line"><strong>Inputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>inputfilestream:</em> specified inputfilestream.</div>
-</div>
-</div>
 </dd></dl>
 
 </dd></dl>
@@ -1164,30 +1121,6 @@ Format shall be assumed to be csv where one line is (name , label)_i</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="tests.unittests.DatasetTests">
-<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">DatasetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for all dataset-involved unit tests.</p>
-<dl class="method">
-<dt id="tests.unittests.DatasetTests.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tests.unittests.DatasetTests.test_load_targets">
-<code class="descname">test_load_targets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests.test_load_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests.test_load_targets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test functionality to load training data.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tests.unittests.DatasetTests.test_show_targets">
-<code class="descname">test_show_targets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DatasetTests.test_show_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DatasetTests.test_show_targets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test functionality to label training data.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="tests.unittests.GPUtests">
 <em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">GPUtests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for all GPU/cuda unit tests.</p>
@@ -1351,7 +1284,7 @@ Format shall be assumed to be csv where one line is (name , label)_i</p>
         <a href="flowdiagrams.html" class="btn btn-neutral float-right" title="Flow Diagrams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="running.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="running.html" class="btn btn-neutral" title="User Instructions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

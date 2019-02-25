@@ -5,6 +5,13 @@ The purpose of this document is to provide detailed, step-by-step
 instructions on how to run the code in our codebase related to (1)
 training a network and (2) testing it.
 
+Assuming you have set-up and installed all Python requirements
+correctly, all that remains is to ensure that you have properly
+formatted inputfiles. Consult the Code Docs section for a full
+description of the options. Below, we give some advice on a few of the
+components that are needed to avoid potential pitfalls.
+
+
 Training
 ---------------------
 
@@ -14,11 +21,7 @@ your inputfile is also in that directory, and simply run::
 
   python train.py train.py <input_file_name>
 
-Assuming you have set-up and installed all Python requirements
-correctly, all that remains is to ensure that you have a properly
-formatted inputfile. Consult the Code Docs section for a full
-description of the options. Below, we give some advice on a few of the
-components that are needed to avoid potential pitfalls:
+Notes on the training inputfile:
 
 #. ``datadir`` : This option sets the full filepath to the location on
    your machine where your training dataset resides. There should be
@@ -56,12 +59,10 @@ Here is an example inputfile for training that demonstrates correct
 option specification. In this case, the user is asking the software to
 precompute the YOLO architecture::
 
-  inputtype        = train
-  projdir          = /full/path/to/xview-yolov3/src/
-  datadir          = /full/path/to/training/datadir/
+  [TRAIN]
   loaddir          = /full/path/to/xview-yolov3/checkpoints/
-  outdir           = /full/path/to/outdir/
-  targetspath      = /full/path/to/targetdir/xView_train.geojson
+  outdir           = /full/path/to/xview-yolov3/output/
+  targetspath      = /full/path/to/targetsdir/xView_train.geojson
   targetfiletype   = json
   traindir         = /full/path/to/traindir/
   epochs           = 300
@@ -70,10 +71,9 @@ precompute the YOLO architecture::
   networkcfg       = /full/path/to/xview-yolov3/cfg/yolov3_template.cfg
   imgsize          = 800
   resume           = False
-  invalidclasslist = 75,82
-  boundingboxclusters = 30
+  invalid_class_list         = 75,82
+  boundingboxclusters        = 30
   computeboundingboxclusters = False
-
 
 Testing
 ---------------------
@@ -84,8 +84,5 @@ your inputfile is also in that directory, and simply run::
 
   python detect.py train.py <input_file_name>
 
-Assuming you have set-up and installed all Python requirements
-correctly, all that remains is to ensure that you have a properly
-formatted inputfile. Consult the Code Docs section for a full
-description of the options. Below, we give some advice on a few of the
-components that are needed to avoid potential pitfalls:
+Notes on the testing inputfile:
+

@@ -199,8 +199,9 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;inputfilename&#39;</span><span class="p">,</span>\
                         <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;inputfilename&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>\
                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Filename of the input file&#39;</span><span class="p">)</span>
-    <span class="n">args</span>   <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">inputs</span> <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+    <span class="n">args</span>          <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">inputfilename</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">inputfilename</span>
+    <span class="n">inputs</span>        <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="n">inputfilename</span><span class="p">);</span>
     <span class="n">inputs</span><span class="o">.</span><span class="n">printInputs</span><span class="p">();</span>
     <span class="c1"># Problem setup</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">loaddir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
