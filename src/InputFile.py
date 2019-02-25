@@ -1,27 +1,23 @@
 import numpy as np
-from pprint import pprint
-import sys
+import sys,os
+import configparser
 
-# Auxiliary class for packaging input file options
 class InputFile():
     """
     Class for packaging all input/config file options together.
 
+    .. note:: 
+         There are separate options required by InputFile depending on whether the intended goal is training or testing. The user must declare on the first line of the InputFile either ``[TRAIN]`` or ``[TEST]``, depending on their desired objective.
+
     **Inputs**
 
     ----------
-    args : command line arguments 
-        (passed to constructor at runtime) command line arguments used in shell call for main driver script. args must have a inputfilename member that specifies the desired inputfile name. 
+    inputfilename : string 
+        String specifying the desired inputfile name. 
 
-    **Options**
+    **Train Options**
 
     ----------
-    inputtype : string
-        Options are `train` or `detect`
-    projdir : string
-        Absolute path to project directory
-    datadir : string
-        Absolute path to data directory
     loaddir : string
         Absolute path to load directory
     outdir : string
@@ -31,12 +27,6 @@ class InputFile():
     targetfiletype : string
         Type of target file
     traindir : string
-        Type of target file
-
-    **Options (Train-Specific)**
-
-    ----------
-    traindir : string 
         Type of target file
     epochs : int
         Number of training epochs
@@ -57,12 +47,20 @@ class InputFile():
     computeboundingboxclusters : bool
         Boolean value specifying whether to compute bounding box clusters
 
-    **Options (Detect-Specific)**
+    **Test Options**
 
     ----------
+    loaddir : string
+        Absolute path to load directory
+    outdir : string
+        Absolute path to output directory
+    targetspath : string
+        Absolute path to target file
+    targetfiletype : string
+        Type of target file
     imagepath : string
         Image path
-    plotflag : bool
+    plot_flag : bool
         Flag for plotting
     secondary_classifier : bool
         Boolean value specifying whether to use a secondary classifier
@@ -80,7 +78,7 @@ class InputFile():
         NMS threshold
     batch_size : int
         Desired batchsize
-    img_size : int
+    imgsize : int
         Desired cropped image size
     rgb_mean : string
         Absolute path to dataset RGB mean file
@@ -93,25 +91,67 @@ class InputFile():
     invalid_class_list : string (csv format)
         Comma-separated list of classes to be ignored from training data
     """
-    
-    def __init__(self,args=[]):
+
+    def __init__(self, inputfile):
+        config    = configparser.ConfigParser()
+        config.read(inputfile)
+        keys,vals = self.assert_everything_included(config)
+        self.set_options(keys,vals)
+        self.convert_strings_to_appropriate_datatypes()
+
+    def assert_everything_included(self,config):
+        # Check that correct section header is used
+        self.inputtype = config.sections()[0]
         try:
-            inputfilename        = args.inputfilename
-            inputfilestream      = open(inputfilename)
-            inputtype            = inputfilestream.readline().strip().split('= ')[1];
-            self.projdir         = inputfilestream.readline().strip().split('= ')[1];
-            self.datadir         = inputfilestream.readline().strip().split('= ')[1];
-            self.loaddir         = inputfilestream.readline().strip().split('= ')[1];
-            self.outdir          = inputfilestream.readline().strip().split('= ')[1];
-            self.targetspath     = inputfilestream.readline().strip().split('= ')[1];
-            self.targetfiletype  = inputfilestream.readline().strip().split('= ')[1];
-            if (inputtype == "train"):
-                self.readTrainingInputfile(inputfilestream);
-            elif (inputtype == "detect"):
-                self.readDetectInputfile(inputfilestream);
-            inputfilestream.close();
-        except:
-            print("Using no input file (blank initialization).")
+            assert( (self.inputtype == 'TRAIN') | (self.inputtype == 'TEST') )
+        except AssertionError as e:
+            e.args += ('Please specify as the inputfile section header either [TRAIN] or [TEST]',)
+            raise
+        # Get keys
+        keys = [k for k in config[self.inputtype]]
+        vals = [config[self.inputtype][v] for v in keys]
+        if (self.inputtype == 'TRAIN'):
+            self.necessary_keys = ['loaddir', 'outdir', 'targetspath', 'targetfiletype', 'traindir', 'epochs', 'epochstart', 'batchsize', 'networkcfg', 'imgsize', 'resume', 'invalid_class_list', 'boundingboxclusters', 'computeboundingboxclusters']
+        elif (self.inputtype == 'TEST'):
+            self.necessary_keys = ['loaddir', 'outdir', 'targetspath', 'targetfiletype', 'imagepath', 'plot_flag', 'secondary_classifier', 'networkcfg', 'networksavefile', 'class_path', 'conf_thres', 'cls_thres', 'nms_thres', 'batch_size', 'imgsize', 'rgb_mean', 'rgb_std', 'class_mean', 'class_sigma', 'invalid_class_list']
+        # Check that all necessary keys are included
+        for k in self.necessary_keys:
+            try:
+                assert( any(k in s for s in keys) )
+            except AssertionError as e:
+                e.args += ('The following necessary argument was not specified in the input file: ' + k,)
+                raise
+        return keys,vals
+
+    def set_options(self,keys,vals):
+        # Set all options
+        for i,k in enumerate(keys):
+            setattr(self,k,vals[i])
+
+    def convert_strings_to_appropriate_datatypes(self):
+        if (self.invalid_class_list):
+            self.invalid_class_list  = np.array([int(x) for x in self.invalid_class_list.split(',')] , dtype='int')
+        else:
+            self.invalid_class_list = np.array([])
+        # Train-specific
+        if (self.inputtype == "TRAIN"):
+            self.epochs     = int(self.epochs)
+            self.epochstart = int(self.epochstart)
+            self.batchsize  = int(self.batchsize)
+            self.imgsize    = int(self.imgsize)
+            self.resume     = ((self.resume == "True") | (self.resume == "true"))
+            self.boundingboxclusters = int(self.boundingboxclusters)
+            self.computeboundingboxclusters = ((self.computeboundingboxclusters == "True") | (self.computeboundingboxclusters == "true"))
+        # Test-specific
+        elif (self.inputtype == "TEST"):
+            self.plot_flag = ((self.plot_flag == "True") | (self.plot_flag == "true"))
+            self.secondary_classifier = ((self.secondary_classifier == "True") | (self.secondary_classifier == "true"))
+            self.conf_thres = float(self.conf_thres)
+            self.cls_thres  = float(self.cls_thres)
+            self.nms_thres  = float(self.nms_thres)
+            self.batch_size = int(self.batch_size)
+            self.imgsize    = int(self.imgsize)
+
     def printInputs(self):
         """
         Method to print all config options.
@@ -122,49 +162,3 @@ class InputFile():
         print('\n'.join("%s: %s" % item for item in attrs.items()))
         print("**************************************************")
         print('\n');
-    def readTrainingInputfile(self,inputfilestream):
-        """
-        Method to read config options from a training inputfile.
-
-        | **Inputs:**
-        |    *inputfilestream:* specified inputfilestream.
-        """
-        self.traindir        = inputfilestream.readline().strip().split('= ')[1];
-        self.epochs          = int(inputfilestream.readline().strip().split('= ')[1]);
-        self.epochstart      = int(inputfilestream.readline().strip().split('= ')[1]);
-        self.batchsize       = int(inputfilestream.readline().strip().split('= ')[1]);
-        self.networkcfg      = inputfilestream.readline().strip().split('= ')[1];
-        self.imgsize         = int(inputfilestream.readline().strip().split('= ')[1]);
-        resume               = inputfilestream.readline().strip().split('= ')[1];
-        self.resume          = ((resume == "True") | (resume == "true"));
-        invalid_class_list   = inputfilestream.readline().strip().split('= ')[1]
-        self.invalid_class_list         = np.array( invalid_class_list.split(',') , dtype='int' )
-        self.boundingboxclusters        = int(inputfilestream.readline().strip().split('= ')[1]);
-        computeboundingboxclusters      = inputfilestream.readline().strip().split('= ')[1];
-        self.computeboundingboxclusters = ((computeboundingboxclusters == "True") | (computeboundingboxclusters == "true"));
-    def readDetectInputfile(self,inputfilestream):
-        """
-        Method to read config options from a detection inputfile
-
-        | **Inputs:**
-        |    *inputfilestream:* specified inputfilestream.
-        """
-        self.imagepath       = inputfilestream.readline().strip().split('= ')[1];
-        plotflag             = inputfilestream.readline().strip().split('= ')[1];
-        self.plot_flag       = ((plotflag == "True") | (plotflag == "true"));
-        secondary_classifier       = inputfilestream.readline().strip().split('= ')[1];
-        self.secondary_classifier  = ((secondary_classifier == "True") | (secondary_classifier == "true"));
-        self.networkcfg      = inputfilestream.readline().strip().split('= ')[1];
-        self.networksavefile = inputfilestream.readline().strip().split('= ')[1];
-        self.class_path      = inputfilestream.readline().strip().split('= ')[1];
-        self.conf_thres      = float(inputfilestream.readline().strip().split('= ')[1]);
-        self.cls_thres       = float(inputfilestream.readline().strip().split('= ')[1]);
-        self.nms_thres       = float(inputfilestream.readline().strip().split('= ')[1]);
-        self.batch_size      = int(inputfilestream.readline().strip().split('= ')[1]);
-        self.imgsize         = int(inputfilestream.readline().strip().split('= ')[1]);
-        self.rgb_mean        = inputfilestream.readline().strip().split('= ')[1];
-        self.rgb_std         = inputfilestream.readline().strip().split('= ')[1];
-        self.class_mean      = inputfilestream.readline().strip().split('= ')[1];
-        self.class_sigma     = inputfilestream.readline().strip().split('= ')[1];
-        invalid_class_list   = inputfilestream.readline().strip().split('= ')[1]
-        self.invalid_class_list  = np.array( invalid_class_list.split(',') , dtype='int' )

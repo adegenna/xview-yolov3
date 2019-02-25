@@ -70,7 +70,7 @@ class DataProcessingTests(unittest.TestCase):
         warnings.filterwarnings("ignore")
         args                    = lambda:0
         args.inputfilename      = './input_test.dat'
-        self.inputs             = InputFile(args)
+        self.inputs             = InputFile(args.inputfilename)
         self.ndata              = 9
         self.nobject            = 11158
 
@@ -79,7 +79,8 @@ class DataProcessingTests(unittest.TestCase):
         Test loading of geojson formatted data.
         """
         print('test loading of geojson formatted data')
-        coords,chips,classes    = get_labels_geojson(self.inputs.datadir + 'xview/labels/jsontest.json')
+        self.inputs.targetspath = '/'.join(self.inputs.targetspath.split('/')[0:-1]) + '/jsontest.json'
+        coords,chips,classes    = get_labels_geojson(self.inputs.targetspath)
         self.assertTrue(coords.shape == (self.nobject, 4))
         self.assertTrue(chips.size   == self.nobject)
         self.assertTrue(classes.size == self.nobject)
@@ -116,69 +117,6 @@ class DataProcessingTests(unittest.TestCase):
         self.assertTrue(num2 == 2316)
         
 
-        
-class DatasetTests(unittest.TestCase):
-    """
-    Class for all dataset-involved unit tests.
-    """
-    def setUp(self):
-        """
-        Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.
-        """
-        warnings.filterwarnings("ignore")
-        args                    = lambda:0
-        args.inputfilename      = './input_test.dat'
-        self.inputs             = InputFile(args);
-        self.filetypes          = ['matlab', 'pickle']
-        self.filetypeAppend     = ['.mat', '.pkl']
-        self.basetargetpath     = self.inputs.targetspath[0:-4];
-        self.nclass             = 60
-        self.nobjects           = 11057
-        self.ndata              = 9
-        self.expectedTargetKeys = {'__header__', '__version__', '__globals__', 'class_cov', 'class_mu', 'class_sigma', 'id', 'image_numbers', 'image_weights', 'targets', 'wh'}
-    
-    def test_load_targets(self):
-        """
-        Test functionality to load training data.
-        """
-        print('test training data loading functionality')        
-        for i in range(len(self.filetypes)):
-            self.inputs.targetfiletype = self.filetypes[i]
-            self.inputs.targetspath    = self.basetargetpath + self.filetypeAppend[i];
-            sys.stdout = open(os.devnull, 'w')
-            dataloader                 = ListDataset(self.inputs)
-            sys.stdout = sys.__stdout__
-            self.assertTrue(dataloader.mat.keys() == self.expectedTargetKeys)
-            self.assertTrue(dataloader.mat['class_cov'].shape   == (self.nclass,4,4))
-            self.assertTrue(dataloader.mat['class_mu'].shape    == (self.nclass,4))
-            self.assertTrue(dataloader.mat['class_sigma'].shape == (self.nclass,4))
-            self.assertTrue(dataloader.mat['id'].size              == self.nobjects)
-            self.assertTrue(dataloader.mat['image_numbers'].shape  == (self.ndata,1))
-            self.assertTrue(dataloader.mat['image_weights'].shape  == (self.ndata,1))
-            self.assertTrue(dataloader.mat['targets'].shape        == (self.nobjects,5))
-            self.assertTrue(dataloader.mat['wh'].shape             == (self.nobjects,2))
-            
-    def test_show_targets(self):
-        """
-        Test functionality to label training data.
-        """
-        print('test training data labeling')
-        self.inputs.targetfiletype = self.filetypes[0]
-        self.inputs.targetspath    = self.basetargetpath + self.filetypeAppend[0];
-        sys.stdout = open(os.devnull, 'w')
-        dataloader                 = ListDataset(self.inputs)
-        sys.stdout = sys.__stdout__
-        for i, (imgs, targets) in enumerate(dataloader):
-            try:
-                obj     = targets[0][:,1:].numpy()
-                obj    *= self.inputs.imgsize
-            except:
-                obj     = []
-            img     = np.transpose(imgs[0].numpy(),(1,2,0))
-            plot_rgb_image(img,dataloader.rgb_mean.squeeze(),dataloader.rgb_std.squeeze(),obj)
-
-
-
 class TargetTests(unittest.TestCase):
     """
     Class for all target-involved unit tests.
@@ -190,7 +128,7 @@ class TargetTests(unittest.TestCase):
         warnings.filterwarnings("ignore")
         args                    = lambda:0
         args.inputfilename      = './input_test.dat'
-        self.inputs             = InputFile(args);
+        self.inputs             = InputFile(args.inputfilename);
         self.inputs.targetspath = '/'.join(self.inputs.targetspath.split('/')[0:-1]) + '/jsontest.json'
         self.inputs.targetfiletype = 'json'
         self.nclass             = 41
@@ -404,7 +342,7 @@ class ModelsTests(unittest.TestCase):
         warnings.filterwarnings("ignore")
         args                    = lambda:0
         args.inputfilename      = './input_test.dat'
-        self.inputs             = InputFile(args);
+        self.inputs             = InputFile(args.inputfilename);
         if not os.path.exists(self.inputs.outdir):
             os.makedirs(self.inputs.outdir)
 

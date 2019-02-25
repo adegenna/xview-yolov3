@@ -43,8 +43,9 @@ def main():
     parser.add_argument('inputfilename',\
                         metavar='inputfilename',type=str,\
                         help='Filename of the input file')
-    args   = parser.parse_args()
-    inputs = InputFile(args);
+    args          = parser.parse_args()
+    inputfilename = args.inputfilename
+    inputs        = InputFile(inputfilename);
     inputs.printInputs();
     # Problem setup
     os.makedirs(inputs.loaddir, exist_ok=True)

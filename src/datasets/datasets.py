@@ -41,19 +41,7 @@ class ListDataset():  # for training
         self.nL1      = None
         self.r        = None
         # load targets
-        if (self.targetfiletype == 'matlab'):
-            print("Loading target data from specified matlab file...")
-            self.mat = scipy.io.loadmat(self.targets_path)
-            self.targetIDs     = self.mat['id'].squeeze()
-            self.targets       = self.mat['targets']
-            self.class_weights = xview_class_weights(range(60)).numpy()
-        elif (self.targetfiletype == 'pickle'):
-            print("Loading target data from specified pickle file...")
-            self.mat = load_obj(self.targets_path)
-            self.targetIDs     = self.mat['id'].squeeze()
-            self.targets       = self.mat['targets']
-            self.class_weights = xview_class_weights(range(60)).numpy()
-        elif (self.targetfiletype == 'json'):
+        if (self.targetfiletype == 'json'):
             print("Loading target data from specified json file...")
             targets         = Target(inputs)
             self.targetIDs  = vars(targets)['_Target__filtered_chips']

@@ -1,6 +1,4 @@
-inputtype        = train
-projdir          = /home/adegennaro/oga_cat/xview-yolov3/src/
-datadir          = /data/xview/train/images/
+[TRAIN]
 loaddir          = /home/adegennaro/oga_cat/xview-yolov3/checkpoints/
 outdir           = /home/adegennaro/oga_cat/xview-yolov3/output/
 targetspath      = /data/xview/labels/xView_train.geojson
@@ -12,6 +10,6 @@ batchsize        = 8
 networkcfg       = /home/adegennaro/oga_cat/xview-yolov3/cfg/yolov3_custom.cfg
 imgsize          = 800
 resume           = False
-invalidclasslist = 75,82
+invalid_class_list = 75,82
 boundingboxclusters = 30
 computeboundingboxclusters = False
