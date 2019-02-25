@@ -30,7 +30,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Flow Diagrams" href="flowdiagrams.html" />
-    <link rel="prev" title="Installation" href="installation.html" /> 
+    <link rel="prev" title="Installation" href="running.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -88,6 +88,7 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Docs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.train">Src/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.datasetProcessing">Utils/</a></li>
@@ -274,6 +275,8 @@
 <dd>Absolute path to class</dd>
 <dt>conf_thres <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
 <dd>Confidence threshold for detection</dd>
+<dt>cls_thres <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Class threshold for detection</dd>
 <dt>nms_thres <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
 <dd>NMS threshold</dd>
 <dt>batch_size <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
@@ -434,7 +437,8 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="method">
 <dt id="src.NetworkTester.NetworkTester.loadClasses">
 <code class="descname">loadClasses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.loadClasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.loadClasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to load class names from specified path in user-input file.</p>
+<dd><p>Method to load class names from specified path in user-input file.
+Format assumed shall be a csv list of (class_name , class_label)_i</p>
 </dd></dl>
 
 <dl class="method">
@@ -788,7 +792,13 @@ and a ground truth.  Primary metric is mean average precision (mAP).</p>
 <p><strong>Inputs</strong></p>
 <dl class="docutils">
 <dt>opt <span class="classifier-delimiter">:</span> <span class="classifier">InputFile</span></dt>
-<dd>InputFile member specifying all user options. Note: prediction files in opt.outdir should have filename format ‘XYZ.tif.txt’, where ‘XYZ.tif’ is the xView TIFF file being predicted on. Prediction files should be in space-delimited csv format, with each line like (xmin ymin xmax ymax class_prediction score_prediction).</dd>
+<dd>InputFile member specifying all user options.</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Prediction files in opt.outdir will have filename format ‘XYZ.tif.txt’, where ‘XYZ.tif’ is the .tif file used for prediction. Prediction files should be in space-delimited csv format; each line appears as: (xmin ymin xmax ymax class_prediction score_prediction).</p>
+</div>
+<dl class="docutils">
 <dt>iou_threshold <span class="classifier-delimiter">:</span> <span class="classifier">float </span></dt>
 <dd>iou threshold (between 0 and 1) indicating the percentage iou required to count a prediction as a true positive</dd>
 </dl>
@@ -800,7 +810,7 @@ and a ground truth.  Primary metric is mean average precision (mAP).</p>
 <p><strong>Raises</strong></p>
 <dl class="docutils">
 <dt>ValueError </dt>
-<dd>Raised if there are files in the prediction folder that are not in the ground truth geojson. EG a prediction file is titled ‘15.tif.txt’, but the file ‘15.tif’ is not in the ground truth.</dd>
+<dd>Raised if there are files in the prediction folder that are not in the ground truth file. For example, a prediction file is titled ‘15.tif.txt’, but the file ‘15.tif’ is not in the ground truth.</dd>
 </dl>
 </dd></dl>
 
@@ -1078,8 +1088,9 @@ precision: The precision curve (list).</div></blockquote>
 
 <dl class="function">
 <dt id="utils.utils.load_classes">
-<code class="descclassname">utils.utils.</code><code class="descname">load_classes</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#load_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.load_classes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads class labels at ‘path’</p>
+<code class="descclassname">utils.utils.</code><code class="descname">load_classes</code><span class="sig-paren">(</span><em>xview_names_and_labels_filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#load_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.load_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads class labels at ‘xview_names_and_labels_filepath’
+Format shall be assumed to be csv where one line is (name , label)_i</p>
 </dd></dl>
 
 <dl class="function">
@@ -1340,7 +1351,7 @@ precision: The precision curve (list).</div></blockquote>
         <a href="flowdiagrams.html" class="btn btn-neutral float-right" title="Flow Diagrams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="running.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

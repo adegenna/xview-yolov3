@@ -86,6 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">User Instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../inheritance.html">Dependency Graphs</a></li>
@@ -188,7 +189,10 @@
 
 <span class="sd">      ----------</span>
 <span class="sd">      opt : InputFile</span>
-<span class="sd">            InputFile member specifying all user options. Note: prediction files in opt.outdir should have filename format &#39;XYZ.tif.txt&#39;, where &#39;XYZ.tif&#39; is the xView TIFF file being predicted on. Prediction files should be in space-delimited csv format, with each line like (xmin ymin xmax ymax class_prediction score_prediction).</span>
+<span class="sd">            InputFile member specifying all user options. </span>
+<span class="sd">      </span>
+<span class="sd">      .. note:: </span>
+<span class="sd">         Prediction files in opt.outdir will have filename format &#39;XYZ.tif.txt&#39;, where &#39;XYZ.tif&#39; is the .tif file used for prediction. Prediction files should be in space-delimited csv format; each line appears as: (xmin ymin xmax ymax class_prediction score_prediction).</span>
 
 <span class="sd">      iou_threshold : float </span>
 <span class="sd">            iou threshold (between 0 and 1) indicating the percentage iou required to count a prediction as a true positive</span>
@@ -203,7 +207,7 @@
 <span class="sd">    </span>
 <span class="sd">      ----------</span>
 <span class="sd">      ValueError </span>
-<span class="sd">          Raised if there are files in the prediction folder that are not in the ground truth geojson. EG a prediction file is titled &#39;15.tif.txt&#39;, but the file &#39;15.tif&#39; is not in the ground truth.</span>
+<span class="sd">          Raised if there are files in the prediction folder that are not in the ground truth file. For example, a prediction file is titled &#39;15.tif.txt&#39;, but the file &#39;15.tif&#39; is not in the ground truth.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">path_predictions</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">outdir</span>
