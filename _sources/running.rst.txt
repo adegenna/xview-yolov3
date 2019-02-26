@@ -65,15 +65,15 @@ option specification. In this case, the user is asking the software to
 precompute the YOLO architecture::
 
   [TRAIN]
-  loaddir          = /full/path/to/xview-yolov3/checkpoints/
-  outdir           = /full/path/to/xview-yolov3/output/
+  loaddir          = /full/path/to/loaddir/
+  outdir           = /full/path/to/outdir/
   targetspath      = /full/path/to/targetsdir/xView_train.geojson
   targetfiletype   = json
   traindir         = /full/path/to/traindir/
   epochs           = 300
   epochstart       = 0
   batchsize        = 8
-  networkcfg       = /full/path/to/xview-yolov3/cfg/yolov3_template.cfg
+  networkcfg       = /full/path/to/networkdir/yolov3_template.cfg
   imgsize          = 800
   resume           = False
   invalid_class_list         = 75,82
@@ -141,23 +141,23 @@ Here is an example inputfile for testing that demonstrates correct
 option specification::
 
   [TEST]
-  loaddir              = /full/path/to/xview-yolov3/src/
+  loaddir              = /full/path/to/loaddir/
   outdir               = /full/path/to/outdir/
   targetspath          = /full/path/to/targetdir/xView_train.geojson
   targetfiletype       = json
   imagepath            = /full/path/to/testdir/
   plot_flag            = True
   secondary_classifier = False
-  networkcfg           = /full/path/to/xview-yolov3/output/test2/yolov3_custom.cfg
-  networksavefile      = /full/path/to/xview-yolov3/output/test2/best.pt
-  class_path           = /full/path/to/xview-yolov3/data/xview_names_and_labels.csv
+  networkcfg           = /full/path/to/networksavedir/yolov3_custom.cfg
+  networksavefile      = /full/path/to/networksavedir/best.pt
+  class_path           = /full/path/to/classpathdir/xview_names_and_labels.csv
   conf_thres           = 0.99
   cls_thres            = 0.05
   nms_thres            = 0.4
   batch_size           = 1
   imgsize              = 1632
-  rgb_mean             = /full/path/to/xview-yolov3/output/test2/training_rgb_mean.out
-  rgb_std              = /full/path/to/xview-yolov3/output/test2/training_rgb_std.out
-  class_mean           = /full/path/to/xview-yolov3/output/test2/training_class_mean.out
-  class_sigma          = /full/path/to/xview-yolov3/output/test2/training_class_sigma.out
+  rgb_mean             = /full/path/to/statdir/training_rgb_mean.out
+  rgb_std              = /full/path/to/statdir/training_rgb_std.out
+  class_mean           = /full/path/to/statdir/training_class_mean.out
+  class_sigma          = /full/path/to/statdir/training_class_sigma.out
   invalid_class_list   = 75,82
