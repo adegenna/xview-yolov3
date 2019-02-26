@@ -188,6 +188,26 @@
 </dl>
 </dd></dl>
 
+<span class="target" id="module-src.detect"></span><dl class="function">
+<dt id="src.detect.detect">
+<code class="descclassname">src.detect.</code><code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main driver script for testing the YOLOv3 network.</p>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments</span></dt>
+<dd>command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
+</dl>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>inputs.outdir/metrics.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
+<dd>output metrics for specified test image given by inputs.imagepath</dd>
+<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.jpg <span class="classifier-delimiter">:</span> <span class="classifier">jpeg image</span></dt>
+<dd>test image with detected bounding boxes, classes and confidence scores</dd>
+<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
+<dd>text file with bounding boxes, classes and confidence scores for all detections</dd>
+</dl>
+</dd></dl>
+
 <span class="target" id="module-src.InputFile"></span><dl class="class">
 <dt id="src.InputFile.InputFile">
 <em class="property">class </em><code class="descclassname">src.InputFile.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>inputfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile" title="Permalink to this definition">¶</a></dt>
@@ -268,10 +288,6 @@
 <dd>Absolute path to dataset RGB mean file</dd>
 <dt>rgb_std <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>Absolute path to dataset RGB standard deviation file</dd>
-<dt>class_mean <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to class mean file</dd>
-<dt>class_sigma <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to class standard deviation file</dd>
 <dt>invalid_class_list <span class="classifier-delimiter">:</span> <span class="classifier">string (csv format)</span></dt>
 <dd>Comma-separated list of classes to be ignored from training data</dd>
 </dl>
