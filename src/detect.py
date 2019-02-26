@@ -6,7 +6,7 @@ import torch
 from models import *
 from datasets import *
 from utils.utils import *
-from Inputstuff import *
+from InputFile import *
 from NetworkTester import *
 
 def detect():
@@ -37,7 +37,7 @@ def detect():
                         help='Filename of the input file')
     args          = parser.parse_args()
     inputfilename = args.inputfilename
-    opt           = Inputstuff(inputfilename);
+    opt           = InputFile(inputfilename);
     os.makedirs(opt.outdir, exist_ok=True)
     opt.printInputs();
     

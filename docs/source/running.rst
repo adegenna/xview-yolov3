@@ -23,7 +23,7 @@ your inputfile is also in that directory, and simply run::
 
 Notes on the training inputfile:
 
-#. ``datadir`` : This option sets the full filepath to the location on
+#. ``traindir`` : This option sets the full filepath to the location on
    your machine where your training dataset resides. There should be
    nothing in this directory except the training image
    files. Currently supported image files are ``.tif`` and ``.bmp``.
@@ -45,7 +45,12 @@ Notes on the training inputfile:
    box clusters (i.e. YOLO anchors) in the ``boundingboxclusters``
    argument of the inputfile.
 
-#. ``invalidclasslist`` : This option was added to give the user the
+#. ``imgsize`` : This integer value specifies the pixel length of a
+   single image chip. Because of the specifics of the YOLOv3
+   architecture, the only constraint is that this number must be a
+   multiple of 32.
+
+#. ``invalid_class_list`` : This option was added to give the user the
    ability to specify a list of classes referred to in the
    ``targetspath`` metadata file that either are not present or need
    to be excluded from the training dataset. For example, the xView
@@ -60,15 +65,15 @@ option specification. In this case, the user is asking the software to
 precompute the YOLO architecture::
 
   [TRAIN]
-  loaddir          = /full/path/to/xview-yolov3/checkpoints/
-  outdir           = /full/path/to/xview-yolov3/output/
+  loaddir          = /full/path/to/loaddir/
+  outdir           = /full/path/to/outdir/
   targetspath      = /full/path/to/targetsdir/xView_train.geojson
   targetfiletype   = json
   traindir         = /full/path/to/traindir/
   epochs           = 300
   epochstart       = 0
   batchsize        = 8
-  networkcfg       = /full/path/to/xview-yolov3/cfg/yolov3_template.cfg
+  networkcfg       = /full/path/to/networkdir/yolov3_template.cfg
   imgsize          = 800
   resume           = False
   invalid_class_list         = 75,82
@@ -86,3 +91,73 @@ your inputfile is also in that directory, and simply run::
 
 Notes on the testing inputfile:
 
+#. ``targetspath`` , ``invalid_class_list`` , ``imgsize`` : Same notes
+   apply as in the training case above.
+
+#. ``imagepath`` : This option sets the full filepath to the location
+   on your machine where your test dataset resides. There should be
+   nothing in this directory except the test image files. Currently
+   supported image files are ``.tif`` and ``.bmp``.
+
+#. ``networkcfg`` : This option specifies the full filepath to a
+   trained YOLOv3 configuration file. If you used the recommended
+   input to this option in the training stage, then the code will have
+   produced this file for you, saved as ``cfg/yolov3_custom.cfg``.
+
+#. ``networksavefile`` : This option specifies the full filepath to
+   the PyTorch savefile (.pt extension) that contains all weights for
+   the trained network.
+
+#. ``class_path`` : This file is a comma-separated list of all classes
+   and any associated numeric labels. For example, the xView dataset
+   contains 60 classes, with associated labels ranging from 11
+   to 94. Thus, the ``class_path`` file for the xView dataset would be
+   a 60-line .csv file that would look as follows::
+
+     Fixed-wing Aircraft , 11
+     Small Aircraft , 12
+     Cargo Plane , 13
+     ...
+     Tower , 94
+     
+#. ``rgb_mean`` , ``rgb_std`` : These files contain RGB statistics
+   that were computed on the training dataset by the training
+   routine. Each of them is simply a 3-line file, where each line
+   contains a single numeric value that is the mean (or standard
+   deviation) of the respective RGB channel. These values are used to
+   normalize any data that is fed into the network.
+
+#. ``class_mean`` , ``class_std`` : These files contain class
+   statistics that were computed on the training dataset by the
+   training routine. Each of these files contains N-lines, where N is
+   the number of classes, and each line contains a comma-separated
+   list of 4 values, corresponding to the mean (or standard deviation)
+   of the width, height, area, and aspect ratio (in that order) of the
+   respective class objects. These statistics are used as prior
+   information to reduce false positives in the object detection
+   stage.
+   
+Here is an example inputfile for testing that demonstrates correct
+option specification::
+
+  [TEST]
+  loaddir              = /full/path/to/loaddir/
+  outdir               = /full/path/to/outdir/
+  targetspath          = /full/path/to/targetdir/xView_train.geojson
+  targetfiletype       = json
+  imagepath            = /full/path/to/testdir/
+  plot_flag            = True
+  secondary_classifier = False
+  networkcfg           = /full/path/to/networksavedir/yolov3_custom.cfg
+  networksavefile      = /full/path/to/networksavedir/best.pt
+  class_path           = /full/path/to/classpathdir/xview_names_and_labels.csv
+  conf_thres           = 0.99
+  cls_thres            = 0.05
+  nms_thres            = 0.4
+  batch_size           = 1
+  imgsize              = 1632
+  rgb_mean             = /full/path/to/statdir/training_rgb_mean.out
+  rgb_std              = /full/path/to/statdir/training_rgb_std.out
+  class_mean           = /full/path/to/statdir/training_class_mean.out
+  class_sigma          = /full/path/to/statdir/training_class_sigma.out
+  invalid_class_list   = 75,82
