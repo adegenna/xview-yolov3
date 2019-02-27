@@ -25,6 +25,10 @@ def load_classes(xview_names_and_labels_filepath):
             name_i,label_i = line.split(',')
             names.append(name_i)
             labels.append(int(label_i))
+    # Sort w.r.t. labels
+    idx    = np.argsort(labels).astype(int)
+    labels = np.array(labels)[idx].tolist()
+    names  = np.array(names)[idx].tolist()
     return names,labels
 
 def convert_class_labels_to_indices(class_labels,unique_class_labels):
