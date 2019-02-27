@@ -251,6 +251,8 @@
 <dd>Desired number of bounding-box clusters for the YOLO architecture</dd>
 <dt>computeboundingboxclusters <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
 <dd>Boolean value specifying whether to compute bounding box clusters</dd>
+<dt>class_path <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute path to class</dd>
 </dl>
 <p><strong>Test Options</strong></p>
 <dl class="docutils">
@@ -499,6 +501,13 @@ Format assumed shall be a csv list of (class_name , class_label)_i</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="src.targets.Target.count_number_of_nonexistent_chips">
+<code class="descname">count_number_of_nonexistent_chips</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.count_number_of_nonexistent_chips" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to count the number of chips that exist in the target metadata file, but not in the actual database.
+Returns: number of nonexistent objects, and number of nonexistent files</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="src.targets.Target.detect_nonexistent_chip">
 <code class="descname">detect_nonexistent_chip</code><span class="sig-paren">(</span><em>chip_i</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.detect_nonexistent_chip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to detect all instances in database of a chip that does not exist</p>
@@ -556,6 +565,12 @@ Format assumed shall be a csv list of (class_name , class_label)_i</p>
 <dt id="src.targets.Target.process_target_data">
 <code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to perform all target processing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.targets.Target.read_list_of_class_names_and_labels">
+<code class="descname">read_list_of_class_names_and_labels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.read_list_of_class_names_and_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to read in the user-provided list of class names and associated numeric labels.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1049,6 +1064,12 @@ precision: The precision curve (list).</div></blockquote>
 <dt># Returns</dt>
 <dd>The average precision as computed in py-faster-rcnn.</dd>
 </dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.convert_class_labels_to_indices">
+<code class="descclassname">utils.utils.</code><code class="descname">convert_class_labels_to_indices</code><span class="sig-paren">(</span><em>class_labels</em>, <em>unique_class_labels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#convert_class_labels_to_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.convert_class_labels_to_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that takes a list of N class labels and the list of all M&lt;N unique class labels and returns a list of size N, where each entry is the index of the corresponding label in the list of unique class labels. For example, given class_labels = [34,89,34,34,11] and unique_class_labels = [11,34,89], the output = [1,2,1,1,0].</p>
 </dd></dl>
 
 <dl class="function">

@@ -60,6 +60,24 @@ Notes on the training inputfile:
    If there are no "invalid" classes in your target metadata file,
    then simply leave this option blank.
 
+#. ``class_path`` : This file is a comma-separated list of all classes
+   and any associated numeric labels. For example, the xView dataset
+   contains 60 classes, with associated labels ranging from 11
+   to 94. Thus, the ``class_path`` file for the xView dataset would be
+   a 60-line .csv file that would look as follows::
+
+     Fixed-wing Aircraft , 11
+     Small Aircraft , 12
+     Cargo Plane , 13
+     ...
+     Tower , 94
+
+#. ``sampling_weight`` : This option sets how images are weighted for
+   random selection at runtime during the training routine. Options
+   are ``inverse_class_frequency`` and ``uniform``. The former weights
+   an image by the sum of the inverse of the class frequencies of all
+   its objects; the latter weights all images uniformly.
+
 Here is an example inputfile for training that demonstrates correct
 option specification. In this case, the user is asking the software to
 precompute the YOLO architecture::
@@ -79,6 +97,8 @@ precompute the YOLO architecture::
   invalid_class_list         = 75,82
   boundingboxclusters        = 30
   computeboundingboxclusters = False
+  class_path       = /full/path/to/xview_names_and_labels.csv
+  sampling_weight  = inverse_class_frequency
 
 Testing
 ---------------------
@@ -91,8 +111,8 @@ your inputfile is also in that directory, and simply run::
 
 Notes on the testing inputfile:
 
-#. ``targetspath`` , ``invalid_class_list`` , ``imgsize`` : Same notes
-   apply as in the training case above.
+#. ``targetspath`` , ``invalid_class_list`` , ``imgsize`` ,
+   ``class_path`` : Same notes apply as in the training case above.
 
 #. ``imagepath`` : This option sets the full filepath to the location
    on your machine where your test dataset resides. There should be
@@ -107,18 +127,6 @@ Notes on the testing inputfile:
 #. ``networksavefile`` : This option specifies the full filepath to
    the PyTorch savefile (.pt extension) that contains all weights for
    the trained network.
-
-#. ``class_path`` : This file is a comma-separated list of all classes
-   and any associated numeric labels. For example, the xView dataset
-   contains 60 classes, with associated labels ranging from 11
-   to 94. Thus, the ``class_path`` file for the xView dataset would be
-   a 60-line .csv file that would look as follows::
-
-     Fixed-wing Aircraft , 11
-     Small Aircraft , 12
-     Cargo Plane , 13
-     ...
-     Tower , 94
      
 #. ``rgb_mean`` , ``rgb_std`` : These files contain RGB statistics
    that were computed on the training dataset by the training

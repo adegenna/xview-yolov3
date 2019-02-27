@@ -202,6 +202,8 @@
 <span class="sd">        Desired number of bounding-box clusters for the YOLO architecture</span>
 <span class="sd">    computeboundingboxclusters : bool</span>
 <span class="sd">        Boolean value specifying whether to compute bounding box clusters</span>
+<span class="sd">    class_path : string</span>
+<span class="sd">        Absolute path to class</span>
 
 <span class="sd">    **Test Options**</span>
 
@@ -267,9 +269,9 @@
         <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span><span class="p">]]</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span><span class="p">][</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s1">&#39;TRAIN&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loaddir&#39;</span><span class="p">,</span> <span class="s1">&#39;outdir&#39;</span><span class="p">,</span> <span class="s1">&#39;targetspath&#39;</span><span class="p">,</span> <span class="s1">&#39;targetfiletype&#39;</span><span class="p">,</span> <span class="s1">&#39;traindir&#39;</span><span class="p">,</span> <span class="s1">&#39;epochs&#39;</span><span class="p">,</span> <span class="s1">&#39;epochstart&#39;</span><span class="p">,</span> <span class="s1">&#39;batchsize&#39;</span><span class="p">,</span> <span class="s1">&#39;networkcfg&#39;</span><span class="p">,</span> <span class="s1">&#39;imgsize&#39;</span><span class="p">,</span> <span class="s1">&#39;resume&#39;</span><span class="p">,</span> <span class="s1">&#39;invalid_class_list&#39;</span><span class="p">,</span> <span class="s1">&#39;boundingboxclusters&#39;</span><span class="p">,</span> <span class="s1">&#39;computeboundingboxclusters&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_necessary_keys_train</span><span class="p">()</span>
         <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s1">&#39;TEST&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loaddir&#39;</span><span class="p">,</span> <span class="s1">&#39;outdir&#39;</span><span class="p">,</span> <span class="s1">&#39;targetspath&#39;</span><span class="p">,</span> <span class="s1">&#39;targetfiletype&#39;</span><span class="p">,</span> <span class="s1">&#39;imagepath&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_flag&#39;</span><span class="p">,</span> <span class="s1">&#39;secondary_classifier&#39;</span><span class="p">,</span> <span class="s1">&#39;networkcfg&#39;</span><span class="p">,</span> <span class="s1">&#39;networksavefile&#39;</span><span class="p">,</span> <span class="s1">&#39;class_path&#39;</span><span class="p">,</span> <span class="s1">&#39;conf_thres&#39;</span><span class="p">,</span> <span class="s1">&#39;cls_thres&#39;</span><span class="p">,</span> <span class="s1">&#39;nms_thres&#39;</span><span class="p">,</span> <span class="s1">&#39;batch_size&#39;</span><span class="p">,</span> <span class="s1">&#39;imgsize&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb_std&#39;</span><span class="p">,</span> <span class="s1">&#39;class_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;class_sigma&#39;</span><span class="p">,</span> <span class="s1">&#39;invalid_class_list&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_necessary_keys_test</span><span class="p">()</span>
         <span class="c1"># Check that all necessary keys are included</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -307,6 +309,48 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_necessary_keys_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Set list defining necessary keys for training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loaddir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;outdir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;targetspath&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;targetfiletype&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;traindir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;epochs&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;epochstart&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;batchsize&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;networkcfg&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;imgsize&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;resume&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;invalid_class_list&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;boundingboxclusters&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;computeboundingboxclusters&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;class_path&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;sampling_weight&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">set_necessary_keys_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Set list defining necessary keys for testing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loaddir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;outdir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;targetspath&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;targetfiletype&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;imagepath&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;plot_flag&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;secondary_classifier&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;networkcfg&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;networksavefile&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;class_path&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;conf_thres&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;cls_thres&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;nms_thres&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;batch_size&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;imgsize&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;rgb_mean&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;rgb_std&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;class_mean&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;class_sigma&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;invalid_class_list&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="InputFile.printInputs"><a class="viewcode-back" href="../../code.html#src.InputFile.InputFile.printInputs">[docs]</a>    <span class="k">def</span> <span class="nf">printInputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
