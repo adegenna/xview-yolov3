@@ -12,7 +12,7 @@ import torch
 from PIL import Image
 
 # from torch.utils.data import Dataset
-from utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset, zerocenter_class_indices
+from utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset, convert_class_labels_to_indices
 from src.targets import *
 from datasets.datasetTransformations import *
 from datasets.datasetStats import *
@@ -46,8 +46,9 @@ class ListDataset():  # for training
             targets         = Target(inputs)
             self.targetIDs  = vars(targets)['_Target__filtered_chips']
             coords          = vars(targets)['_Target__filtered_coords']
-            classes         = vars(targets)['_Target__filtered_classes']
-            classes         = zerocenter_class_indices(classes)
+            classes         = vars(targets)['_Target__filtered_classes']            
+            unique_class_labels = vars(targets)['_Target__list_of_unique_class_labels']
+            classes         = convert_class_labels_to_indices(classes,unique_class_labels)
             self.targets    = np.hstack([np.reshape(classes,[len(classes),1]),coords]).astype(float)
             self.targets_metadata = targets
             self.class_weights    = vars(targets)['_Target__filtered_class_weights']

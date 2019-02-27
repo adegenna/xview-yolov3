@@ -46,6 +46,8 @@ class InputFile():
         Desired number of bounding-box clusters for the YOLO architecture
     computeboundingboxclusters : bool
         Boolean value specifying whether to compute bounding box clusters
+    class_path : string
+        Absolute path to class
 
     **Test Options**
 
@@ -111,7 +113,7 @@ class InputFile():
         keys = [k for k in config[self.inputtype]]
         vals = [config[self.inputtype][v] for v in keys]
         if (self.inputtype == 'TRAIN'):
-            self.necessary_keys = ['loaddir', 'outdir', 'targetspath', 'targetfiletype', 'traindir', 'epochs', 'epochstart', 'batchsize', 'networkcfg', 'imgsize', 'resume', 'invalid_class_list', 'boundingboxclusters', 'computeboundingboxclusters']
+            self.necessary_keys = ['loaddir', 'outdir', 'targetspath', 'targetfiletype', 'traindir', 'epochs', 'epochstart', 'batchsize', 'networkcfg', 'imgsize', 'resume', 'invalid_class_list', 'boundingboxclusters', 'computeboundingboxclusters', 'class_path']
         elif (self.inputtype == 'TEST'):
             self.necessary_keys = ['loaddir', 'outdir', 'targetspath', 'targetfiletype', 'imagepath', 'plot_flag', 'secondary_classifier', 'networkcfg', 'networksavefile', 'class_path', 'conf_thres', 'cls_thres', 'nms_thres', 'batch_size', 'imgsize', 'rgb_mean', 'rgb_std', 'class_mean', 'class_sigma', 'invalid_class_list']
         # Check that all necessary keys are included

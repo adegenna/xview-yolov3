@@ -27,6 +27,17 @@ def load_classes(xview_names_and_labels_filepath):
             labels.append(int(label_i))
     return names,labels
 
+def convert_class_labels_to_indices(class_labels,unique_class_labels):
+    """
+    Function that takes a list of N class labels and the list of all M<N unique class labels and returns a list of size N, where each entry is the index of the corresponding label in the list of unique class labels. For example, given class_labels = [34,89,34,34,11] and unique_class_labels = [11,34,89], the output = [1,2,1,1,0]. 
+    """
+    for i in range(len(unique_class_labels)):
+        label_i = unique_class_labels[i]
+        idx_i   = [i for i,e in enumerate(class_labels) if e == label_i]
+        for j in range(len(idx_i)):
+            class_labels[idx_i[j]] = i
+    return class_labels
+        
 def modelinfo(model):
     nparams = sum(x.numel() for x in model.parameters())
     ngradients = sum(x.numel() for x in model.parameters() if x.requires_grad)

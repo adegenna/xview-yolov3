@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 from targets.fcn_sigma_rejection import *
 from targets.per_class_stats import *
 from utils.datasetProcessing import *
-from utils.utils import convert_tif2bmp, readBmpDataset, zerocenter_class_indices
+from utils.utils import convert_tif2bmp, readBmpDataset, load_classes
 
 # This is a python-conversion of utils/analysis.m and all related target preprocessing
 
@@ -40,24 +40,46 @@ class Target():
         self.__w,self.__h,self.__area            = compute_width_height_area(self.__x1,self.__y1,self.__x2,self.__y2)
         self.set_image_w_and_h()
         self.process_target_data()
-        
-    def set_image_w_and_h(self):
+        # Read in list of class names/labels
+        self.read_list_of_class_names_and_labels()
+
+    def count_number_of_nonexistent_chips(self):
         """
-        Method to set width and height of images associated with targets.
+        Method to count the number of chips that exist in the target metadata file, but not in the actual database.
+        Returns: number of nonexistent objects, and number of nonexistent files
         """
-        self.__image_w         = np.zeros_like(self.__x1)
-        self.__image_h         = np.zeros_like(self.__x1)
-        idx_nonexistent        = []
-        chip_nonexistent       = []
+        size_nonexistent       = 0
+        num_nonexistent_chips  = 0
         for i in range(len(self.__image_w)):
             try:
                 idx               = np.where(self.__files == self.__chips[i])[0][0]
                 self.__image_h[i] = self.__HWC[idx,0];
                 self.__image_w[i] = self.__HWC[idx,1];
             except:
-                idx_i           = self.detect_nonexistent_chip(self.__chips[i])
-                idx_nonexistent = np.append(idx_nonexistent,idx_i)
-                chip_nonexistent = np.append(chip_nonexistent,self.__chips[i])
+                idx_i                  = self.detect_nonexistent_chip(self.__chips[i])
+                size_nonexistent      += len(idx_i)
+                num_nonexistent_chips += 1
+        return size_nonexistent , num_nonexistent_chips
+        
+    def set_image_w_and_h(self):
+        """
+        Method to set width and height of images associated with targets.
+        """
+        self.__image_w      = np.zeros_like(self.__x1)
+        self.__image_h      = np.zeros_like(self.__x1)
+        size_nonexistent,num_nonexistent_chips = self.count_number_of_nonexistent_chips()
+        idx_nonexistent     = np.zeros(size_nonexistent)
+        chip_nonexistent    = np.zeros(num_nonexistent_chips)
+        count1 = 0
+        count2 = 0
+        for i in range(len(self.__image_w)):
+            idx               = np.where(self.__files == self.__chips[i])[0]
+            if (len(idx) == 0):
+                idx_i             = self.detect_nonexistent_chip(self.__chips[i])
+                idx_nonexistent[count1:count1+len(idx_i)] = idx_i
+                chip_nonexistent[count2]                  = self.__chips[i]
+                count1 += len(idx_i)
+                count2 += 1
         chip_nonexistent  = np.unique(chip_nonexistent).astype('int')
         for i in range(len(chip_nonexistent)):
             print('Chip ' + str(chip_nonexistent[i]) + ' not found, ignoring...')
@@ -253,13 +275,11 @@ class Target():
             e.args += ('Filtered data elements must be computed prior to using this function',)
             raise
         self.__image_weights = np.zeros(len(self.__files))
-        zerocentered_classes = np.array(zerocenter_class_indices(self.__filtered_class_labels))
         for i in range(len(self.__files)):
             idx_label_i      = np.where( self.__filtered_chips == self.__files[i] )[0]
             classes_image_i  = self.__filtered_classes[idx_label_i].astype(int)
             zerocentered_idx = np.where(self.__filtered_class_labels == classes_image_i[:,None])[1]
             classes_image_i  = zerocentered_idx
-            #classes_image_i  = zerocentered_classes[zerocentered_idx]
             weight_image_i   = np.sum( self.__filtered_class_weights[classes_image_i] )
             self.__image_weights[i] = weight_image_i
         self.__image_weights /= np.sum(self.__image_weights)        
@@ -289,6 +309,15 @@ class Target():
         self.compute_image_weights_with_filtered_data()
         if (self.__inputs.computeboundingboxclusters == True):
             self.compute_bounding_box_clusters_using_kmeans(self.__inputs.boundingboxclusters)
+
+    def read_list_of_class_names_and_labels(self):
+        """
+        Method to read in the user-provided list of class names and associated numeric labels.
+        """
+        class_names,class_labels            = load_classes(self.__inputs.class_path)
+        self.__list_of_unique_class_names   = class_names
+        self.__list_of_unique_class_labels  = class_labels
+
 
 
 # Little auxiliary functions
