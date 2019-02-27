@@ -113,9 +113,9 @@ class InputFile():
         keys = [k for k in config[self.inputtype]]
         vals = [config[self.inputtype][v] for v in keys]
         if (self.inputtype == 'TRAIN'):
-            self.necessary_keys = ['loaddir', 'outdir', 'targetspath', 'targetfiletype', 'traindir', 'epochs', 'epochstart', 'batchsize', 'networkcfg', 'imgsize', 'resume', 'invalid_class_list', 'boundingboxclusters', 'computeboundingboxclusters', 'class_path']
+            self.set_necessary_keys_train()
         elif (self.inputtype == 'TEST'):
-            self.necessary_keys = ['loaddir', 'outdir', 'targetspath', 'targetfiletype', 'imagepath', 'plot_flag', 'secondary_classifier', 'networkcfg', 'networksavefile', 'class_path', 'conf_thres', 'cls_thres', 'nms_thres', 'batch_size', 'imgsize', 'rgb_mean', 'rgb_std', 'class_mean', 'class_sigma', 'invalid_class_list']
+            self.set_necessary_keys_test()
         # Check that all necessary keys are included
         for k in self.necessary_keys:
             try:
@@ -153,6 +153,48 @@ class InputFile():
             self.nms_thres  = float(self.nms_thres)
             self.batch_size = int(self.batch_size)
             self.imgsize    = int(self.imgsize)
+
+    def set_necessary_keys_train(self):
+        # Set list defining necessary keys for training
+        self.necessary_keys = ['loaddir', \
+                               'outdir', \
+                               'targetspath', \
+                               'targetfiletype', \
+                               'traindir', \
+                               'epochs', \
+                               'epochstart', \
+                               'batchsize', \
+                               'networkcfg', \
+                               'imgsize', \
+                               'resume', \
+                               'invalid_class_list', \
+                               'boundingboxclusters', \
+                               'computeboundingboxclusters', \
+                               'class_path', \
+                               'sampling_weight']
+
+    def set_necessary_keys_test(self):
+        # Set list defining necessary keys for testing
+        self.necessary_keys = ['loaddir', \
+                               'outdir', \
+                               'targetspath', \
+                               'targetfiletype', \
+                               'imagepath', \
+                               'plot_flag', \
+                               'secondary_classifier', \
+                               'networkcfg', \
+                               'networksavefile', \
+                               'class_path', \
+                               'conf_thres', \
+                               'cls_thres', \
+                               'nms_thres', \
+                               'batch_size', \
+                               'imgsize', \
+                               'rgb_mean', \
+                               'rgb_std', \
+                               'class_mean', \
+                               'class_sigma', \
+                               'invalid_class_list']
 
     def printInputs(self):
         """

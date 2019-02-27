@@ -67,12 +67,14 @@ class ListDataset():  # for training
 
     def __iter__(self):
         self.count = -1
-        image_labels =  vars(self.targets_metadata)['_Target__files']
-        image_weights = vars(self.targets_metadata)['_Target__image_weights']
-        self.shuffled_vector = np.random.choice(image_labels, self.nF, p=image_weights)
-        #self.shuffled_vector = np.random.permutation(self.nF)  # Uniform image weights
-        #self.shuffled_vector = np.random.choice(self.mat['image_numbers'].ravel(), self.nF,
-        #                                        p=self.mat['image_weights'].ravel())
+        if (self.__inputs.sampling_weight == 'inverse_class_frequency'):
+            image_labels =  vars(self.targets_metadata)['_Target__files']
+            image_weights = vars(self.targets_metadata)['_Target__image_weights']
+            self.shuffled_vector = np.random.choice(image_labels, self.nF, p=image_weights)
+        elif (self__inputs.sampling_weight == 'uniform'):
+            self.shuffled_vector = np.random.permutation(self.nF)
+        else:
+            sys.exit('Specified option sampling_weight is not supported.') 
         return self        
     
     # @profile
@@ -85,15 +87,11 @@ class ListDataset():  # for training
         ib = min((self.count + 1) * self.batch_size, self.nF)
 
         height = self.height
-        # height = random.choice([15, 17, 19, 21]) * 32
 
         img_all = []
         labels_all = []
         for index, files_index in enumerate(range(ia, ib)):
-            # img_path = self.files[self.shuffled_vector[files_index]]  # BGR
-            # img_path = '%s%g.bmp' % (self.path, self.shuffled_vector[files_index])
             img_path = self.__inputs.traindir + str(self.shuffled_vector[files_index]) + '.bmp'
-            #img_path = self.files[self.shuffled_vector[files_index]] # Uniform image weights
 
             img0 = cv2.imread(img_path)
             if img0 is None:
@@ -108,10 +106,6 @@ class ListDataset():  # for training
             chip = chip.rsplit('_')[-1]
             i = (self.targetIDs == float(chip.replace('.tif', '').replace('.bmp', ''))).nonzero()[0]
             labels1 = self.targets[i]
-            
-            # Remove buildings and small cars
-            # labels1 = labels1[(labels1[:, 0] != 5) & (labels1[:, 0] != 48)]
-
             img1, labels1, M = random_affine(img0, targets=labels1, degrees=(-20, 20), translate=(0.01, 0.01),
                                              scale=(0.70, 1.30))  # RGB
 
@@ -132,8 +126,6 @@ class ListDataset():  # for training
                 if self.nL > 0:
                     # convert labels to xywh
                     self.labels[:, 1:5] = xyxy2xywh(self.labels[:, 1:5].copy()) / self.height
-                    # remap xview classes 11-94 to 0-61
-                    # labels[:, 0] = xview_classes2indices(labels[:, 0])
 
                 # random lr flip
                 if random.random() > 0.5:
