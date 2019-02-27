@@ -48,6 +48,8 @@ class InputFile():
         Boolean value specifying whether to compute bounding box clusters
     class_path : string
         Absolute path to class
+    sampling_weight : string
+        String specifying type of sampling weight; options are inverse_class_frequency and uniform
 
     **Test Options**
 
