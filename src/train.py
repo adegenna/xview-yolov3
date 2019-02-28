@@ -47,7 +47,9 @@ def main():
     inputfilename = args.inputfilename
     inputs        = InputFile(inputfilename);
     inputs.printInputs();
+    
     # Problem setup
+    setup_gpu_support(inputs.hardware)
     os.makedirs(inputs.loaddir, exist_ok=True)
     dataloader = ListDataset(inputs)    
     if inputs.computeboundingboxclusters:
@@ -55,6 +57,7 @@ def main():
         inputs.networkcfg = networkcfg
     model      = Darknet(inputs)
     trainer    = NetworkTrainer(model, dataloader, inputs);
+
     # Start training
     trainer.train();
 

@@ -8,6 +8,7 @@ import json
 import pickle
 import glob
 import matplotlib.pyplot as plt
+import sys,os
 
 # set printoptions
 torch.set_printoptions(linewidth=1320, precision=5, profile='long')
@@ -660,4 +661,20 @@ def convert_tif2bmp(p):
         cv2.imwrite(f.replace('.tif', '.bmp'), img)
         #os.system('rm -rf ' + f)
 
+def setup_gpu_support(string_hardware):
+    """
+    Function to setup single/multiple GPU support, if desired.
+    Assumes string_hardware is either 'cpu' or 'single_gpu' (assertion for this is done by InputFile).
+    If string_hardware = single_gpu, the CUDA_VISIBLE_DEVICES environment variable is set to the first gpu available.
+    """
+    if (string_hardware == 'single_gpu'):
+        numGPU  = torch.cuda.device_count()
+        if (numGPU > 0):
+            idx_gpu = 0
+            # Only use the first device
+            namegpu = torch.cuda.get_device_name(idx_gpu)
+            os.environ['CUDA_VISIBLE_DEVICES'] = str(idx_gpu)
+            print("Using GPU " + namegpu + " .");
+        else:
+            print('No GPUs are available; using CPU support only.')
     
