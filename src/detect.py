@@ -42,6 +42,7 @@ def detect():
     opt.printInputs();
     
     # Setup testing problem
+    setup_gpu_support(inputs.hardware)
     model      = Darknet(opt)
     dataloader = ImageFolder(opt)
     tester     = NetworkTester(model,dataloader,opt)
