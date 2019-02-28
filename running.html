@@ -236,6 +236,10 @@ are <code class="docutils literal notranslate"><span class="pre">inverse_class_f
 an image by the sum of the inverse of the class frequencies of all
 its objects; the latter weights all images uniformly.</p>
 </li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">hardware</span></code> This option sets whether the user would like to use
+CPU or GPU for computation. Options available are <code class="docutils literal notranslate"><span class="pre">cpu</span></code> and
+<code class="docutils literal notranslate"><span class="pre">single_gpu</span></code>. If <code class="docutils literal notranslate"><span class="pre">single_gpu</span></code> is used, then GPU device 0 is used.</p>
+</li>
 </ol>
 <p>Here is an example inputfile for training that demonstrates correct
 option specification. In this case, the user is asking the software to
@@ -257,6 +261,7 @@ precompute the YOLO architecture:</p>
 <span class="n">computeboundingboxclusters</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">class_path</span>       <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">xview_names_and_labels</span><span class="o">.</span><span class="n">csv</span>
 <span class="n">sampling_weight</span>  <span class="o">=</span> <span class="n">inverse_class_frequency</span>
+<span class="n">hardware</span>         <span class="o">=</span> <span class="n">single_gpu</span>
 </pre></div>
 </div>
 </div>
@@ -271,7 +276,8 @@ your inputfile is also in that directory, and simply run:</p>
 <p>Notes on the testing inputfile:</p>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">targetspath</span></code> , <code class="docutils literal notranslate"><span class="pre">invalid_class_list</span></code> , <code class="docutils literal notranslate"><span class="pre">imgsize</span></code> ,
-<code class="docutils literal notranslate"><span class="pre">class_path</span></code> : Same notes apply as in the training case above.</li>
+<code class="docutils literal notranslate"><span class="pre">class_path</span></code> , <code class="docutils literal notranslate"><span class="pre">hardware</span></code> : Same notes apply as in the training
+case above.</li>
 <li><code class="docutils literal notranslate"><span class="pre">imagepath</span></code> : This option sets the full filepath to the location
 on your machine where your test dataset resides. There should be
 nothing in this directory except the test image files. Currently
@@ -322,6 +328,7 @@ option specification:</p>
 <span class="n">class_mean</span>           <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">statdir</span><span class="o">/</span><span class="n">training_class_mean</span><span class="o">.</span><span class="n">out</span>
 <span class="n">class_sigma</span>          <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">statdir</span><span class="o">/</span><span class="n">training_class_sigma</span><span class="o">.</span><span class="n">out</span>
 <span class="n">invalid_class_list</span>   <span class="o">=</span> <span class="mi">75</span><span class="p">,</span><span class="mi">82</span>
+<span class="n">hardware</span>             <span class="o">=</span> <span class="n">single_gpu</span>
 </pre></div>
 </div>
 </div>

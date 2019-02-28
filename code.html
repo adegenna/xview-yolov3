@@ -255,6 +255,8 @@
 <dd>Absolute path to class</dd>
 <dt>sampling_weight <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>String specifying type of sampling weight; options are inverse_class_frequency and uniform</dd>
+<dt>hardware <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>String specifying whether CPU/GPU support is desired/available. Options are cpu and single_gpu.</dd>
 </dl>
 <p><strong>Test Options</strong></p>
 <dl class="docutils">
@@ -298,6 +300,8 @@
 <dd>Absolute path to class standard deviation file</dd>
 <dt>invalid_class_list <span class="classifier-delimiter">:</span> <span class="classifier">string (csv format)</span></dt>
 <dd>Comma-separated list of classes to be ignored from training data</dd>
+<dt>hardware <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>String specifying whether CPU/GPU support is desired/available. Options are cpu and single_gpu.</dd>
 </dl>
 <dl class="method">
 <dt id="src.InputFile.InputFile.printInputs">
@@ -1103,6 +1107,14 @@ Format shall be assumed to be csv where one line is (name , label)_i</p>
 <div class="line"><em>path:</em> Absolute path to the dataset directory</div>
 </div>
 </div>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.utils.setup_gpu_support">
+<code class="descclassname">utils.utils.</code><code class="descname">setup_gpu_support</code><span class="sig-paren">(</span><em>string_hardware</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#setup_gpu_support"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.setup_gpu_support" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to setup single/multiple GPU support, if desired.
+Assumes string_hardware is either ‘cpu’ or ‘single_gpu’ (assertion for this is done by InputFile).
+If string_hardware = single_gpu, the CUDA_VISIBLE_DEVICES environment variable is set to the first gpu available.</p>
 </dd></dl>
 
 <dl class="function">

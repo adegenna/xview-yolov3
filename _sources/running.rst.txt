@@ -78,6 +78,10 @@ Notes on the training inputfile:
    an image by the sum of the inverse of the class frequencies of all
    its objects; the latter weights all images uniformly.
 
+#. ``hardware`` This option sets whether the user would like to use
+   CPU or GPU for computation. Options available are ``cpu`` and
+   ``single_gpu``. If ``single_gpu`` is used, then GPU device 0 is used. 
+
 Here is an example inputfile for training that demonstrates correct
 option specification. In this case, the user is asking the software to
 precompute the YOLO architecture::
@@ -99,6 +103,7 @@ precompute the YOLO architecture::
   computeboundingboxclusters = False
   class_path       = /full/path/to/xview_names_and_labels.csv
   sampling_weight  = inverse_class_frequency
+  hardware         = single_gpu
 
 Testing
 ---------------------
@@ -112,7 +117,8 @@ your inputfile is also in that directory, and simply run::
 Notes on the testing inputfile:
 
 #. ``targetspath`` , ``invalid_class_list`` , ``imgsize`` ,
-   ``class_path`` : Same notes apply as in the training case above.
+   ``class_path`` , ``hardware`` : Same notes apply as in the training
+   case above.
 
 #. ``imagepath`` : This option sets the full filepath to the location
    on your machine where your test dataset resides. There should be
@@ -169,3 +175,4 @@ option specification::
   class_mean           = /full/path/to/statdir/training_class_mean.out
   class_sigma          = /full/path/to/statdir/training_class_sigma.out
   invalid_class_list   = 75,82
+  hardware             = single_gpu
