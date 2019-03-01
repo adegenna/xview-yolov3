@@ -23,11 +23,12 @@ CPU mode::
 
   python3 train.py <input_file_name>
 
-Single-GPU mode::
+Single
+GPU mode::
   CUDA_VISIBLE_DEVICES=0 python3 train.py <input_file_name>
   
-  .. note:: 
-     Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.
+.. note:: 
+   Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.
 
 Notes on the training inputfile:
 
@@ -119,11 +120,12 @@ CPU mode::
 
   python3 detect.py <input_file_name>
 
-Single-GPU mode::
+Single
+GPU mode::
   CUDA_VISIBLE_DEVICES=0 python3 detect.py <input_file_name>
   
-  .. note::
-     Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.
+.. note::
+   Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.
 
 Notes on the testing inputfile:
 
