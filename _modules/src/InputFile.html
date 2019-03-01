@@ -206,9 +206,7 @@
 <span class="sd">        Absolute path to class</span>
 <span class="sd">    sampling_weight : string</span>
 <span class="sd">        String specifying type of sampling weight; options are inverse_class_frequency and uniform</span>
-<span class="sd">    hardware : string</span>
-<span class="sd">        String specifying whether CPU/GPU support is desired/available. Options are cpu and single_gpu.</span>
-
+<span class="sd">    </span>
 <span class="sd">    **Test Options**</span>
 
 <span class="sd">    ----------</span>
@@ -252,8 +250,6 @@
 <span class="sd">        Absolute path to class standard deviation file</span>
 <span class="sd">    invalid_class_list : string (csv format)</span>
 <span class="sd">        Comma-separated list of classes to be ignored from training data</span>
-<span class="sd">    hardware : string</span>
-<span class="sd">        String specifying whether CPU/GPU support is desired/available. Options are cpu and single_gpu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">):</span>
@@ -315,16 +311,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_string_options</span><span class="p">()</span>
         
-    <span class="k">def</span> <span class="nf">check_string_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Check on string options for options common to TRAIN/TEST</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">assert</span><span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hardware</span> <span class="o">==</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hardware</span> <span class="o">==</span> <span class="s1">&#39;single_gpu&#39;</span><span class="p">)</span> <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;Please specify either cpu or single_gpu for the hardware input option.&#39;</span><span class="p">,)</span>
-            <span class="k">raise</span>
-
     <span class="k">def</span> <span class="nf">set_necessary_keys_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Set list defining necessary keys for training</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loaddir&#39;</span><span class="p">,</span> \
@@ -342,8 +329,7 @@
                                <span class="s1">&#39;boundingboxclusters&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;computeboundingboxclusters&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;class_path&#39;</span><span class="p">,</span> \
-                               <span class="s1">&#39;sampling_weight&#39;</span><span class="p">,</span>\
-                               <span class="s1">&#39;hardware&#39;</span> <span class="p">]</span>
+                               <span class="s1">&#39;sampling_weight&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">set_necessary_keys_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Set list defining necessary keys for testing</span>
@@ -366,8 +352,7 @@
                                <span class="s1">&#39;rgb_std&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;class_mean&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;class_sigma&#39;</span><span class="p">,</span> \
-                               <span class="s1">&#39;invalid_class_list&#39;</span><span class="p">,</span> \
-                               <span class="s1">&#39;hardware&#39;</span> <span class="p">]</span>
+                               <span class="s1">&#39;invalid_class_list&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="InputFile.printInputs"><a class="viewcode-back" href="../../code.html#src.InputFile.InputFile.printInputs">[docs]</a>    <span class="k">def</span> <span class="nf">printInputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
