@@ -671,3 +671,4 @@ def assert_single_gpu_support():
         assert( numGPU <= 1 )
     except AssertionError as e:
         e.args += ('Multiple GPUs detected. Currently, multiple GPU support is not available for this software. Please re-run this software in single-GPU mode, e.g. by setting the CUDA_VISIBLE_DEVICES environment variable (see documentation for details.',)
+        raise
