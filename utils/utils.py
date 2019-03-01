@@ -661,7 +661,7 @@ def convert_tif2bmp(p):
         cv2.imwrite(f.replace('.tif', '.bmp'), img)
         #os.system('rm -rf ' + f)
 
-def check_gpu_support():
+def assert_single_gpu_support():
     """
     Function to check that only a single GPU is being used.
     Currently, all software must be run with a single GPU only, so this routine does a simple assert check on the environment variable that ensures this.

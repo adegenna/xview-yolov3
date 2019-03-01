@@ -17,9 +17,17 @@ Training
 
 Network training is handled by the driver script ``src/train.py``. To
 run this, make sure you are in the ``src/`` subdirectory, and that
-your inputfile is also in that directory, and simply run::
+your inputfile is also in that directory.
 
-  python train.py train.py <input_file_name>
+CPU mode::
+
+  python3 train.py <input_file_name>
+
+Single-GPU mode::
+  CUDA_VISIBLE_DEVICES=0 python3 train.py <input_file_name>
+  
+  .. note:: 
+     Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.
 
 Notes on the training inputfile:
 
@@ -78,10 +86,6 @@ Notes on the training inputfile:
    an image by the sum of the inverse of the class frequencies of all
    its objects; the latter weights all images uniformly.
 
-#. ``hardware`` This option sets whether the user would like to use
-   CPU or GPU for computation. Options available are ``cpu`` and
-   ``single_gpu``. If ``single_gpu`` is used, then GPU device 0 is used. 
-
 Here is an example inputfile for training that demonstrates correct
 option specification. In this case, the user is asking the software to
 precompute the YOLO architecture::
@@ -103,22 +107,28 @@ precompute the YOLO architecture::
   computeboundingboxclusters = False
   class_path       = /full/path/to/xview_names_and_labels.csv
   sampling_weight  = inverse_class_frequency
-  hardware         = single_gpu
 
 Testing
 ---------------------
 
 Network testing is handled by the driver script ``src/detect.py``. To
 run this, make sure you are in the ``src/`` subdirectory, and that
-your inputfile is also in that directory, and simply run::
+your inputfile is also in that directory.
 
-  python detect.py train.py <input_file_name>
+CPU mode::
+
+  python3 detect.py <input_file_name>
+
+Single-GPU mode::
+  CUDA_VISIBLE_DEVICES=0 python3 detect.py <input_file_name>
+  
+  .. note::
+     Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.
 
 Notes on the testing inputfile:
 
 #. ``targetspath`` , ``invalid_class_list`` , ``imgsize`` ,
-   ``class_path`` , ``hardware`` : Same notes apply as in the training
-   case above.
+   ``class_path`` : Same notes apply as in the training case above.
 
 #. ``imagepath`` : This option sets the full filepath to the location
    on your machine where your test dataset resides. There should be
@@ -175,4 +185,3 @@ option specification::
   class_mean           = /full/path/to/statdir/training_class_mean.out
   class_sigma          = /full/path/to/statdir/training_class_sigma.out
   invalid_class_list   = 75,82
-  hardware             = single_gpu
