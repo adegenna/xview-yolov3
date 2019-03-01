@@ -49,7 +49,7 @@ def main():
     inputs.printInputs();
     
     # Problem setup
-    setup_gpu_support(inputs.hardware)
+    assert_single_gpu_support()
     os.makedirs(inputs.loaddir, exist_ok=True)
     dataloader = ListDataset(inputs)    
     if inputs.computeboundingboxclusters:

@@ -661,20 +661,13 @@ def convert_tif2bmp(p):
         cv2.imwrite(f.replace('.tif', '.bmp'), img)
         #os.system('rm -rf ' + f)
 
-def setup_gpu_support(string_hardware):
+def check_gpu_support():
     """
-    Function to setup single/multiple GPU support, if desired.
-    Assumes string_hardware is either 'cpu' or 'single_gpu' (assertion for this is done by InputFile).
-    If string_hardware = single_gpu, the CUDA_VISIBLE_DEVICES environment variable is set to the first gpu available.
+    Function to check that only a single GPU is being used.
+    Currently, all software must be run with a single GPU only, so this routine does a simple assert check on the environment variable that ensures this.
     """
-    if (string_hardware == 'single_gpu'):
-        numGPU  = torch.cuda.device_count()
-        if (numGPU > 0):
-            idx_gpu = 0
-            # Only use the first device
-            namegpu = torch.cuda.get_device_name(idx_gpu)
-            os.environ['CUDA_VISIBLE_DEVICES'] = str(idx_gpu)
-            print("Using GPU " + namegpu + " .");
-        else:
-            print('No GPUs are available; using CPU support only.')
-    
+    numGPU  = torch.cuda.device_count()
+    try:
+        assert( numGPU <= 1 )
+    except AssertionError as e:
+        e.args += ('Multiple GPUs detected. Currently, multiple GPU support is not available for this software. Please re-run this software in single-GPU mode, e.g. by setting the CUDA_VISIBLE_DEVICES environment variable (see documentation for details.',)
