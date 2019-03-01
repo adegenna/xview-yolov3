@@ -50,9 +50,7 @@ class InputFile():
         Absolute path to class
     sampling_weight : string
         String specifying type of sampling weight; options are inverse_class_frequency and uniform
-    hardware : string
-        String specifying whether CPU/GPU support is desired/available. Options are cpu and single_gpu.
-
+    
     **Test Options**
 
     ----------
@@ -96,8 +94,6 @@ class InputFile():
         Absolute path to class standard deviation file
     invalid_class_list : string (csv format)
         Comma-separated list of classes to be ignored from training data
-    hardware : string
-        String specifying whether CPU/GPU support is desired/available. Options are cpu and single_gpu.
     """
 
     def __init__(self, inputfile):
@@ -159,16 +155,7 @@ class InputFile():
             self.nms_thres  = float(self.nms_thres)
             self.batch_size = int(self.batch_size)
             self.imgsize    = int(self.imgsize)
-        self.check_string_options()
         
-    def check_string_options(self):
-        # Check on string options for options common to TRAIN/TEST
-        try:
-            assert( (self.hardware == 'cpu') | (self.hardware == 'single_gpu') )
-        except AssertionError as e:
-            e.args += ('Please specify either cpu or single_gpu for the hardware input option.',)
-            raise
-
     def set_necessary_keys_train(self):
         # Set list defining necessary keys for training
         self.necessary_keys = ['loaddir', \
@@ -186,8 +173,7 @@ class InputFile():
                                'boundingboxclusters', \
                                'computeboundingboxclusters', \
                                'class_path', \
-                               'sampling_weight',\
-                               'hardware' ]
+                               'sampling_weight']
 
     def set_necessary_keys_test(self):
         # Set list defining necessary keys for testing
@@ -210,8 +196,7 @@ class InputFile():
                                'rgb_std', \
                                'class_mean', \
                                'class_sigma', \
-                               'invalid_class_list', \
-                               'hardware' ]
+                               'invalid_class_list']
 
     def printInputs(self):
         """
