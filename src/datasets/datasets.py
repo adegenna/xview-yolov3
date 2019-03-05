@@ -21,7 +21,7 @@ class ListDataset():  # for training
     """
     Image dataset class for training
     """
-    def __init__(self, inputs):
+    def __init__(self, inputs, targets):
         print('********************* DATA PREPROCESSING *********************')
         print('Reading dataset from ' + inputs.traindir + '...');
         self.path       = inputs.traindir;
@@ -43,13 +43,12 @@ class ListDataset():  # for training
         # load targets
         if (self.targetfiletype == 'json'):
             print("Loading target data from specified json file...")
-            targets             = Target(inputs)
             self.targetIDs      = targets.filtered_chips
             coords              = targets.filtered_coords
             classes             = targets.filtered_classes            
             unique_class_labels = targets.list_of_unique_class_labels            
-            classes         = convert_class_labels_to_indices(classes,unique_class_labels)
-            self.targets    = np.hstack([np.reshape(classes,[len(classes),1]),coords]).astype(float)
+            classes             = convert_class_labels_to_indices(classes,unique_class_labels)
+            self.targets        = np.hstack([np.reshape(classes,[len(classes),1]),coords]).astype(float)
             self.targets_metadata = targets
             self.class_weights    = targets.filtered_class_weights
         else:
@@ -71,7 +70,7 @@ class ListDataset():  # for training
             image_labels =  self.targets_metadata.files
             image_weights = self.targets_metadata.image_weights            
             self.shuffled_vector = np.random.choice(image_labels, self.nF, p=image_weights)
-        elif (self__inputs.sampling_weight == 'uniform'):
+        elif (self.__inputs.sampling_weight == 'uniform'):
             self.shuffled_vector = np.random.permutation(self.nF)
         else:
             sys.exit('Specified option sampling_weight is not supported.') 
