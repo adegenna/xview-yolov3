@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 from targets.fcn_sigma_rejection import *
 from targets.per_class_stats import *
 from utils.datasetProcessing import *
-from utils.utils import convert_tif2bmp, readBmpDataset, load_classes
+from utils.utils import convert_tif2bmp, readBmpDataset, load_classes, convert_class_labels_to_indices
 
 # This is a python-conversion of utils/analysis.m and all related target preprocessing
 
@@ -320,6 +320,27 @@ class Target():
 
     def get_number_of_filtered_classes(self):
         return len(self.__filtered_class_labels)
+
+    def output_data_for_listdataset(self):
+        """
+        Method to output data needed for the ListDataset dataloader.
+
+        **Outputs**
+
+        ----------
+        object_data : list
+            list containing three pieces of data on all objects: [filtered_chips,filtered_coords,filtered_classes]
+        class_weights : array
+            array containing the weights for each class
+        image_weights : array
+            array containing the weights for each image
+        files : list
+            list of all files
+        """
+        classes             = convert_class_labels_to_indices(self.__filtered_classes,self.__list_of_unique_class_labels)
+        object_data         = [self.__filtered_chips , self.__filtered_coords , classes]
+        return object_data , self.__filtered_class_weights , self.__image_weights , self.__files
+        
 
     @property
     def filtered_chips(self):
