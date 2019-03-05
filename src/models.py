@@ -3,7 +3,6 @@ sys.path.append('../')
 from collections import defaultdict
 import torch.nn as nn
 from utils.utils import *
-from src.targets import *
 
 def create_modules(module_defs):
     """
