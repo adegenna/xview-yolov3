@@ -21,7 +21,7 @@ class ListDataset():  # for training
     """
     Image dataset class for training
     """
-    def __init__(self, inputs, targets):
+    def __init__(self, inputs, object_data, class_weights, image_weights, files):
         print('********************* DATA PREPROCESSING *********************')
         print('Reading dataset from ' + inputs.traindir + '...');
         self.path       = inputs.traindir;
@@ -43,14 +43,12 @@ class ListDataset():  # for training
         # load targets
         if (self.targetfiletype == 'json'):
             print("Loading target data from specified json file...")
-            self.targetIDs      = targets.filtered_chips
-            coords              = targets.filtered_coords
-            classes             = targets.filtered_classes            
-            unique_class_labels = targets.list_of_unique_class_labels            
-            classes             = convert_class_labels_to_indices(classes,unique_class_labels)
-            self.targets        = np.hstack([np.reshape(classes,[len(classes),1]),coords]).astype(float)
-            self.targets_metadata = targets
-            self.class_weights    = targets.filtered_class_weights
+            chips,coords,classes  = object_data
+            self.targetIDs        = chips
+            self.targets          = np.hstack([np.reshape(classes,[len(classes),1]),coords]).astype(float)
+            self.class_weights    = class_weights
+            self.image_weights    = image_weights
+            self.targets_files    = files
         else:
             sys.exit('Specified target filetype is not supported')
         
@@ -67,9 +65,8 @@ class ListDataset():  # for training
     def __iter__(self):
         self.count = -1
         if (self.__inputs.sampling_weight == 'inverse_class_frequency'):
-            image_labels =  self.targets_metadata.files
-            image_weights = self.targets_metadata.image_weights            
-            self.shuffled_vector = np.random.choice(image_labels, self.nF, p=image_weights)
+            image_labels =  self.targets_files
+            self.shuffled_vector = np.random.choice(image_labels, self.nF, p=self.image_weights)
         elif (self.__inputs.sampling_weight == 'uniform'):
             self.shuffled_vector = np.random.permutation(self.nF)
         else:
