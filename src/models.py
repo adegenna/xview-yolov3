@@ -290,8 +290,8 @@ def create_yolo_architecture(inputs,targets):
     """Creates a yolo-v3 layer configuration file from desired options"""
     print('Creating custom YOLOv3 architecture from desired specifications...')
     output_config_file_path = '/'.join(inputs.networkcfg.split('/')[0:-1]) + '/yolov3_custom.cfg'
-    n_classes               = len(vars(targets)['_Target__filtered_class_labels'])
-    anchor_coordinates      = vars(targets)['_Target__clusters_wh']
+    n_classes               = len(targets.filtered_class_labels)
+    anchor_coordinates      = targets.clusters_wh
     create_yolo_config_file(inputs.networkcfg,\
                             output_config_file_path,\
                             inputs.boundingboxclusters,\

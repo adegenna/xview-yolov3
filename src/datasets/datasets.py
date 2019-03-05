@@ -43,15 +43,15 @@ class ListDataset():  # for training
         # load targets
         if (self.targetfiletype == 'json'):
             print("Loading target data from specified json file...")
-            targets         = Target(inputs)
-            self.targetIDs  = vars(targets)['_Target__filtered_chips']
-            coords          = vars(targets)['_Target__filtered_coords']
-            classes         = vars(targets)['_Target__filtered_classes']            
-            unique_class_labels = vars(targets)['_Target__list_of_unique_class_labels']
+            targets             = Target(inputs)
+            self.targetIDs      = targets.filtered_chips
+            coords              = targets.filtered_coords
+            classes             = targets.filtered_classes            
+            unique_class_labels = targets.list_of_unique_class_labels            
             classes         = convert_class_labels_to_indices(classes,unique_class_labels)
             self.targets    = np.hstack([np.reshape(classes,[len(classes),1]),coords]).astype(float)
             self.targets_metadata = targets
-            self.class_weights    = vars(targets)['_Target__filtered_class_weights']
+            self.class_weights    = targets.filtered_class_weights
         else:
             sys.exit('Specified target filetype is not supported')
         
@@ -68,8 +68,8 @@ class ListDataset():  # for training
     def __iter__(self):
         self.count = -1
         if (self.__inputs.sampling_weight == 'inverse_class_frequency'):
-            image_labels =  vars(self.targets_metadata)['_Target__files']
-            image_weights = vars(self.targets_metadata)['_Target__image_weights']
+            image_labels =  self.targets_metadata.files
+            image_weights = self.targets_metadata.image_weights            
             self.shuffled_vector = np.random.choice(image_labels, self.nF, p=image_weights)
         elif (self__inputs.sampling_weight == 'uniform'):
             self.shuffled_vector = np.random.permutation(self.nF)

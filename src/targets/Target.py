@@ -318,6 +318,41 @@ class Target():
         self.__list_of_unique_class_names   = class_names
         self.__list_of_unique_class_labels  = class_labels
 
+    @property
+    def filtered_chips(self):
+        return self.__filtered_chips
+
+    @property
+    def filtered_coords(self):
+        return self.__filtered_coords
+
+    @property
+    def filtered_classes(self):
+        return self.__filtered_classes
+
+    @property
+    def list_of_unique_class_labels(self):
+        return self.__list_of_unique_class_labels
+    
+    @property
+    def filtered_class_weights(self):
+        return self.__filtered_class_weights
+
+    @property
+    def filtered_class_labels(self):
+        return self.__filtered_class_labels
+
+    @property
+    def files(self):
+        return self.__files
+
+    @property
+    def image_weights(self):
+        return self.__image_weights
+
+    @property
+    def clusters_wh(self):
+        return self.__clusters_wh
 
 
 # Little auxiliary functions
