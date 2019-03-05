@@ -20,6 +20,20 @@ from datasets.datasetStats import *
 class ListDataset():  # for training
     """
     Image dataset class for training
+
+    **Inputs**
+
+    ----------
+    inputs : InputFile
+        InputFile object containing user-specified config options
+    object_data : list
+        list containing three pieces of data on all objects: [chips,coords,classes]
+    class_weights : array
+        array containing the weights for each class
+    image_weights : array
+        array containing the weights for each image
+    files : list
+        list of all files
     """
     def __init__(self, inputs, object_data, class_weights, image_weights, files):
         print('********************* DATA PREPROCESSING *********************')
