@@ -57,7 +57,8 @@ def main():
         anchor_coordinates = targets.clusters_wh
         networkcfg         = create_yolo_architecture(inputs,n_classes,anchor_coordinates)
         inputs.networkcfg  = networkcfg
-    dataloader = ListDataset(inputs , targets.output_data_for_listdataset() )
+    object_data, class_weights, image_weights, files = targets.output_data_for_listdataset()
+    dataloader = ListDataset(inputs , object_data, class_weights, image_weights, files)
     model      = Darknet(inputs)
     trainer    = NetworkTrainer(model, dataloader, inputs);
 
