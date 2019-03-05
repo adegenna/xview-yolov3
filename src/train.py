@@ -53,8 +53,10 @@ def main():
     os.makedirs(inputs.loaddir, exist_ok=True)
     dataloader = ListDataset(inputs)    
     if inputs.computeboundingboxclusters:
-        networkcfg        = create_yolo_architecture(inputs,dataloader.targets_metadata)
-        inputs.networkcfg = networkcfg
+        n_classes          = dataloader.targets_metadata.get_number_of_filtered_classes()
+        anchor_coordinates = dataloader.targets_metadata.clusters_wh
+        networkcfg         = create_yolo_architecture(inputs,n_classes,anchor_coordinates)
+        inputs.networkcfg  = networkcfg
     model      = Darknet(inputs)
     trainer    = NetworkTrainer(model, dataloader, inputs);
 

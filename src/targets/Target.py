@@ -318,6 +318,9 @@ class Target():
         self.__list_of_unique_class_names   = class_names
         self.__list_of_unique_class_labels  = class_labels
 
+    def get_number_of_filtered_classes(self):
+        return len(self.__filtered_class_labels)
+
     @property
     def filtered_chips(self):
         return self.__filtered_chips
