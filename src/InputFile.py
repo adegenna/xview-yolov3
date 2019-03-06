@@ -66,8 +66,6 @@ class InputFile():
         Image path
     plot_flag : bool
         Flag for plotting
-    secondary_classifier : bool
-        Boolean value specifying whether to use a secondary classifier
     networkcfg : string
         Network architecture file
     networksavefile : string
@@ -131,7 +129,6 @@ class InputFile():
       targetfiletype       = json
       imagepath            = /full/path/to/testdir/
       plot_flag            = True
-      secondary_classifier = False
       networkcfg           = /full/path/to/networksavedir/yolov3_custom.cfg
       networksavefile      = /full/path/to/networksavedir/best.pt
       class_path           = /full/path/to/classpathdir/xview_names_and_labels.csv
@@ -200,7 +197,6 @@ class InputFile():
         # Test-specific
         elif (self.inputtype == "TEST"):
             self.plot_flag = ((self.plot_flag == "True") | (self.plot_flag == "true"))
-            self.secondary_classifier = ((self.secondary_classifier == "True") | (self.secondary_classifier == "true"))
             self.conf_thres = float(self.conf_thres)
             self.cls_thres  = float(self.cls_thres)
             self.nms_thres  = float(self.nms_thres)
@@ -234,7 +230,6 @@ class InputFile():
                                'targetfiletype', \
                                'imagepath', \
                                'plot_flag', \
-                               'secondary_classifier', \
                                'networkcfg', \
                                'networksavefile', \
                                'class_path', \

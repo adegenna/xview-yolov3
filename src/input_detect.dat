@@ -5,7 +5,6 @@ targetspath      = /home/adegennaro/Projects/OGA/cat/data/xview/labels/xView_tra
 targetfiletype   = json
 imagepath        = /home/adegennaro/Projects/OGA/cat/xview-yolov3/tests/data/xview/test/images/
 plot_flag            = True
-secondary_classifier = False
 networkcfg           = /home/adegennaro/Projects/OGA/cat/xview-yolov3/output/test2/yolov3_custom.cfg
 networksavefile      = /home/adegennaro/Projects/OGA/cat/xview-yolov3/output/test2/best.pt
 class_path           = /home/adegennaro/Projects/OGA/cat/xview-yolov3/data/xview_names_and_labels.csv
