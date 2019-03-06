@@ -7,10 +7,12 @@ from utils.utils import *
 from InputFile import *
 
 class NetworkTrainer():
-    def __init__(self, model, dataloader, inputs):
+    def __init__(self, model, dataloader, inputs, class_weights, n_classes):
         self.__inputs      = inputs;
         self.__dataloader  = dataloader;
-        self.model    = model;
+        self.model         = model;
+        self.class_weights = class_weights
+        self.n_class       = n_classes
         self.setupCuda();
         self.loadSavedModels();
 
@@ -102,15 +104,13 @@ class NetworkTrainer():
         t0, t1 = time.time(), time.time()
         print('%10s' * 16 % (
             'Epoch', 'Batch', 'x', 'y', 'w', 'h', 'conf', 'cls', 'total', 'P', 'R', 'nGT', 'TP', 'FP', 'FN', 'time'))
-        class_weights      = self.__dataloader.targets_metadata.filtered_class_weights
-        self.class_weights = (torch.from_numpy(class_weights).float()).to(self.__device)
-        n_class            = len(self.__dataloader.targets_metadata.filtered_class_labels)
+        self.class_weights = (torch.from_numpy(self.class_weights).float()).to(self.__device)
         # Main training loop
         for epoch in range(self.__inputs.epochs):
             epoch       += self.__start_epoch
             self.__ui    = -1
             self.__rloss   = defaultdict(float)  # running loss
-            self.__metrics = torch.zeros(4, n_class)
+            self.__metrics = torch.zeros(4, self.n_class)
             for i, (imgs, targets) in enumerate(self.__dataloader):
                 n = 4  # number of pictures at a time
                 for j in range(int(len(imgs) / n)):

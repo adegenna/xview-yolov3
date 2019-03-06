@@ -52,15 +52,14 @@ def main():
     assert_single_gpu_support()
     os.makedirs(inputs.loaddir, exist_ok=True)
     targets    = Target(inputs)
+    n_classes  = targets.get_number_of_filtered_classes()
     if inputs.computeboundingboxclusters:
-        n_classes          = targets.get_number_of_filtered_classes()
-        anchor_coordinates = targets.clusters_wh
-        networkcfg         = create_yolo_architecture(inputs,n_classes,anchor_coordinates)
+        networkcfg         = create_yolo_architecture(inputs,n_classes,targets.clusters_wh)
         inputs.networkcfg  = networkcfg
     object_data, class_weights, image_weights, files = targets.output_data_for_listdataset()
     dataloader = ListDataset(inputs , object_data, class_weights, image_weights, files)
     model      = Darknet(inputs)
-    trainer    = NetworkTrainer(model, dataloader, inputs);
+    trainer    = NetworkTrainer(model, dataloader, inputs, class_weights, n_classes);
 
     # Start training
     trainer.train();
