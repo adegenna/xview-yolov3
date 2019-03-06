@@ -221,81 +221,190 @@
 <dd>String specifying the desired inputfile name.</dd>
 </dl>
 <p><strong>Train Options</strong></p>
-<dl class="docutils">
-<dt>loaddir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to load directory</dd>
-<dt>outdir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to output directory</dd>
-<dt>targetspath <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to target file</dd>
-<dt>targetfiletype <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Type of target file</dd>
-<dt>traindir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Type of target file</dd>
-<dt>epochs <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>Number of training epochs</dd>
-<dt>epochstart <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>Starting epoch</dd>
-<dt>batchsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>Training batch size</dd>
-<dt>networkcfg <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to network architecture file</dd>
-<dt>imgsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>Base image crop size</dd>
-<dt>resume <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd>Boolean value specifying whether training is resuming from previous iteration</dd>
-<dt>invalid_class_list <span class="classifier-delimiter">:</span> <span class="classifier">string (csv format)</span></dt>
-<dd>Comma-separated list of classes to be ignored from training data</dd>
-<dt>boundingboxclusters <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>Desired number of bounding-box clusters for the YOLO architecture</dd>
-<dt>computeboundingboxclusters <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd>Boolean value specifying whether to compute bounding box clusters</dd>
-<dt>class_path <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to class</dd>
-<dt>sampling_weight <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>String specifying type of sampling weight; options are inverse_class_frequency and uniform</dd>
-</dl>
+<p>Below are a list of options that must be specified in an inputfile
+of type <code class="docutils literal notranslate"><span class="pre">[TRAIN]</span></code>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="34%" />
+<col width="13%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">option</th>
+<th class="head">data type</th>
+<th class="head">meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>loaddir</td>
+<td>string</td>
+<td>Absolute path to load directory.</td>
+</tr>
+<tr class="row-odd"><td>outdir</td>
+<td>string</td>
+<td>Absolute path to output directory.</td>
+</tr>
+<tr class="row-even"><td>targetspath</td>
+<td>string</td>
+<td>Absolute path to target file.</td>
+</tr>
+<tr class="row-odd"><td>targetfiletype</td>
+<td>string</td>
+<td>Type of target file.</td>
+</tr>
+<tr class="row-even"><td>traindir</td>
+<td>string</td>
+<td>Type of target file.</td>
+</tr>
+<tr class="row-odd"><td>epochs</td>
+<td>int</td>
+<td>Number of training epochs.</td>
+</tr>
+<tr class="row-even"><td>epochstart</td>
+<td>int</td>
+<td>Starting epoch.</td>
+</tr>
+<tr class="row-odd"><td>batchsize</td>
+<td>int</td>
+<td>Training batch size.</td>
+</tr>
+<tr class="row-even"><td>networkcfg</td>
+<td>string</td>
+<td>Absolute path to network architecture file.</td>
+</tr>
+<tr class="row-odd"><td>imgsize</td>
+<td>int</td>
+<td>Base image crop size.</td>
+</tr>
+<tr class="row-even"><td>resume</td>
+<td>bool</td>
+<td>Boolean value specifying whether training is
+resuming from previous iteration.</td>
+</tr>
+<tr class="row-odd"><td>invalid_class_list</td>
+<td>string</td>
+<td>Comma-separated list of classes to be
+ignored from training data.</td>
+</tr>
+<tr class="row-even"><td>boundingboxclusters</td>
+<td>int</td>
+<td>Desired number of bounding-box clusters for
+the YOLO architecture.</td>
+</tr>
+<tr class="row-odd"><td>computeboundingboxclusters</td>
+<td>bool</td>
+<td>Boolean value specifying whether to compute
+bounding box clusters.</td>
+</tr>
+<tr class="row-even"><td>class_path</td>
+<td>string</td>
+<td>Absolute path to class.</td>
+</tr>
+<tr class="row-odd"><td>sampling_weight</td>
+<td>string</td>
+<td>String specifying type of sampling weight.
+Options are inverse_class_frequency and uniform</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Test Options</strong></p>
-<dl class="docutils">
-<dt>loaddir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to load directory</dd>
-<dt>outdir <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to output directory</dd>
-<dt>targetspath <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to target file</dd>
-<dt>targetfiletype <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Type of target file</dd>
-<dt>imagepath <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Image path</dd>
-<dt>plot_flag <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd>Flag for plotting</dd>
-<dt>networkcfg <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to network architecture file</dd>
-<dt>networksavefile <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to trained YOLOv3 network file, saved by PyTorch (.pt)</dd>
-<dt>class_path <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to class</dd>
-<dt>conf_thres <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd>Confidence threshold for detection</dd>
-<dt>cls_thres <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd>Class threshold for detection</dd>
-<dt>nms_thres <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd>NMS threshold</dd>
-<dt>batch_size <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>Desired batchsize</dd>
-<dt>imgsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>Desired cropped image size</dd>
-<dt>rgb_mean <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to dataset RGB mean file</dd>
-<dt>rgb_std <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to dataset RGB standard deviation file</dd>
-<dt>class_mean <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to class mean file</dd>
-<dt>class_sigma <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Absolute path to class standard deviation file</dd>
-<dt>invalid_class_list <span class="classifier-delimiter">:</span> <span class="classifier">string (csv format)</span></dt>
-<dd>Comma-separated list of classes to be ignored from training data</dd>
-</dl>
+<p>Below are a list of options that must be specified in an inputfile
+of type <code class="docutils literal notranslate"><span class="pre">[TEST]</span></code>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="13%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">option</th>
+<th class="head">data type</th>
+<th class="head">meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>loaddir</td>
+<td>string</td>
+<td>Absolute path to load directory.</td>
+</tr>
+<tr class="row-odd"><td>outdir</td>
+<td>string</td>
+<td>Absolute path to output directory.</td>
+</tr>
+<tr class="row-even"><td>targetspath</td>
+<td>string</td>
+<td>Absolute path to target file.</td>
+</tr>
+<tr class="row-odd"><td>targetfiletype</td>
+<td>string</td>
+<td>Type of target file.</td>
+</tr>
+<tr class="row-even"><td>imagepath</td>
+<td>string</td>
+<td>Absolute path to directory containing images.</td>
+</tr>
+<tr class="row-odd"><td>plot_flag</td>
+<td>bool</td>
+<td>Flag to indicate whether to plot and output
+object detections.</td>
+</tr>
+<tr class="row-even"><td>networkcfg</td>
+<td>string</td>
+<td>Absolute path to network architecture file.</td>
+</tr>
+<tr class="row-odd"><td>networksavefile</td>
+<td>string</td>
+<td>Absolute path to trained YOLOv3 network file,
+saved by PyTorch (.pt).</td>
+</tr>
+<tr class="row-even"><td>class_path</td>
+<td>string</td>
+<td>Absolute path to .csv file containing list
+of classes/labels.</td>
+</tr>
+<tr class="row-odd"><td>conf_thres</td>
+<td>float</td>
+<td>Confidence threshold for detection.</td>
+</tr>
+<tr class="row-even"><td>cls_thres</td>
+<td>float</td>
+<td>Class threshold for detection.</td>
+</tr>
+<tr class="row-odd"><td>nms_thres</td>
+<td>float</td>
+<td>NMS threshold.</td>
+</tr>
+<tr class="row-even"><td>batch_size</td>
+<td>int</td>
+<td>Batch size.</td>
+</tr>
+<tr class="row-odd"><td>imgsize</td>
+<td>int</td>
+<td>Desired cropped image size.</td>
+</tr>
+<tr class="row-even"><td>rgb_mean</td>
+<td>string</td>
+<td>Absolute path to dataset RGB mean file.</td>
+</tr>
+<tr class="row-odd"><td>rgb_std</td>
+<td>string</td>
+<td>Absolute path to dataset RGB standard deviation file.</td>
+</tr>
+<tr class="row-even"><td>class_mean</td>
+<td>string</td>
+<td>Absolute path to class mean file.</td>
+</tr>
+<tr class="row-odd"><td>class_sigma</td>
+<td>string</td>
+<td>Absolute path to class standard deviation file.</td>
+</tr>
+<tr class="row-even"><td>invalid_class_list</td>
+<td>string</td>
+<td>Comma-separated list of classes to be ignored
+from training data.</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Examples</strong></p>
 <p>To use this class, 
 follow this interface:</p>
@@ -366,6 +475,62 @@ of what <code class="docutils literal notranslate"><span class="pre">input_file.
 <dt>imgsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>Desired cropped image size</dd>
 </dl>
+<p><strong>Member Variables</strong></p>
+<dl class="docutils">
+<dt>losses <span class="classifier-delimiter">:</span> <span class="classifier">dict, only created if in training mode</span></dt>
+<dd><p class="first">Dictionary containing 
+quantities on training loss</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">key</th>
+<th class="head">meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘loss’</td>
+<td>total value of training loss.</td>
+</tr>
+<tr class="row-odd"><td>‘x’</td>
+<td>bounding box x-position loss.</td>
+</tr>
+<tr class="row-even"><td>‘y’</td>
+<td>bounding box y-position loss.</td>
+</tr>
+<tr class="row-odd"><td>‘w’</td>
+<td>bounding box width loss.</td>
+</tr>
+<tr class="row-even"><td>‘h’</td>
+<td>bounding box height loss.</td>
+</tr>
+<tr class="row-odd"><td>‘conf’</td>
+<td>objectness confidence loss.</td>
+</tr>
+<tr class="row-even"><td>‘cls’</td>
+<td>object classification loss.</td>
+</tr>
+<tr class="row-odd"><td>‘nGT’</td>
+<td>number of ground truths.</td>
+</tr>
+<tr class="row-even"><td>‘TP’</td>
+<td>number of true positives.</td>
+</tr>
+<tr class="row-odd"><td>‘FP’</td>
+<td>number of false positives.</td>
+</tr>
+<tr class="row-even"><td>‘FN’</td>
+<td>number of false negatives.</td>
+</tr>
+<tr class="row-odd"><td>‘FPe’</td>
+<td>number of false positives in each class.</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
 <p><strong>Examples</strong></p>
 <p>Here is an example 
 of how this class may be instantiated:</p>
@@ -374,9 +539,11 @@ of how this class may be instantiated:</p>
 <span class="n">darknet</span>    <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">networkcfg</span><span class="p">,</span> <span class="n">imgsize</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">network_cfg_file.dat</span></code> is a configuration file that specifies a valid YOLOv3 architecture.
+Please consult the <code class="docutils literal notranslate"><span class="pre">cfg/</span></code> subdirectory of the main project repo for examples.</p>
 <p>The interface to forward-pass an image through the network uses the recipe implemented 
 in the <code class="docutils literal notranslate"><span class="pre">forward()</span></code> routine and takes an image as input and returns the network output as a result:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span>  <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you are training this network, you would also provide corresponding image targets, 
@@ -387,22 +554,12 @@ and possibly other inputs defined in the <code class="docutils literal notransla
 <p>Typically, the images/targets are provided by a dataloader like <code class="docutils literal notranslate"><span class="pre">ListDataset</span></code> 
 that produces iterable pairs of images/targets, which would look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="p">,</span> <span class="p">(</span><span class="n">image_i</span> <span class="p">,</span> <span class="n">target_i</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
-    <span class="n">output_i</span>  <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image_i</span><span class="p">,</span><span class="n">target_i</span><span class="p">)</span>
+    <span class="n">output_i</span> <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image_i</span><span class="p">,</span><span class="n">target_i</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>During training, a detection loss would be calculated in the <code class="docutils literal notranslate"><span class="pre">YOLOLayer</span></code> submodules and stored as the <code class="docutils literal notranslate"><span class="pre">losses</span></code> member, which is a <code class="docutils literal notranslate"><span class="pre">dict</span></code>
-whose members may be accessed as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">total_loss</span>                   <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">]</span>
-<span class="n">bounding_box_x_position_loss</span> <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
-<span class="n">bounding_box_y_position_loss</span> <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
-<span class="n">bounding_box_width_loss</span>      <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">]</span>
-<span class="n">object_confidence_loss</span>       <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;conf&#39;</span><span class="p">]</span>
-<span class="n">object_classification_loss</span>   <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;cls&#39;</span><span class="p">]</span>
-<span class="n">number_ground_truths</span>         <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;nGT&#39;</span><span class="p">]</span>
-<span class="n">true_positives</span>               <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;TP&#39;</span><span class="p">]</span>
-<span class="n">false_positives</span>              <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FP&#39;</span><span class="p">]</span>
-<span class="n">false_negatives</span>              <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FN&#39;</span><span class="p">]</span>
-<span class="n">false_positives_by_class</span>     <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FPe&#39;</span><span class="p">]</span>
+<p>During training, a detection loss would be calculated in the <code class="docutils literal notranslate"><span class="pre">YOLOLayer</span></code> submodules and stored as the <code class="docutils literal notranslate"><span class="pre">losses</span></code> dictionary member,
+whose members may be accessed directly, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">total_loss</span> <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Other functionality is inherited directly from the <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> module 
