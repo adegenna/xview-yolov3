@@ -213,7 +213,8 @@ class Darknet(nn.Module):
 
     ----------
     losses : dict, only created if in training mode
-        Dictionary containing quantities on training loss
+        Dictionary containing 
+        quantities on training loss
     
         =======  ============================================================
         key      meaning
@@ -230,6 +231,7 @@ class Darknet(nn.Module):
         'FP'     number of false positives.
         'FN'     number of false negatives.
         'FPe'    number of false positives in each class.
+        =======  ============================================================
 
     **Examples**
 

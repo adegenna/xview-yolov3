@@ -18,80 +18,68 @@ class InputFile():
     **Train Options**
 
     ----------
-    loaddir : string
-        Absolute path to load directory
-    outdir : string
-        Absolute path to output directory
-    targetspath : string
-        Absolute path to target file
-    targetfiletype : string
-        Type of target file
-    traindir : string
-        Type of target file
-    epochs : int
-        Number of training epochs
-    epochstart : int
-        Starting epoch
-    batchsize : int
-        Training batch size
-    networkcfg : string
-        Absolute path to network architecture file
-    imgsize : int
-        Base image crop size
-    resume : bool
-        Boolean value specifying whether training is resuming from previous iteration
-    invalid_class_list : string (csv format)
-        Comma-separated list of classes to be ignored from training data
-    boundingboxclusters : int
-        Desired number of bounding-box clusters for the YOLO architecture
-    computeboundingboxclusters : bool
-        Boolean value specifying whether to compute bounding box clusters
-    class_path : string
-        Absolute path to class
-    sampling_weight : string
-        String specifying type of sampling weight; options are inverse_class_frequency and uniform
+    Below are a list of options that must be specified in an inputfile
+    of type ``[TRAIN]``:
+
+    ==============================  ============  ===============================================
+    option                          data type     meaning
+    ==============================  ============  ===============================================
+    loaddir                         string        Absolute path to load directory.        
+    outdir                          string        Absolute path to output directory.
+    targetspath                     string        Absolute path to target file.
+    targetfiletype                  string        Type of target file.
+    traindir                        string        Type of target file.
+    epochs                          int           Number of training epochs.
+    epochstart                      int           Starting epoch.
+    batchsize                       int           Training batch size.
+    networkcfg                      string        Absolute path to network architecture file.
+    imgsize                         int           Base image crop size.
+    resume                          bool          Boolean value specifying whether training is 
+                                                  resuming from previous iteration.
+    invalid_class_list              string        Comma-separated list of classes to be 
+                                                  ignored from training data.
+    boundingboxclusters             int           Desired number of bounding-box clusters for 
+                                                  the YOLO architecture.
+    computeboundingboxclusters      bool          Boolean value specifying whether to compute 
+                                                  bounding box clusters.
+    class_path                      string        Absolute path to class.
+    sampling_weight                 string        String specifying type of sampling weight. 
+                                                  Options are inverse_class_frequency and uniform
+    ==============================  ============  ===============================================
     
     **Test Options**
 
     ----------
-    loaddir : string
-        Absolute path to load directory
-    outdir : string
-        Absolute path to output directory
-    targetspath : string
-        Absolute path to target file
-    targetfiletype : string
-        Type of target file
-    imagepath : string
-        Image path
-    plot_flag : bool
-        Flag for plotting
-    networkcfg : string
-        Absolute path to network architecture file
-    networksavefile : string
-        Absolute path to trained YOLOv3 network file, saved by PyTorch (.pt)
-    class_path : string
-        Absolute path to class
-    conf_thres : float
-        Confidence threshold for detection
-    cls_thres : float
-        Class threshold for detection
-    nms_thres : float
-        NMS threshold
-    batch_size : int
-        Desired batchsize
-    imgsize : int
-        Desired cropped image size
-    rgb_mean : string
-        Absolute path to dataset RGB mean file
-    rgb_std : string
-        Absolute path to dataset RGB standard deviation file
-    class_mean : string
-        Absolute path to class mean file
-    class_sigma : string
-        Absolute path to class standard deviation file
-    invalid_class_list : string (csv format)
-        Comma-separated list of classes to be ignored from training data
+    Below are a list of options that must be specified in an inputfile
+    of type ``[TEST]``:
+
+    ==============================  ============  ===============================================
+    option                          data type     meaning
+    ==============================  ============  ===============================================
+    loaddir                         string        Absolute path to load directory.        
+    outdir                          string        Absolute path to output directory.
+    targetspath                     string        Absolute path to target file.
+    targetfiletype                  string        Type of target file.
+    imagepath                       string        Absolute path to directory containing images.
+    plot_flag                       bool          Flag to indicate whether to plot and output 
+                                                  object detections.
+    networkcfg                      string        Absolute path to network architecture file.
+    networksavefile                 string        Absolute path to trained YOLOv3 network file, 
+                                                  saved by PyTorch (.pt).
+    class_path                      string        Absolute path to .csv file containing list 
+                                                  of classes/labels.
+    conf_thres                      float         Confidence threshold for detection.
+    cls_thres                       float         Class threshold for detection.
+    nms_thres                       float         NMS threshold.
+    batch_size                      int           Batch size.
+    imgsize                         int           Desired cropped image size.
+    rgb_mean                        string        Absolute path to dataset RGB mean file.
+    rgb_std                         string        Absolute path to dataset RGB standard deviation file.
+    class_mean                      string        Absolute path to class mean file.
+    class_sigma                     string        Absolute path to class standard deviation file.
+    invalid_class_list              string        Comma-separated list of classes to be ignored
+                                                  from training data.
+    ==============================  ============  ===============================================
 
     **Examples**
 
