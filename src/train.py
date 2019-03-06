@@ -58,7 +58,7 @@ def main():
         inputs.networkcfg  = networkcfg
     object_data, class_weights, image_weights, files = targets.output_data_for_listdataset()
     dataloader = ListDataset(inputs , object_data, class_weights, image_weights, files)
-    model      = Darknet(inputs)
+    model      = Darknet(inputs.networkcfg, inputs.imgsize)
     trainer    = NetworkTrainer(model, dataloader, inputs, class_weights, n_classes);
 
     # Start training

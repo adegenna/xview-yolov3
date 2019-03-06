@@ -43,7 +43,7 @@ def detect():
     
     # Setup testing problem
     assert_single_gpu_support()
-    model      = Darknet(opt)
+    model      = Darknet(opt.networkcfg, opt.imgsize)
     dataloader = ImageFolder(opt)
     tester     = NetworkTester(model,dataloader,opt)
     
