@@ -369,9 +369,9 @@ of what <code class="docutils literal notranslate"><span class="pre">input_file.
 <p><strong>Examples</strong></p>
 <p>Here is an example 
 of how this class may be instantiated:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">networkcfg</span>        <span class="o">=</span> <span class="s1">&#39;/full/path/to/network_cfg_file.dat&#39;</span>
-<span class="n">imgsize</span>           <span class="o">=</span> <span class="mi">800</span>
-<span class="n">darknet</span>           <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">networkcfg</span><span class="p">,</span> <span class="n">imgsize</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">networkcfg</span> <span class="o">=</span> <span class="s1">&#39;/full/path/to/network_cfg_file.dat&#39;</span>
+<span class="n">imgsize</span>    <span class="o">=</span> <span class="mi">800</span>
+<span class="n">darknet</span>    <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">networkcfg</span><span class="p">,</span> <span class="n">imgsize</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The interface to forward-pass an image through the network uses the recipe implemented 
@@ -381,7 +381,7 @@ in the <code class="docutils literal notranslate"><span class="pre">forward()</s
 </div>
 <p>If you are training this network, you would also provide corresponding image targets, 
 and possibly other inputs defined in the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span>                       <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Typically, the images/targets are provided by a dataloader like <code class="docutils literal notranslate"><span class="pre">ListDataset</span></code> 

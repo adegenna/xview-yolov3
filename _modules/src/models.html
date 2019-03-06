@@ -369,9 +369,9 @@
 <span class="sd">    --------</span>
 <span class="sd">    Here is an example </span>
 <span class="sd">    of how this class may be instantiated::</span>
-<span class="sd">        networkcfg        = &#39;/full/path/to/network_cfg_file.dat&#39;</span>
-<span class="sd">        imgsize           = 800</span>
-<span class="sd">        darknet           = Darknet(networkcfg, imgsize)</span>
+<span class="sd">        networkcfg = &#39;/full/path/to/network_cfg_file.dat&#39;</span>
+<span class="sd">        imgsize    = 800</span>
+<span class="sd">        darknet    = Darknet(networkcfg, imgsize)</span>
 
 <span class="sd">    The interface to forward-pass an image through the network uses the recipe implemented </span>
 <span class="sd">    in the ``forward()`` routine and takes an image as input and returns the network output as a result::</span>
@@ -379,7 +379,7 @@
 
 <span class="sd">    If you are training this network, you would also provide corresponding image targets, </span>
 <span class="sd">    and possibly other inputs defined in the ``forward`` method::</span>
-<span class="sd">        output                       = darknet(image,target)</span>
+<span class="sd">        output = darknet(image,target)</span>
 
 <span class="sd">    Typically, the images/targets are provided by a dataloader like ``ListDataset`` </span>
 <span class="sd">    that produces iterable pairs of images/targets, which would look like this::</span>
