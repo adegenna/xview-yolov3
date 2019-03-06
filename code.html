@@ -239,7 +239,7 @@
 <dt>batchsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>Training batch size</dd>
 <dt>networkcfg <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Network architecture file</dd>
+<dd>Absolute path to network architecture file</dd>
 <dt>imgsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd>Base image crop size</dd>
 <dt>resume <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
@@ -270,7 +270,7 @@
 <dt>plot_flag <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
 <dd>Flag for plotting</dd>
 <dt>networkcfg <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd>Network architecture file</dd>
+<dd>Absolute path to network architecture file</dd>
 <dt>networksavefile <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>Absolute path to trained YOLOv3 network file, saved by PyTorch (.pt)</dd>
 <dt>class_path <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
@@ -357,8 +357,56 @@ of what <code class="docutils literal notranslate"><span class="pre">input_file.
 
 <span class="target" id="module-src.models"></span><dl class="class">
 <dt id="src.models.Darknet">
-<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
-<dd><p>YOLOv3 object detection model</p>
+<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>networkcfg</em>, <em>imgsize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
+<dd><p>YOLOv3 object detection model. This class, the modules that comprise its architecture, and its interface are inherited from <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>.</p>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>networkcfg <span class="classifier-delimiter">:</span> <span class="classifier">string </span></dt>
+<dd>Absolute path to YOLOv3 network architecture file.</dd>
+<dt>imgsize <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Desired cropped image size</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<p>Here is an example 
+of how this class may be instantiated:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">networkcfg</span>        <span class="o">=</span> <span class="s1">&#39;/full/path/to/network_cfg_file.dat&#39;</span>
+<span class="n">imgsize</span>           <span class="o">=</span> <span class="mi">800</span>
+<span class="n">darknet</span>           <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">networkcfg</span><span class="p">,</span> <span class="n">imgsize</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The interface to forward-pass an image through the network uses the recipe implemented 
+in the <code class="docutils literal notranslate"><span class="pre">forward()</span></code> routine and takes an image as input and returns the network output as a result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span>  <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you are training this network, you would also provide corresponding image targets, 
+and possibly other inputs defined in the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span>                       <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Typically, the images/targets are provided by a dataloader like <code class="docutils literal notranslate"><span class="pre">ListDataset</span></code> 
+that produces iterable pairs of images/targets, which would look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="p">,</span> <span class="p">(</span><span class="n">image_i</span> <span class="p">,</span> <span class="n">target_i</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+    <span class="n">output_i</span>  <span class="o">=</span> <span class="n">darknet</span><span class="p">(</span><span class="n">image_i</span><span class="p">,</span><span class="n">target_i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>During training, a detection loss would be calculated in the <code class="docutils literal notranslate"><span class="pre">YOLOLayer</span></code> submodules and stored as the <code class="docutils literal notranslate"><span class="pre">losses</span></code> member, which is a <code class="docutils literal notranslate"><span class="pre">dict</span></code>
+whose members may be accessed as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">total_loss</span>                   <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">]</span>
+<span class="n">bounding_box_x_position_loss</span> <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+<span class="n">bounding_box_y_position_loss</span> <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+<span class="n">bounding_box_width_loss</span>      <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">]</span>
+<span class="n">object_confidence_loss</span>       <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;conf&#39;</span><span class="p">]</span>
+<span class="n">object_classification_loss</span>   <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;cls&#39;</span><span class="p">]</span>
+<span class="n">number_ground_truths</span>         <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;nGT&#39;</span><span class="p">]</span>
+<span class="n">true_positives</span>               <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;TP&#39;</span><span class="p">]</span>
+<span class="n">false_positives</span>              <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FP&#39;</span><span class="p">]</span>
+<span class="n">false_negatives</span>              <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FN&#39;</span><span class="p">]</span>
+<span class="n">false_positives_by_class</span>     <span class="o">=</span> <span class="n">darknet</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FPe&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Other functionality is inherited directly from the <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> module 
+of PyTorch, so consult those documents for assistance in using it.</p>
 <dl class="method">
 <dt id="src.models.Darknet.forward">
 <code class="descname">forward</code><span class="sig-paren">(</span><em>x</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet.forward" title="Permalink to this definition">¶</a></dt>
