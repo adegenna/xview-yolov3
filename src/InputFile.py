@@ -35,7 +35,7 @@ class InputFile():
     batchsize : int
         Training batch size
     networkcfg : string
-        Network architecture file
+        Absolute path to network architecture file
     imgsize : int
         Base image crop size
     resume : bool
@@ -67,7 +67,7 @@ class InputFile():
     plot_flag : bool
         Flag for plotting
     networkcfg : string
-        Network architecture file
+        Absolute path to network architecture file
     networksavefile : string
         Absolute path to trained YOLOv3 network file, saved by PyTorch (.pt)
     class_path : string

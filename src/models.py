@@ -198,18 +198,67 @@ class YOLOLayer(nn.Module):
 
 
 class Darknet(nn.Module):
-    """YOLOv3 object detection model"""
+    """
+    YOLOv3 object detection model. This class, the modules that comprise its architecture, and its interface are inherited from ``torch.nn.Module``.
+    
+    **Inputs**
 
-    def __init__(self, inputs):
+    ----------
+    networkcfg : string 
+        Absolute path to YOLOv3 network architecture file.
+    imgsize : int
+        Desired cropped image size
+
+    **Examples**
+
+    --------
+    Here is an example 
+    of how this class may be instantiated::
+        networkcfg        = '/full/path/to/network_cfg_file.dat'
+        imgsize           = 800
+        darknet           = Darknet(networkcfg, imgsize)
+
+    The interface to forward-pass an image through the network uses the recipe implemented 
+    in the ``forward()`` routine and takes an image as input and returns the network output as a result::
+        output  = darknet(image)
+
+    If you are training this network, you would also provide corresponding image targets, 
+    and possibly other inputs defined in the ``forward`` method::
+        output                       = darknet(image,target)
+
+    Typically, the images/targets are provided by a dataloader like ``ListDataset`` 
+    that produces iterable pairs of images/targets, which would look like this::
+        for i , (image_i , target_i) in enumerate(dataloader):
+            output_i  = darknet(image_i,target_i)
+
+    During training, a detection loss would be calculated in the ``YOLOLayer`` submodules and stored as the ``losses`` member, which is a ``dict``
+    whose members may be accessed as follows::
+        total_loss                   = darknet.losses['loss']
+        bounding_box_x_position_loss = darknet.losses['x']
+        bounding_box_y_position_loss = darknet.losses['y']
+        bounding_box_width_loss      = darknet.losses['w']
+        object_confidence_loss       = darknet.losses['conf']
+        object_classification_loss   = darknet.losses['cls']
+        number_ground_truths         = darknet.losses['nGT']
+        true_positives               = darknet.losses['TP']
+        false_positives              = darknet.losses['FP']
+        false_negatives              = darknet.losses['FN']
+        false_positives_by_class     = darknet.losses['FPe']
+    
+    Other functionality is inherited directly from the ``torch.nn.Module`` module 
+    of PyTorch, so consult those documents for assistance in using it.
+"""
+
+    def __init__(self, networkcfg, imgsize):
         super(Darknet, self).__init__()        
         try:
-            self.module_defs = parse_model_config(inputs.networkcfg)
+            self.module_defs = parse_model_config(networkcfg)
             self.nC          = int(self.module_defs[-1]['classes'])
         except:
             sys.exit('Loading YOLOv3 config file failed...')
-        self.module_defs[0]['height'] = inputs.imgsize
+        self.module_defs[0]['height']      = imgsize
         self.hyperparams, self.module_list = create_modules(self.module_defs)
-        self.img_size   = inputs.imgsize
+        self.img_size                      = imgsize
         self.loss_names = ['loss', 'x', 'y', 'w', 'h', 'conf', 'cls', 'nGT', 'TP', 'FP', 'FPe', 'FN', 'TC']
 
     def forward(self, x, targets=None, requestPrecision=False, weight=None, epoch=None):
