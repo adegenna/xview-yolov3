@@ -209,6 +209,28 @@ class Darknet(nn.Module):
     imgsize : int
         Desired cropped image size
 
+    **Member Variables**
+
+    ----------
+    losses : dict, only created if in training mode
+        Dictionary containing quantities on training loss
+    
+        =======  ============================================================
+        key      meaning
+        =======  ============================================================
+        'loss'   total value of training loss.
+        'x'      bounding box x-position loss.
+        'y'      bounding box y-position loss.
+        'w'      bounding box width loss.
+        'h'      bounding box height loss.
+        'conf'   objectness confidence loss.
+        'cls'    object classification loss.
+        'nGT'    number of ground truths.
+        'TP'     number of true positives.
+        'FP'     number of false positives.
+        'FN'     number of false negatives.
+        'FPe'    number of false positives in each class.
+
     **Examples**
 
     --------
@@ -218,9 +240,12 @@ class Darknet(nn.Module):
         imgsize    = 800
         darknet    = Darknet(networkcfg, imgsize)
 
+    ``network_cfg_file.dat`` is a configuration file that specifies a valid YOLOv3 architecture.
+    Please consult the ``cfg/`` subdirectory of the main project repo for examples.
+
     The interface to forward-pass an image through the network uses the recipe implemented 
     in the ``forward()`` routine and takes an image as input and returns the network output as a result::
-        output  = darknet(image)
+        output = darknet(image)
 
     If you are training this network, you would also provide corresponding image targets, 
     and possibly other inputs defined in the ``forward`` method::
@@ -229,25 +254,15 @@ class Darknet(nn.Module):
     Typically, the images/targets are provided by a dataloader like ``ListDataset`` 
     that produces iterable pairs of images/targets, which would look like this::
         for i , (image_i , target_i) in enumerate(dataloader):
-            output_i  = darknet(image_i,target_i)
+            output_i = darknet(image_i,target_i)
 
-    During training, a detection loss would be calculated in the ``YOLOLayer`` submodules and stored as the ``losses`` member, which is a ``dict``
-    whose members may be accessed as follows::
-        total_loss                   = darknet.losses['loss']
-        bounding_box_x_position_loss = darknet.losses['x']
-        bounding_box_y_position_loss = darknet.losses['y']
-        bounding_box_width_loss      = darknet.losses['w']
-        object_confidence_loss       = darknet.losses['conf']
-        object_classification_loss   = darknet.losses['cls']
-        number_ground_truths         = darknet.losses['nGT']
-        true_positives               = darknet.losses['TP']
-        false_positives              = darknet.losses['FP']
-        false_negatives              = darknet.losses['FN']
-        false_positives_by_class     = darknet.losses['FPe']
+    During training, a detection loss would be calculated in the ``YOLOLayer`` submodules and stored as the ``losses`` dictionary member,
+    whose members may be accessed directly, e.g.::
+        total_loss = darknet.losses['loss']
     
     Other functionality is inherited directly from the ``torch.nn.Module`` module 
     of PyTorch, so consult those documents for assistance in using it.
-"""
+    """
 
     def __init__(self, networkcfg, imgsize):
         super(Darknet, self).__init__()        

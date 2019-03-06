@@ -54,39 +54,6 @@ class NetworkTester():
         self.__classes      = class_names
         self.__class_labels = class_labels
 
-    def updateMetricsLoss(self):
-        self.__ui += 1
-        self.__metrics += self.model.losses['metrics']
-        for key, val in self.model.losses.items():
-            self.__rloss[key] = (self.__rloss[key] * self.__ui + val) / (self.__ui + 1)
-
-    def calculatePrecision(self):
-        precision = self.__metrics[0] / (self.__metrics[0] + self.__metrics[1] + 1e-16)
-        k = (self.__metrics[0] + self.__metrics[1]) > 0
-        if k.sum() > 0:
-            mean_precision = precision[k].mean()
-        else:
-            mean_precision = 0
-        return mean_precision;
-
-    def calculateRecall(self):
-        recall = self.__metrics[0] / (self.__metrics[0] + self.__metrics[2] + 1e-16)
-        k      = (self.__metrics[0] + self.__metrics[2]) > 0
-        if k.sum() > 0:
-            mean_recall = recall[k].mean()
-        else:
-            mean_recall = 0
-        return mean_recall;
-
-    def outputBatchMetrics(self,epoch,mean_precision,mean_recall,i,t1):
-        s = ('%10s%10s' + '%10.3g' * 14) % (
-            '%g/%g' % (epoch, self.__inputs.epochs - 1), '%g/%g' % (i, len(self.__dataloader) - 1), self.__rloss['x'],
-            self.__rloss['y'], self.__rloss['w'], self.__rloss['h'], self.__rloss['conf'], self.__rloss['cls'],
-            self.__rloss['loss'], mean_precision, mean_recall, self.model.losses['nGT'], self.model.losses['TP'],
-            self.model.losses['FP'], self.model.losses['FN'], time.time() - t1)
-        print(s)
-        return s;
-
     def detect(self):
         """Method to compute object detections over testing dataset"""
 
