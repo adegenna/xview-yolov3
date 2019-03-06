@@ -214,9 +214,9 @@ class Darknet(nn.Module):
     --------
     Here is an example 
     of how this class may be instantiated::
-        networkcfg        = '/full/path/to/network_cfg_file.dat'
-        imgsize           = 800
-        darknet           = Darknet(networkcfg, imgsize)
+        networkcfg = '/full/path/to/network_cfg_file.dat'
+        imgsize    = 800
+        darknet    = Darknet(networkcfg, imgsize)
 
     The interface to forward-pass an image through the network uses the recipe implemented 
     in the ``forward()`` routine and takes an image as input and returns the network output as a result::
@@ -224,7 +224,7 @@ class Darknet(nn.Module):
 
     If you are training this network, you would also provide corresponding image targets, 
     and possibly other inputs defined in the ``forward`` method::
-        output                       = darknet(image,target)
+        output = darknet(image,target)
 
     Typically, the images/targets are provided by a dataloader like ``ListDataset`` 
     that produces iterable pairs of images/targets, which would look like this::
