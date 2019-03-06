@@ -96,7 +96,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="flowdiagrams.html">Flow Diagrams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inheritance.html">Dependency Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 </ul>
 
@@ -299,6 +298,58 @@
 <dt>invalid_class_list <span class="classifier-delimiter">:</span> <span class="classifier">string (csv format)</span></dt>
 <dd>Comma-separated list of classes to be ignored from training data</dd>
 </dl>
+<p><strong>Examples</strong></p>
+<p>To use this class, 
+follow this interface:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_file_object</span> <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="s1">&#39;/full/path/to/input_file.dat&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For the <code class="docutils literal notranslate"><span class="pre">[TRAIN]</span></code> case, here is an example
+of what <code class="docutils literal notranslate"><span class="pre">input_file.dat</span></code> might contain:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">TRAIN</span><span class="p">]</span>
+<span class="n">loaddir</span>          <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">loaddir</span><span class="o">/</span>
+<span class="n">outdir</span>           <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">outdir</span><span class="o">/</span>
+<span class="n">targetspath</span>      <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">targetsdir</span><span class="o">/</span><span class="n">xView_train</span><span class="o">.</span><span class="n">geojson</span>
+<span class="n">targetfiletype</span>   <span class="o">=</span> <span class="n">json</span>
+<span class="n">traindir</span>         <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">traindir</span><span class="o">/</span>
+<span class="n">epochs</span>           <span class="o">=</span> <span class="mi">300</span>
+<span class="n">epochstart</span>       <span class="o">=</span> <span class="mi">0</span>
+<span class="n">batchsize</span>        <span class="o">=</span> <span class="mi">8</span>
+<span class="n">networkcfg</span>       <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">networkdir</span><span class="o">/</span><span class="n">yolov3_template</span><span class="o">.</span><span class="n">cfg</span>
+<span class="n">imgsize</span>          <span class="o">=</span> <span class="mi">800</span>
+<span class="n">resume</span>           <span class="o">=</span> <span class="kc">False</span>
+<span class="n">invalid_class_list</span>         <span class="o">=</span> <span class="mi">75</span><span class="p">,</span><span class="mi">82</span>
+<span class="n">boundingboxclusters</span>        <span class="o">=</span> <span class="mi">30</span>
+<span class="n">computeboundingboxclusters</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">class_path</span>       <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">xview_names_and_labels</span><span class="o">.</span><span class="n">csv</span>
+<span class="n">sampling_weight</span>  <span class="o">=</span> <span class="n">inverse_class_frequency</span>
+</pre></div>
+</div>
+<p>For the <code class="docutils literal notranslate"><span class="pre">[TEST]</span></code> case, here is an example
+of what <code class="docutils literal notranslate"><span class="pre">input_file.dat</span></code> might contain:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">TEST</span><span class="p">]</span>
+<span class="n">loaddir</span>              <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">loaddir</span><span class="o">/</span>
+<span class="n">outdir</span>               <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">outdir</span><span class="o">/</span>
+<span class="n">targetspath</span>          <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">targetdir</span><span class="o">/</span><span class="n">xView_train</span><span class="o">.</span><span class="n">geojson</span>
+<span class="n">targetfiletype</span>       <span class="o">=</span> <span class="n">json</span>
+<span class="n">imagepath</span>            <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">testdir</span><span class="o">/</span>
+<span class="n">plot_flag</span>            <span class="o">=</span> <span class="kc">True</span>
+<span class="n">secondary_classifier</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">networkcfg</span>           <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">networksavedir</span><span class="o">/</span><span class="n">yolov3_custom</span><span class="o">.</span><span class="n">cfg</span>
+<span class="n">networksavefile</span>      <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">networksavedir</span><span class="o">/</span><span class="n">best</span><span class="o">.</span><span class="n">pt</span>
+<span class="n">class_path</span>           <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">classpathdir</span><span class="o">/</span><span class="n">xview_names_and_labels</span><span class="o">.</span><span class="n">csv</span>
+<span class="n">conf_thres</span>           <span class="o">=</span> <span class="mf">0.99</span>
+<span class="n">cls_thres</span>            <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">nms_thres</span>            <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">batch_size</span>           <span class="o">=</span> <span class="mi">1</span>
+<span class="n">imgsize</span>              <span class="o">=</span> <span class="mi">1632</span>
+<span class="n">rgb_mean</span>             <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">statdir</span><span class="o">/</span><span class="n">training_rgb_mean</span><span class="o">.</span><span class="n">out</span>
+<span class="n">rgb_std</span>              <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">statdir</span><span class="o">/</span><span class="n">training_rgb_std</span><span class="o">.</span><span class="n">out</span>
+<span class="n">class_mean</span>           <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">statdir</span><span class="o">/</span><span class="n">training_class_mean</span><span class="o">.</span><span class="n">out</span>
+<span class="n">class_sigma</span>          <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">statdir</span><span class="o">/</span><span class="n">training_class_sigma</span><span class="o">.</span><span class="n">out</span>
+<span class="n">invalid_class_list</span>   <span class="o">=</span> <span class="mi">75</span><span class="p">,</span><span class="mi">82</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="src.InputFile.InputFile.printInputs">
 <code class="descname">printInputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.printInputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.printInputs" title="Permalink to this definition">¶</a></dt>
@@ -379,8 +430,22 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="function">
 <dt id="src.models.create_yolo_architecture">
-<code class="descclassname">src.models.</code><code class="descname">create_yolo_architecture</code><span class="sig-paren">(</span><em>inputs</em>, <em>targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_yolo_architecture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_yolo_architecture" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">src.models.</code><code class="descname">create_yolo_architecture</code><span class="sig-paren">(</span><em>inputs</em>, <em>n_classes</em>, <em>anchor_coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_yolo_architecture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_yolo_architecture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a yolo-v3 layer configuration file from desired options</p>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>inputs <span class="classifier-delimiter">:</span> <span class="classifier">InputFile object </span></dt>
+<dd>Specifies some necessary user options.</dd>
+<dt>n_classes <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Specifies number of classes in the dataset</dd>
+<dt>anchor_coordinates <span class="classifier-delimiter">:</span> <span class="classifier">list&lt;double&gt;</span></dt>
+<dd>List of doubles of form [x1,y1,x2,y2, … , xN,yN] where N = number of anchors and (xi,yi) are the i’th anchor coordinates.</dd>
+</dl>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>output_config_file_path <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd>Absolute filepath of the network config file created by this function</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -564,6 +629,23 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="src.targets.Target.output_data_for_listdataset">
+<code class="descname">output_data_for_listdataset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.output_data_for_listdataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to output data needed for the ListDataset dataloader.</p>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>object_data <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>list containing three pieces of data on all objects: [filtered_chips,filtered_coords,filtered_classes]</dd>
+<dt>class_weights <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd>array containing the weights for each class</dd>
+<dt>image_weights <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd>array containing the weights for each image</dd>
+<dt>files <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>list of all files</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="src.targets.Target.process_target_data">
 <code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to perform all target processing.</p>
@@ -658,8 +740,21 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 
 <span class="target" id="module-src.datasets"></span><dl class="class">
 <dt id="src.datasets.ListDataset">
-<em class="property">class </em><code class="descclassname">src.datasets.</code><code class="descname">ListDataset</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasets.html#ListDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.ListDataset" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">src.datasets.</code><code class="descname">ListDataset</code><span class="sig-paren">(</span><em>inputs</em>, <em>object_data</em>, <em>class_weights</em>, <em>image_weights</em>, <em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasets.html#ListDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.ListDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Image dataset class for training</p>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>inputs <span class="classifier-delimiter">:</span> <span class="classifier">InputFile</span></dt>
+<dd>InputFile object containing user-specified config options</dd>
+<dt>object_data <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>list containing three pieces of data on all objects: [chips,coords,classes]</dd>
+<dt>class_weights <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd>array containing the weights for each class</dd>
+<dt>image_weights <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd>array containing the weights for each image</dd>
+<dt>files <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>list of all files</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">

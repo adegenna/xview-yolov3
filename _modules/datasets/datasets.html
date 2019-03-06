@@ -89,7 +89,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../running.html">User Instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../inheritance.html">Dependency Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 </ul>
 
@@ -176,8 +175,22 @@
 <div class="viewcode-block" id="ListDataset"><a class="viewcode-back" href="../../code.html#src.datasets.ListDataset">[docs]</a><span class="k">class</span> <span class="nc">ListDataset</span><span class="p">():</span>  <span class="c1"># for training</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Image dataset class for training</span>
+
+<span class="sd">    **Inputs**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    inputs : InputFile</span>
+<span class="sd">        InputFile object containing user-specified config options</span>
+<span class="sd">    object_data : list</span>
+<span class="sd">        list containing three pieces of data on all objects: [chips,coords,classes]</span>
+<span class="sd">    class_weights : array</span>
+<span class="sd">        array containing the weights for each class</span>
+<span class="sd">    image_weights : array</span>
+<span class="sd">        array containing the weights for each image</span>
+<span class="sd">    files : list</span>
+<span class="sd">        list of all files</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">object_data</span><span class="p">,</span> <span class="n">class_weights</span><span class="p">,</span> <span class="n">image_weights</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;********************* DATA PREPROCESSING *********************&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reading dataset from &#39;</span> <span class="o">+</span> <span class="n">inputs</span><span class="o">.</span><span class="n">traindir</span> <span class="o">+</span> <span class="s1">&#39;...&#39;</span><span class="p">);</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span>       <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">traindir</span><span class="p">;</span>
@@ -199,15 +212,12 @@
         <span class="c1"># load targets</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targetfiletype</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading target data from specified json file...&quot;</span><span class="p">)</span>
-            <span class="n">targets</span>         <span class="o">=</span> <span class="n">Target</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">targetIDs</span>  <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">targets</span><span class="p">)[</span><span class="s1">&#39;_Target__filtered_chips&#39;</span><span class="p">]</span>
-            <span class="n">coords</span>          <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">targets</span><span class="p">)[</span><span class="s1">&#39;_Target__filtered_coords&#39;</span><span class="p">]</span>
-            <span class="n">classes</span>         <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">targets</span><span class="p">)[</span><span class="s1">&#39;_Target__filtered_classes&#39;</span><span class="p">]</span>            
-            <span class="n">unique_class_labels</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">targets</span><span class="p">)[</span><span class="s1">&#39;_Target__list_of_unique_class_labels&#39;</span><span class="p">]</span>
-            <span class="n">classes</span>         <span class="o">=</span> <span class="n">convert_class_labels_to_indices</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span><span class="n">unique_class_labels</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">targets</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">classes</span><span class="p">,[</span><span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">),</span><span class="mi">1</span><span class="p">]),</span><span class="n">coords</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">targets_metadata</span> <span class="o">=</span> <span class="n">targets</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">class_weights</span>    <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">targets</span><span class="p">)[</span><span class="s1">&#39;_Target__filtered_class_weights&#39;</span><span class="p">]</span>
+            <span class="n">chips</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">classes</span>  <span class="o">=</span> <span class="n">object_data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">targetIDs</span>        <span class="o">=</span> <span class="n">chips</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">targets</span>          <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">classes</span><span class="p">,[</span><span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">),</span><span class="mi">1</span><span class="p">]),</span><span class="n">coords</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">class_weights</span>    <span class="o">=</span> <span class="n">class_weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image_weights</span>    <span class="o">=</span> <span class="n">image_weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">targets_files</span>    <span class="o">=</span> <span class="n">files</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Specified target filetype is not supported&#39;</span><span class="p">)</span>
         
@@ -224,10 +234,9 @@
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">sampling_weight</span> <span class="o">==</span> <span class="s1">&#39;inverse_class_frequency&#39;</span><span class="p">):</span>
-            <span class="n">image_labels</span> <span class="o">=</span>  <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets_metadata</span><span class="p">)[</span><span class="s1">&#39;_Target__files&#39;</span><span class="p">]</span>
-            <span class="n">image_weights</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets_metadata</span><span class="p">)[</span><span class="s1">&#39;_Target__image_weights&#39;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shuffled_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">image_labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nF</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">image_weights</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">self__inputs</span><span class="o">.</span><span class="n">sampling_weight</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">):</span>
+            <span class="n">image_labels</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">targets_files</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shuffled_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">image_labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nF</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image_weights</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">sampling_weight</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">shuffled_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nF</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Specified option sampling_weight is not supported.&#39;</span><span class="p">)</span> 

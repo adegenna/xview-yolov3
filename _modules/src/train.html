@@ -89,7 +89,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../running.html">User Instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../inheritance.html">Dependency Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 </ul>
 
@@ -207,12 +206,15 @@
     <span class="c1"># Problem setup</span>
     <span class="n">assert_single_gpu_support</span><span class="p">()</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">loaddir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">ListDataset</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>    
+    <span class="n">targets</span>    <span class="o">=</span> <span class="n">Target</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">n_classes</span>  <span class="o">=</span> <span class="n">targets</span><span class="o">.</span><span class="n">get_number_of_filtered_classes</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">computeboundingboxclusters</span><span class="p">:</span>
-        <span class="n">networkcfg</span>        <span class="o">=</span> <span class="n">create_yolo_architecture</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">dataloader</span><span class="o">.</span><span class="n">targets_metadata</span><span class="p">)</span>
-        <span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span> <span class="o">=</span> <span class="n">networkcfg</span>
+        <span class="n">networkcfg</span>         <span class="o">=</span> <span class="n">create_yolo_architecture</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">n_classes</span><span class="p">,</span><span class="n">targets</span><span class="o">.</span><span class="n">clusters_wh</span><span class="p">)</span>
+        <span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span>  <span class="o">=</span> <span class="n">networkcfg</span>
+    <span class="n">object_data</span><span class="p">,</span> <span class="n">class_weights</span><span class="p">,</span> <span class="n">image_weights</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">targets</span><span class="o">.</span><span class="n">output_data_for_listdataset</span><span class="p">()</span>
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">ListDataset</span><span class="p">(</span><span class="n">inputs</span> <span class="p">,</span> <span class="n">object_data</span><span class="p">,</span> <span class="n">class_weights</span><span class="p">,</span> <span class="n">image_weights</span><span class="p">,</span> <span class="n">files</span><span class="p">)</span>
     <span class="n">model</span>      <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-    <span class="n">trainer</span>    <span class="o">=</span> <span class="n">NetworkTrainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">inputs</span><span class="p">);</span>
+    <span class="n">trainer</span>    <span class="o">=</span> <span class="n">NetworkTrainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">class_weights</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">);</span>
 
     <span class="c1"># Start training</span>
     <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">();</span></div>

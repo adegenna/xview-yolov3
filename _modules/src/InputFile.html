@@ -89,7 +89,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../running.html">User Instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../inheritance.html">Dependency Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 </ul>
 
@@ -160,7 +159,7 @@
 
 <div class="viewcode-block" id="InputFile"><a class="viewcode-back" href="../../code.html#src.InputFile.InputFile">[docs]</a><span class="k">class</span> <span class="nc">InputFile</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class for packaging all input/config file options together.</span>
+<span class="sd">    Class for packaging all input/config file options together. </span>
 
 <span class="sd">    .. note:: </span>
 <span class="sd">         There are separate options required by InputFile depending on whether the intended goal is training or testing. The user must declare on the first line of the InputFile either ``[TRAIN]`` or ``[TEST]``, depending on their desired objective.</span>
@@ -169,7 +168,7 @@
 
 <span class="sd">    ----------</span>
 <span class="sd">    inputfilename : string </span>
-<span class="sd">        String specifying the desired inputfile name. </span>
+<span class="sd">        String specifying the desired inputfile name.     </span>
 
 <span class="sd">    **Train Options**</span>
 
@@ -250,6 +249,57 @@
 <span class="sd">        Absolute path to class standard deviation file</span>
 <span class="sd">    invalid_class_list : string (csv format)</span>
 <span class="sd">        Comma-separated list of classes to be ignored from training data</span>
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    --------</span>
+<span class="sd">    To use this class, </span>
+<span class="sd">    follow this interface::</span>
+<span class="sd">        input_file_object = InputFile(&#39;/full/path/to/input_file.dat&#39;)</span>
+
+<span class="sd">    For the ``[TRAIN]`` case, here is an example</span>
+<span class="sd">    of what ``input_file.dat`` might contain::</span>
+<span class="sd">        [TRAIN]</span>
+<span class="sd">        loaddir          = /full/path/to/loaddir/</span>
+<span class="sd">        outdir           = /full/path/to/outdir/</span>
+<span class="sd">        targetspath      = /full/path/to/targetsdir/xView_train.geojson</span>
+<span class="sd">        targetfiletype   = json</span>
+<span class="sd">        traindir         = /full/path/to/traindir/</span>
+<span class="sd">        epochs           = 300</span>
+<span class="sd">        epochstart       = 0</span>
+<span class="sd">        batchsize        = 8</span>
+<span class="sd">        networkcfg       = /full/path/to/networkdir/yolov3_template.cfg</span>
+<span class="sd">        imgsize          = 800</span>
+<span class="sd">        resume           = False</span>
+<span class="sd">        invalid_class_list         = 75,82</span>
+<span class="sd">        boundingboxclusters        = 30</span>
+<span class="sd">        computeboundingboxclusters = False</span>
+<span class="sd">        class_path       = /full/path/to/xview_names_and_labels.csv</span>
+<span class="sd">        sampling_weight  = inverse_class_frequency</span>
+
+<span class="sd">    For the ``[TEST]`` case, here is an example</span>
+<span class="sd">    of what ``input_file.dat`` might contain::</span>
+<span class="sd">      [TEST]</span>
+<span class="sd">      loaddir              = /full/path/to/loaddir/</span>
+<span class="sd">      outdir               = /full/path/to/outdir/</span>
+<span class="sd">      targetspath          = /full/path/to/targetdir/xView_train.geojson</span>
+<span class="sd">      targetfiletype       = json</span>
+<span class="sd">      imagepath            = /full/path/to/testdir/</span>
+<span class="sd">      plot_flag            = True</span>
+<span class="sd">      secondary_classifier = False</span>
+<span class="sd">      networkcfg           = /full/path/to/networksavedir/yolov3_custom.cfg</span>
+<span class="sd">      networksavefile      = /full/path/to/networksavedir/best.pt</span>
+<span class="sd">      class_path           = /full/path/to/classpathdir/xview_names_and_labels.csv</span>
+<span class="sd">      conf_thres           = 0.99</span>
+<span class="sd">      cls_thres            = 0.05</span>
+<span class="sd">      nms_thres            = 0.4</span>
+<span class="sd">      batch_size           = 1</span>
+<span class="sd">      imgsize              = 1632</span>
+<span class="sd">      rgb_mean             = /full/path/to/statdir/training_rgb_mean.out</span>
+<span class="sd">      rgb_std              = /full/path/to/statdir/training_rgb_std.out</span>
+<span class="sd">      class_mean           = /full/path/to/statdir/training_class_mean.out</span>
+<span class="sd">      class_sigma          = /full/path/to/statdir/training_class_sigma.out</span>
+<span class="sd">      invalid_class_list   = 75,82</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">):</span>
