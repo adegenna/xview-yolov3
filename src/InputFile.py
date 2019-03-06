@@ -4,7 +4,7 @@ import configparser
 
 class InputFile():
     """
-    Class for packaging all input/config file options together.
+    Class for packaging all input/config file options together. 
 
     .. note:: 
          There are separate options required by InputFile depending on whether the intended goal is training or testing. The user must declare on the first line of the InputFile either ``[TRAIN]`` or ``[TEST]``, depending on their desired objective.
@@ -13,7 +13,7 @@ class InputFile():
 
     ----------
     inputfilename : string 
-        String specifying the desired inputfile name. 
+        String specifying the desired inputfile name.     
 
     **Train Options**
 
@@ -94,6 +94,57 @@ class InputFile():
         Absolute path to class standard deviation file
     invalid_class_list : string (csv format)
         Comma-separated list of classes to be ignored from training data
+
+    **Examples**
+
+    --------
+    To use this class, 
+    follow this interface::
+        input_file_object = InputFile('/full/path/to/input_file.dat')
+
+    For the ``[TRAIN]`` case, here is an example
+    of what ``input_file.dat`` might contain::
+        [TRAIN]
+        loaddir          = /full/path/to/loaddir/
+        outdir           = /full/path/to/outdir/
+        targetspath      = /full/path/to/targetsdir/xView_train.geojson
+        targetfiletype   = json
+        traindir         = /full/path/to/traindir/
+        epochs           = 300
+        epochstart       = 0
+        batchsize        = 8
+        networkcfg       = /full/path/to/networkdir/yolov3_template.cfg
+        imgsize          = 800
+        resume           = False
+        invalid_class_list         = 75,82
+        boundingboxclusters        = 30
+        computeboundingboxclusters = False
+        class_path       = /full/path/to/xview_names_and_labels.csv
+        sampling_weight  = inverse_class_frequency
+
+    For the ``[TEST]`` case, here is an example
+    of what ``input_file.dat`` might contain::
+      [TEST]
+      loaddir              = /full/path/to/loaddir/
+      outdir               = /full/path/to/outdir/
+      targetspath          = /full/path/to/targetdir/xView_train.geojson
+      targetfiletype       = json
+      imagepath            = /full/path/to/testdir/
+      plot_flag            = True
+      secondary_classifier = False
+      networkcfg           = /full/path/to/networksavedir/yolov3_custom.cfg
+      networksavefile      = /full/path/to/networksavedir/best.pt
+      class_path           = /full/path/to/classpathdir/xview_names_and_labels.csv
+      conf_thres           = 0.99
+      cls_thres            = 0.05
+      nms_thres            = 0.4
+      batch_size           = 1
+      imgsize              = 1632
+      rgb_mean             = /full/path/to/statdir/training_rgb_mean.out
+      rgb_std              = /full/path/to/statdir/training_rgb_std.out
+      class_mean           = /full/path/to/statdir/training_class_mean.out
+      class_sigma          = /full/path/to/statdir/training_class_sigma.out
+      invalid_class_list   = 75,82
     """
 
     def __init__(self, inputfile):

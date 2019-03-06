@@ -17,7 +17,6 @@ Project repository: https://github.com/adegenna/xview-yolov3.
    running
    code
    flowdiagrams
-   inheritance
    contact
 
 Indices and tables
