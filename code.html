@@ -269,8 +269,6 @@
 <dd>Image path</dd>
 <dt>plot_flag <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
 <dd>Flag for plotting</dd>
-<dt>secondary_classifier <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd>Boolean value specifying whether to use a secondary classifier</dd>
 <dt>networkcfg <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
 <dd>Network architecture file</dd>
 <dt>networksavefile <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
@@ -334,7 +332,6 @@ of what <code class="docutils literal notranslate"><span class="pre">input_file.
 <span class="n">targetfiletype</span>       <span class="o">=</span> <span class="n">json</span>
 <span class="n">imagepath</span>            <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">testdir</span><span class="o">/</span>
 <span class="n">plot_flag</span>            <span class="o">=</span> <span class="kc">True</span>
-<span class="n">secondary_classifier</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">networkcfg</span>           <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">networksavedir</span><span class="o">/</span><span class="n">yolov3_custom</span><span class="o">.</span><span class="n">cfg</span>
 <span class="n">networksavefile</span>      <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">networksavedir</span><span class="o">/</span><span class="n">best</span><span class="o">.</span><span class="n">pt</span>
 <span class="n">class_path</span>           <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">classpathdir</span><span class="o">/</span><span class="n">xview_names_and_labels</span><span class="o">.</span><span class="n">csv</span>
@@ -359,25 +356,6 @@ of what <code class="docutils literal notranslate"><span class="pre">input_file.
 </dd></dl>
 
 <span class="target" id="module-src.models"></span><dl class="class">
-<dt id="src.models.ConvNetb">
-<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">ConvNetb</code><span class="sig-paren">(</span><em>num_classes=60</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#ConvNetb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.ConvNetb" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="src.models.ConvNetb.forward">
-<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#ConvNetb.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.ConvNetb.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="src.models.Darknet">
 <em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
 <dd><p>YOLOv3 object detection model</p>

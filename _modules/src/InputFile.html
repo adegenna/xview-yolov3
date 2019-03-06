@@ -221,8 +221,6 @@
 <span class="sd">        Image path</span>
 <span class="sd">    plot_flag : bool</span>
 <span class="sd">        Flag for plotting</span>
-<span class="sd">    secondary_classifier : bool</span>
-<span class="sd">        Boolean value specifying whether to use a secondary classifier</span>
 <span class="sd">    networkcfg : string</span>
 <span class="sd">        Network architecture file</span>
 <span class="sd">    networksavefile : string</span>
@@ -286,7 +284,6 @@
 <span class="sd">      targetfiletype       = json</span>
 <span class="sd">      imagepath            = /full/path/to/testdir/</span>
 <span class="sd">      plot_flag            = True</span>
-<span class="sd">      secondary_classifier = False</span>
 <span class="sd">      networkcfg           = /full/path/to/networksavedir/yolov3_custom.cfg</span>
 <span class="sd">      networksavefile      = /full/path/to/networksavedir/best.pt</span>
 <span class="sd">      class_path           = /full/path/to/classpathdir/xview_names_and_labels.csv</span>
@@ -355,7 +352,6 @@
         <span class="c1"># Test-specific</span>
         <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s2">&quot;TEST&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plot_flag</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_flag</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_flag</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">secondary_classifier</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">secondary_classifier</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secondary_classifier</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">conf_thres</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf_thres</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cls_thres</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cls_thres</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span><span class="p">)</span>
@@ -389,7 +385,6 @@
                                <span class="s1">&#39;targetfiletype&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;imagepath&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;plot_flag&#39;</span><span class="p">,</span> \
-                               <span class="s1">&#39;secondary_classifier&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;networkcfg&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;networksavefile&#39;</span><span class="p">,</span> \
                                <span class="s1">&#39;class_path&#39;</span><span class="p">,</span> \

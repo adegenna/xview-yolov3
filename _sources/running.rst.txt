@@ -173,7 +173,6 @@ option specification::
   targetfiletype       = json
   imagepath            = /full/path/to/testdir/
   plot_flag            = True
-  secondary_classifier = False
   networkcfg           = /full/path/to/networksavedir/yolov3_custom.cfg
   networksavefile      = /full/path/to/networksavedir/best.pt
   class_path           = /full/path/to/classpathdir/xview_names_and_labels.csv
