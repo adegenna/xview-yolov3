@@ -1,10 +1,9 @@
 import argparse
 import time
-from sys import platform
-from models import *
-from datasets import *
-from utils.utils import *
-from InputFile import *
+from yolov3.src.models import *
+from yolov3.src.datasets.datasets import *
+from yolov3.utils.utils import *
+from yolov3.src.InputFile import *
 
 class NetworkTrainer():
     def __init__(self, model, dataloader, inputs, class_weights, n_classes):

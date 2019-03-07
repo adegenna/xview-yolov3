@@ -1,14 +1,12 @@
 import numpy as np
-import sys
-sys.path.append('../../')
 import scipy.io
 import os
 import cv2
 from sklearn.cluster import KMeans
-from targets.fcn_sigma_rejection import *
-from targets.per_class_stats import *
-from utils.datasetProcessing import *
-from utils.utils import convert_tif2bmp, readBmpDataset, load_classes, convert_class_labels_to_indices
+from yolov3.src.targets.fcn_sigma_rejection import *
+from yolov3.src.targets.per_class_stats import *
+from yolov3.utils.datasetProcessing import *
+from yolov3.utils.utils import convert_tif2bmp, readBmpDataset, load_classes, convert_class_labels_to_indices
 
 # This is a python-conversion of utils/analysis.m and all related target preprocessing
 

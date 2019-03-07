@@ -1,8 +1,6 @@
-import sys
-sys.path.append('../')
 from collections import defaultdict
 import torch.nn as nn
-from utils.utils import *
+from yolov3.utils.utils import *
 
 def create_modules(module_defs):
     """

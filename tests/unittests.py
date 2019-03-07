@@ -5,17 +5,16 @@ import sys,os
 import matplotlib.pyplot as plt
 import cv2
 import json
-sys.path.append('../')
-sys.path.append('../src')
-from datasets.datasets import *
-from src.InputFile import *
-from utils.utils import plot_rgb_image
-from utils.datasetProcessing import *
-from src.models import *
-from src.targets.Target import *
-from src.targets.fcn_sigma_rejection import *
-from src.targets.per_class_stats import *
+from yolov3.src.datasets.datasets import *
+from yolov3.src.InputFile import *
+from yolov3.utils.utils import plot_rgb_image
+from yolov3.utils.datasetProcessing import *
+from yolov3.src.models import *
+from yolov3.src.targets.Target import *
+from yolov3.src.targets.fcn_sigma_rejection import *
+from yolov3.src.targets.per_class_stats import *
 import warnings
+
 
 class GPUtests(unittest.TestCase):
     """
@@ -69,7 +68,7 @@ class DataProcessingTests(unittest.TestCase):
         """
         warnings.filterwarnings("ignore")
         args                    = lambda:0
-        args.inputfilename      = './input_test.dat'
+        args.inputfilename      = 'yolov3/tests/input_test.dat'
         self.inputs             = InputFile(args.inputfilename)
         self.ndata              = 9
         self.nobject            = 11158
@@ -127,7 +126,7 @@ class TargetTests(unittest.TestCase):
         """
         warnings.filterwarnings("ignore")
         args                    = lambda:0
-        args.inputfilename      = './input_test.dat'
+        args.inputfilename      = 'yolov3/tests/input_test.dat'
         self.inputs             = InputFile(args.inputfilename);
         self.inputs.targetspath = '/'.join(self.inputs.targetspath.split('/')[0:-1]) + '/jsontest.json'
         self.inputs.targetfiletype = 'json'
@@ -341,7 +340,7 @@ class ModelsTests(unittest.TestCase):
         """
         warnings.filterwarnings("ignore")
         args                    = lambda:0
-        args.inputfilename      = './input_test.dat'
+        args.inputfilename      = 'yolov3/tests/input_test.dat'
         self.inputs             = InputFile(args.inputfilename);
         if not os.path.exists(self.inputs.outdir):
             os.makedirs(self.inputs.outdir)

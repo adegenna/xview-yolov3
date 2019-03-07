@@ -19,9 +19,8 @@ import os
 import time
 import scipy.io
 import numpy as np
-
-from scoring.scoringfunctions import *
-from utils.datasetProcessing import *
+from yolov3.src.scoring.scoringfunctions import *
+from yolov3.utils.datasetProcessing import *
 
 # @profile
 def score(opt, iou_threshold=.5):

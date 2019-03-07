@@ -1,13 +1,11 @@
 import argparse
-import time
-from sys import platform
-
 import torch
-from models import *
-from datasets import *
-from utils.utils import *
-from InputFile import *
-from NetworkTester import *
+from yolov3.utils.utils import assert_single_gpu_support
+from yolov3.src.InputFile import *
+from yolov3.src.models import *
+from yolov3.src.datasets.ImageFolder import *
+from yolov3.src.NetworkTester import *
+from yolov3.src.scoring.score import *
 
 def detect():
     """
@@ -53,8 +51,7 @@ def detect():
 
     # Metrics
     if opt.plot_flag:
-        import scoring
-        scoring.score(opt)
+        score(opt)
 
 if __name__ == '__main__':
     torch.cuda.empty_cache()

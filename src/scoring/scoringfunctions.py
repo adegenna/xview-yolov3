@@ -4,10 +4,9 @@ import os
 import time
 import scipy.io
 import numpy as np
-
-from scoring.matching import Matching
-from scoring.rectangle import Rectangle
-from utils.datasetProcessing import *
+from yolov3.src.scoring.matching import Matching
+from yolov3.src.scoring.rectangle import Rectangle
+from yolov3.utils.datasetProcessing import *
 
 def convert_to_rectangle_list(coordinates):
     """

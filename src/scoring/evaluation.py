@@ -1,9 +1,6 @@
 """Utility methods for computing the performance metrics."""
-import sys
-sys.path.append('../')
-from scoring.matching import Matching
-from scoring.rectangle import Rectangle
-
+from yolov3.src.scoring.matching import Matching
+from yolov3.src.scoring.rectangle import Rectangle
 
 def safe_divide(numerator, denominator):
   """Computes the safe division to avoid the divide by zero problem."""

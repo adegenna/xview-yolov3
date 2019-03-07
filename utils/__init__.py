@@ -1,3 +1,3 @@
-from utils.datasetProcessing import *
-from utils.utils import *
-from utils.utils_xview import *
+from . import datasetProcessing
+from . import utils
+from . import utils_xview

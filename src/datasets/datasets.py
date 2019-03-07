@@ -1,5 +1,3 @@
-import sys
-sys.path.append('../../')
 import glob
 import math
 import os
@@ -9,13 +7,10 @@ import cv2
 import numpy as np
 import scipy.io
 import torch
-from PIL import Image
-
-# from torch.utils.data import Dataset
-from utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset, convert_class_labels_to_indices
-from src.targets import *
-from datasets.datasetTransformations import *
-from datasets.datasetStats import *
+from yolov3.utils.utils import xyxy2xywh, xview_class_weights, load_obj, convert_tif2bmp, readBmpDataset, convert_class_labels_to_indices
+from yolov3.src.targets import *
+from yolov3.src.datasets.datasetTransformations import *
+from yolov3.src.datasets.datasetStats import *
 
 class ListDataset():  # for training
     """

@@ -1,15 +1,18 @@
 [TRAIN]
-loaddir          = /home/adegennaro/Projects/OGA/cat/xview-yolov3/tests/
-outdir           = /home/adegennaro/Projects/OGA/cat/xview-yolov3/tests/output/
-targetspath      = /home/adegennaro/Projects/OGA/cat/xview-yolov3/tests/data/xview/labels/testtargets.mat
+loaddir          = /home/adegennaro/Projects/OGA/cat/yolov3/tests/
+outdir           = /home/adegennaro/Projects/OGA/cat/yolov3/tests/output/
+targetspath      = /home/adegennaro/Projects/OGA/cat/yolov3/tests/data/xview/labels/testtargets.mat
 targetfiletype   = matlab
-traindir         = /home/adegennaro/Projects/OGA/cat/xview-yolov3/tests/data/xview/train/images/
+traindir         = /home/adegennaro/Projects/OGA/cat/yolov3/tests/data/xview/train/images/
 epochs           = 300
 epochstart       = 0
 batchsize        = 8
-networkcfg       = /home/adegennaro/Projects/OGA/cat/xview-yolov3/cfg/c60_a30.cfg
+networkcfg       = /home/adegennaro/Projects/OGA/cat/yolov3/cfg/c60_a30.cfg
 imgsize          = 608
 resume           = False
 invalid_class_list  = 75,82
 boundingboxclusters = 30
 computeboundingboxclusters = False
+class_path       = /home/adegennaro/Projects/OGA/cat/yolov3/data/xview_names_and_labels.csv
+sampling_weight  = inverse_class_frequency
+hardware         = single_gpu

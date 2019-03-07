@@ -1,14 +1,10 @@
 import argparse
-import time
-from sys import platform
-import sys
-sys.path.insert(0,'../')
-from models import *
-from datasets import *
-from utils.utils import *
-from InputFile import *
-from NetworkTrainer import *
 import torch
+from yolov3.utils.utils import assert_single_gpu_support
+from yolov3.src.InputFile import *
+from yolov3.src.models import *
+from yolov3.src.datasets.datasets import ListDataset
+from yolov3.src.NetworkTrainer import *
 
 # batch_size 8: 32*17 = 544
 # batch_size 4: 32*25 = 800 (1.47 vs 544) or 32*23 = 736

@@ -1,5 +1,3 @@
-import sys
-sys.path.append('../../')
 import glob
 import math
 import os
