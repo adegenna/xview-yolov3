@@ -8,7 +8,12 @@ codebase.
 Importing YOLOv3
 ---------------------
 
-#. In your Python driver script, make sure that the ``yolov3``
+#. Make sure you activate the conda environment was described in the
+   Installation section::
+
+     >>> conda activate [envname]
+
+#. In your Python driver script, make sure that the yolov3
    filepath is in the Python search path::
 
      import sys
@@ -26,29 +31,42 @@ Unit Tests
 ---------------------
 
 Unit tests are maintained in the ``yolov3/tests`` subdirectory. To run
-these, navigate to the directory that contains ``yolov3``, and run the
+these, navigate to the directory that contains yolov3, and run the
 unittests as a Python package from the shell::
 
   >>> python3 -m yolov3.tests.unittests
 
 
-Training Script
+Training Example
 ---------------------
 
-Network training is handled by the driver script ``src/train.py``. To
-run this, make sure you are in the ``src/`` subdirectory, and that
-your inputfile is also in that directory.
+.. note:: To run this example, the following pieces of data must exist
+   and be specified in the input file: (1) a training dataset, (2) a
+   .geojson target metadata file, and (3) a .csv file where each line
+   lists the class name and numeric label for all classes in the
+   dataset. For more details, consult the Code Documentation on the
+   InputFile class.
 
-CPU mode::
+An example driver script demonstrating proper interface usage for
+network training is provided in ``scripts/train.py``, together with
+the ``scripts/input_train.dat`` input file. To run it, do the
+following:
 
-  python3 train.py <input_file_name>
+#. Edit the ``scripts/input_train.dat`` input file so that those
+   settings involving filepaths accurately reflect the data/filepaths
+   on your machine.
 
-Single
-GPU mode::
-  CUDA_VISIBLE_DEVICES=0 python3 train.py <input_file_name>
+#. Navigate to the directory that contains yolov3, and issue the
+   following shell command to run the script as a package::
+
+  >>> python3 -m yolov3.scripts.train yolov3/scripts/input_train.dat
   
-.. note:: 
-   Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.
+  .. note:: Mulitple-GPU support is currently not available for any
+   part of this software. Please run in either CPU or single-GPU mode
+   only. If you have multiple GPUs on your machine, you may use the
+   CUDA_VISIBLE_DEVICES flag to enforce single-GPU mode, e.g.::
+
+     >>> CUDA_VISIBLE_DEVICES=0 python3 -m yolov3.scripts.train yolov3/scripts/input_train.dat
 
 Notes on the training inputfile:
 
@@ -125,27 +143,41 @@ precompute the YOLO architecture::
   resume           = False
   invalid_class_list         = 75,82
   boundingboxclusters        = 30
-  computeboundingboxclusters = False
+  computeboundingboxclusters = True
   class_path       = /full/path/to/xview_names_and_labels.csv
   sampling_weight  = inverse_class_frequency
 
-Testing Script
+Detection Example
 ---------------------
 
-Network testing is handled by the driver script ``src/detect.py``. To
-run this, make sure you are in the ``src/`` subdirectory, and that
-your inputfile is also in that directory.
+.. note:: To run this example, the following pieces of data must exist
+   and be specified in the input file: (1) a dataset for
+   detection, (2) a .geojson target metadata file (used for testing,
+   not necessary for detection), and (3) a .csv file where each line
+   lists the class name and numeric label for all classes in the
+   dataset (also only needed for testing). For more details, consult
+   the Code Documentation on the InputFile class.
 
-CPU mode::
+An example driver script demonstrating proper interface usage for
+network detection/testing is provided in ``scripts/detect.py``,
+together with the ``scripts/input_detect.dat`` input file. To run it,
+do the following:
 
-  python3 detect.py <input_file_name>
+#. Edit the ``scripts/input_detect.dat`` input file so that those
+   settings involving filepaths accurately reflect the data/filepaths
+   on your machine.
 
-Single
-GPU mode::
-  CUDA_VISIBLE_DEVICES=0 python3 detect.py <input_file_name>
+#. Navigate to the directory that contains yolov3, and issue the
+   following shell command to run the script as a package::
+
+  >>> python3 -m yolov3.scripts.detect yolov3/scripts/input_detect.dat
   
-.. note::
-   Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.
+  .. note:: Mulitple-GPU support is currently not available for any
+   part of this software. Please run in either CPU or single-GPU mode
+   only. If you have multiple GPUs on your machine, you may use the
+   CUDA_VISIBLE_DEVICES flag to enforce single-GPU mode, e.g.::
+
+     >>> CUDA_VISIBLE_DEVICES=0 python3 -m yolov3.scripts.detect yolov3/scripts/input_detect.dat
 
 Notes on the testing inputfile:
 
