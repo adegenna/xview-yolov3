@@ -1,18 +1,33 @@
 User Instructions
 =====================
 
-The purpose of this document is to provide detailed, step-by-step
-instructions on how to run the code in our codebase related to (1)
-training a network and (2) testing it.
+The purpose of this section is to provide detailed, step-by-step
+instructions on how to use the important interfaces for our
+codebase.
 
-Assuming you have set-up and installed all Python requirements
-correctly, all that remains is to ensure that you have properly
-formatted inputfiles. Consult the Code Docs section for a full
-description of the options. Below, we give some advice on a few of the
-components that are needed to avoid potential pitfalls.
+General Interfaces
+---------------------
+
+#. In the terminal shell, start off by renaming the default project
+   directory from ``xview-yolov3`` to ``yolov3``::
+
+     mv xview-yolov3 yolov3
+
+   The original repository name has a dash character in it, and Python
+   does not allow easy importing of names that contain such
+   characters.
+
+#. In your Python driver script, make sure that the ``yolov3``
+   filepath is in the Python search path::
+
+     import sys
+     sys.path.append('/full/path/to/yolov3')
+
+#. Import 
 
 
-Training
+
+Training Script
 ---------------------
 
 Network training is handled by the driver script ``src/train.py``. To
@@ -109,7 +124,7 @@ precompute the YOLO architecture::
   class_path       = /full/path/to/xview_names_and_labels.csv
   sampling_weight  = inverse_class_frequency
 
-Testing
+Testing Script
 ---------------------
 
 Network testing is handled by the driver script ``src/detect.py``. To

@@ -5,9 +5,9 @@ This software requires Python 3.6, along with the following packages:
 
 * numpy
 * scipy
-* sklearn
+* scikit-learn
 * matplotlib
-* torch
-* opencv-python
+* pytorch
+* opencv
 * h5py
 * tqdm
