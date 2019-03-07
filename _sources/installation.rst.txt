@@ -4,7 +4,7 @@ Installation
 The purpose of this section is to provide detailed, step-by-step
 instructions on how to install Anaconda for Python virtual
 environments, the Pytorch framework, Nvidia GPU drivers, and the
-yolov3 project repository.
+YOLOv3 project repository.
 
 Anaconda
 ---------------------
@@ -13,39 +13,39 @@ We first need to install Anaconda for Python virtual environments.
 
 #. Download the Anaconda installer (shell script) from the Anaconda website::
 
-     wget https://repo.anaconda.com/archive/Anaconda2-5.3.0-Linux-x86_64.sh
+     >>> wget https://repo.anaconda.com/archive/Anaconda2-5.3.0-Linux-x86_64.sh
 
    Note: this assumes you have a 64-bit Linux architecture. If you have something else, then visit https://www.anaconda.com/download/ and select your preferred version.
 
 #. Launch the Anaconda installer::
 
-     bash Anaconda2-5.3.0-Linux-x86_64.sh
+     >>> bash Anaconda2-5.3.0-Linux-x86_64.sh
 
    Accept the user terms and accept the default filepath for installation, which should be ``/home/[user]/anaconda2/``.
 
 #. Open your ``∼/.bashrc`` file in a file editor (e.g., ``emacs ∼/.bashrc``) and paste the following line to the end::
 
-     source /home/[user]/anaconda2/etc/profile.d/conda.sh
+     >>> source /home/[user]/anaconda2/etc/profile.d/conda.sh
 
 #. Save the ``∼/.bashrc`` file, exit, and reload it in your terminal with::
 
-     source ∼/.bashrc
+     >>> source ∼/.bashrc
    
 #. Confirm conda was installed::
 
-     conda --version
+     >>> conda --version
 
    This should output the version of the Anaconda install, if successful
 
 #. Create a custom Anaconda virtual environment for this project::
 
-     conda create -n [envname] python=3.6 anaconda
+     >>> conda create -n [envname] python=3.6 anaconda
 
    In the above, replace [envname] with your desired environment name (do not include the brackets)
 
 #. To verify that this was successful, run::
 
-     conda info --envs
+     >>> conda info --envs
 
    If successful, [envname] should appear as one of the choices.
 
@@ -56,19 +56,19 @@ We will now install PyTorch, a Python deep-learning framework
 
 #. Install PyTorch/Torchvision to your Anaconda environment::
 
-     conda install -n [envname] pytorch torchvision -c pytorch
+     >>> conda install -n [envname] pytorch torchvision -c pytorch
 
 #. To verify that this was successful, activate your conda environment::
 
-     conda activate [envname]
+     >>> conda activate [envname]
 
    Then, check the PyTorch version with::
 
-     python -c "import torch; print(torch.__version__)"
+     >>> python -c "import torch; print(torch.__version__)"
 
    Also check the Torchvision version with::
 
-     python -c "import torchvision; print(torchvision.__version__)"
+     >>> python -c "import torchvision; print(torchvision.__version__)"
 
 If successful, both commands should output the installed versions.
 
@@ -86,13 +86,13 @@ GPU Support
 
 #. Prepare your machine by installing necessary prerequisite packages::
 
-     yum -y update
+     >>> yum -y update
 
-     yum -y groupinstall "Development Tools"
+     >>> yum -y groupinstall "Development Tools"
 
-     yum -y install kernel-devel epel-release
+     >>> yum -y install kernel-devel epel-release
 
-     yum install dkms
+     >>> yum install dkms
 
 #. Download desired Nvidia driver version from their archive at https://www.nvidia.com/object/unix.html (e.g., using wget from the terminal)
 
@@ -104,17 +104,17 @@ GPU Support
 
 5. Stop all Xorg servers::
 
-     systemctl isolate multi-user.target
+     >>> systemctl isolate multi-user.target
 
 6. Run the bash script installer::
 
-     bash NVIDIA-Linux-x86_64-*
+     >>> bash NVIDIA-Linux-x86_64-*
 
 7. Reboot your system
 
 8. Confirm that the installation was successful by inspecting the output of this command::
 
-     nvidia-smi
+     >>> nvidia-smi
    
    If successful, this should display all Nvidia GPUs currently installed in your machine
 
@@ -125,16 +125,16 @@ Note: For now, we are simply using a version of YOLOv3 freely available on Githu
 
 #. Activate your anaconda environment::
 
-     conda activate [envname]
+     >>> conda activate [envname]
 
 #. Clone the YOLOv3 git repo::
 
-     git clone https://github.com/adegenna/yolov3
+     >>> git clone https://github.com/adegenna/yolov3
 
 #. All of Python packages listed in the Requirements section of this documentation must be installed to your local conda environment. You may check whether the listed packages are installed with::
 
-     conda list | grep [package]
+     >>> conda list | grep [package]
 
 #. If one of the required packages is missing, then install it; for example, install opencv-python with::
 
-     conda install -n [envname] -c menpo opencv
+     >>> conda install -n [envname] -c menpo opencv

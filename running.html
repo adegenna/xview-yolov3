@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Instructions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#importing-yolov3">Importing YOLOv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unit-tests">Unit Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#training-script">Training Script</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-script">Testing Script</a></li>
 </ul>
@@ -186,6 +187,15 @@ module; for example:</p>
 </div>
 </li>
 </ol>
+</div>
+<div class="section" id="unit-tests">
+<h2>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline">¶</a></h2>
+<p>Unit tests are maintained in the <code class="docutils literal notranslate"><span class="pre">yolov3/tests</span></code> subdirectory. To run
+these, navigate to the directory that contains <code class="docutils literal notranslate"><span class="pre">yolov3</span></code>, and run the
+unittests as a Python package from the shell:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">yolov3</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">unittests</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="training-script">
 <h2>Training Script<a class="headerlink" href="#training-script" title="Permalink to this headline">¶</a></h2>

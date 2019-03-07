@@ -22,6 +22,15 @@ Importing YOLOv3
      import yolov3
      darknet = yolov3.src.models.Darknet(<network_cfg_file> , <imgsize>)
 
+Unit Tests
+---------------------
+
+Unit tests are maintained in the ``yolov3/tests`` subdirectory. To run
+these, navigate to the directory that contains ``yolov3``, and run the
+unittests as a Python package from the shell::
+
+  >>> python3 -m yolov3.tests.unittests
+
 
 Training Script
 ---------------------
