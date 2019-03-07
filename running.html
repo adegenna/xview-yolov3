@@ -89,7 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Instructions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#general-interfaces">General Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-yolov3">Importing YOLOv3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#training-script">Training Script</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-script">Testing Script</a></li>
 </ul>
@@ -166,18 +166,9 @@
 <p>The purpose of this section is to provide detailed, step-by-step
 instructions on how to use the important interfaces for our
 codebase.</p>
-<div class="section" id="general-interfaces">
-<h2>General Interfaces<a class="headerlink" href="#general-interfaces" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="importing-yolov3">
+<h2>Importing YOLOv3<a class="headerlink" href="#importing-yolov3" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">In the terminal shell, start off by renaming the default project
-directory from <code class="docutils literal notranslate"><span class="pre">xview-yolov3</span></code> to <code class="docutils literal notranslate"><span class="pre">yolov3</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mv</span> <span class="n">xview</span><span class="o">-</span><span class="n">yolov3</span> <span class="n">yolov3</span>
-</pre></div>
-</div>
-<p>The original repository name has a dash character in it, and Python
-does not allow easy importing of names that contain such
-characters.</p>
-</li>
 <li><p class="first">In your Python driver script, make sure that the <code class="docutils literal notranslate"><span class="pre">yolov3</span></code>
 filepath is in the Python search path:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
@@ -185,7 +176,14 @@ filepath is in the Python search path:</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Import</p>
+<li><p class="first">The yolov3 project uses the Python <code class="docutils literal notranslate"><span class="pre">import</span></code> system to load all
+source code in <code class="docutils literal notranslate"><span class="pre">yolov3/src/</span></code> and <code class="docutils literal notranslate"><span class="pre">yolov3/utils/</span></code> in a
+heirarchical manner. You may therefore import this codebase as a
+module; for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yolov3</span>
+<span class="n">darknet</span> <span class="o">=</span> <span class="n">yolov3</span><span class="o">.</span><span class="n">src</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Darknet</span><span class="p">(</span><span class="o">&lt;</span><span class="n">network_cfg_file</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">imgsize</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
 </li>
 </ol>
 </div>

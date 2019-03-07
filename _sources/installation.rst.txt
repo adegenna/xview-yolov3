@@ -4,7 +4,7 @@ Installation
 The purpose of this section is to provide detailed, step-by-step
 instructions on how to install Anaconda for Python virtual
 environments, the Pytorch framework, Nvidia GPU drivers, and the
-``yolov3`` project repository.
+yolov3 project repository.
 
 Anaconda
 ---------------------
@@ -131,7 +131,7 @@ Note: For now, we are simply using a version of YOLOv3 freely available on Githu
 
      git clone https://github.com/adegenna/yolov3
 
-#. All of Python packages listed in the ``Requirements`` section of this documentation must be installed to your local conda environment. You may check whether the listed packages are installed with::
+#. All of Python packages listed in the Requirements section of this documentation must be installed to your local conda environment. You may check whether the listed packages are installed with::
 
      conda list | grep [package]
 

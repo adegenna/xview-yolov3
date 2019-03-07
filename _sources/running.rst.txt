@@ -5,17 +5,8 @@ The purpose of this section is to provide detailed, step-by-step
 instructions on how to use the important interfaces for our
 codebase.
 
-General Interfaces
+Importing YOLOv3
 ---------------------
-
-#. In the terminal shell, start off by renaming the default project
-   directory from ``xview-yolov3`` to ``yolov3``::
-
-     mv xview-yolov3 yolov3
-
-   The original repository name has a dash character in it, and Python
-   does not allow easy importing of names that contain such
-   characters.
 
 #. In your Python driver script, make sure that the ``yolov3``
    filepath is in the Python search path::
@@ -23,8 +14,13 @@ General Interfaces
      import sys
      sys.path.append('/full/path/to/yolov3')
 
-#. Import 
+#. The yolov3 project uses the Python ``import`` system to load all
+   source code in ``yolov3/src/`` and ``yolov3/utils/`` in a
+   heirarchical manner. You may therefore import this codebase as a
+   module; for example::
 
+     import yolov3
+     darknet = yolov3.src.models.Darknet(<network_cfg_file> , <imgsize>)
 
 
 Training Script
