@@ -15,7 +15,8 @@ We first need to install Anaconda for Python virtual environments.
 
      >>> wget https://repo.anaconda.com/archive/Anaconda2-5.3.0-Linux-x86_64.sh
 
-   Note: this assumes you have a 64-bit Linux architecture. If you have something else, then visit https://www.anaconda.com/download/ and select your preferred version.
+   .. note:: 
+   This assumes you have a 64-bit Linux architecture. If you have something else, then visit https://www.anaconda.com/download/ and select your preferred version.
 
 #. Launch the Anaconda installer::
 
@@ -121,8 +122,6 @@ GPU Support
 YOLOv3
 ---------------------
 
-Note: For now, we are simply using a version of YOLOv3 freely available on Github. We plan to fork this and modify it as needed. For now, we only describe the installation directions for the community-available version of YOLOv3.
-
 #. Activate your anaconda environment::
 
      >>> conda activate [envname]
@@ -135,6 +134,6 @@ Note: For now, we are simply using a version of YOLOv3 freely available on Githu
 
      >>> conda list | grep [package]
 
-#. If one of the required packages is missing, then install it; for example, install opencv-python with::
+#. If one of the required packages is missing, then install it; for example, install ``opencv`` with::
 
      >>> conda install -n [envname] -c menpo opencv

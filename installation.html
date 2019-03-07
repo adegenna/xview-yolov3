@@ -176,7 +176,7 @@ YOLOv3 project repository.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="n">Anaconda2</span><span class="o">-</span><span class="mf">5.3</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">Linux</span><span class="o">-</span><span class="n">x86_64</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
-<p>Note: this assumes you have a 64-bit Linux architecture. If you have something else, then visit <a class="reference external" href="https://www.anaconda.com/download/">https://www.anaconda.com/download/</a> and select your preferred version.</p>
+<p>This assumes you have a 64-bit Linux architecture. If you have something else, then visit <a class="reference external" href="https://www.anaconda.com/download/">https://www.anaconda.com/download/</a> and select your preferred version.</p>
 </li>
 <li><p class="first">Launch the Anaconda installer:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bash</span> <span class="n">Anaconda2</span><span class="o">-</span><span class="mf">5.3</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">Linux</span><span class="o">-</span><span class="n">x86_64</span><span class="o">.</span><span class="n">sh</span>
@@ -298,7 +298,6 @@ YOLOv3 project repository.</p>
 </div>
 <div class="section" id="yolov3">
 <h2>YOLOv3<a class="headerlink" href="#yolov3" title="Permalink to this headline">¶</a></h2>
-<p>Note: For now, we are simply using a version of YOLOv3 freely available on Github. We plan to fork this and modify it as needed. For now, we only describe the installation directions for the community-available version of YOLOv3.</p>
 <ol class="arabic">
 <li><p class="first">Activate your anaconda environment:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conda</span> <span class="n">activate</span> <span class="p">[</span><span class="n">envname</span><span class="p">]</span>
@@ -315,7 +314,7 @@ YOLOv3 project repository.</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first">If one of the required packages is missing, then install it; for example, install opencv-python with:</p>
+<li><p class="first">If one of the required packages is missing, then install it; for example, install <code class="docutils literal notranslate"><span class="pre">opencv</span></code> with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">n</span> <span class="p">[</span><span class="n">envname</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">menpo</span> <span class="n">opencv</span>
 </pre></div>
 </div>

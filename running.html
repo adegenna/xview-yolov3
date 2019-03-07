@@ -91,8 +91,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Instructions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#importing-yolov3">Importing YOLOv3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#unit-tests">Unit Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#training-script">Training Script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing-script">Testing Script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#training-example">Training Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#detection-example">Detection Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="code.html">Code Docs</a></li>
@@ -170,7 +170,13 @@ codebase.</p>
 <div class="section" id="importing-yolov3">
 <h2>Importing YOLOv3<a class="headerlink" href="#importing-yolov3" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">In your Python driver script, make sure that the <code class="docutils literal notranslate"><span class="pre">yolov3</span></code>
+<li><p class="first">Make sure you activate the conda environment was described in the
+Installation section:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conda</span> <span class="n">activate</span> <span class="p">[</span><span class="n">envname</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">In your Python driver script, make sure that the yolov3
 filepath is in the Python search path:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/full/path/to/yolov3&#39;</span><span class="p">)</span>
@@ -191,30 +197,49 @@ module; for example:</p>
 <div class="section" id="unit-tests">
 <h2>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline">¶</a></h2>
 <p>Unit tests are maintained in the <code class="docutils literal notranslate"><span class="pre">yolov3/tests</span></code> subdirectory. To run
-these, navigate to the directory that contains <code class="docutils literal notranslate"><span class="pre">yolov3</span></code>, and run the
+these, navigate to the directory that contains yolov3, and run the
 unittests as a Python package from the shell:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">yolov3</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">unittests</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="training-script">
-<h2>Training Script<a class="headerlink" href="#training-script" title="Permalink to this headline">¶</a></h2>
-<p>Network training is handled by the driver script <code class="docutils literal notranslate"><span class="pre">src/train.py</span></code>. To
-run this, make sure you are in the <code class="docutils literal notranslate"><span class="pre">src/</span></code> subdirectory, and that
-your inputfile is also in that directory.</p>
-<p>CPU mode:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">train</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">input_file_name</span><span class="o">&gt;</span>
-</pre></div>
+<div class="section" id="training-example">
+<h2>Training Example<a class="headerlink" href="#training-example" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To run this example, the following pieces of data must exist
+and be specified in the input file: (1) a training dataset, (2) a
+.geojson target metadata file, and (3) a .csv file where each line
+lists the class name and numeric label for all classes in the
+dataset. For more details, consult the Code Documentation on the
+InputFile class.</p>
 </div>
-<p>Single
-GPU mode:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="mi">0</span> <span class="n">python3</span> <span class="n">train</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">input_file_name</span><span class="o">&gt;</span>
+<p>An example driver script demonstrating proper interface usage for
+network training is provided in <code class="docutils literal notranslate"><span class="pre">scripts/train.py</span></code>, together with
+the <code class="docutils literal notranslate"><span class="pre">scripts/input_train.dat</span></code> input file. To run it, do the
+following:</p>
+<ol class="arabic simple">
+<li>Edit the <code class="docutils literal notranslate"><span class="pre">scripts/input_train.dat</span></code> input file so that those
+settings involving filepaths accurately reflect the data/filepaths
+on your machine.</li>
+<li>Navigate to the directory that contains yolov3, and issue the
+following shell command to run the script as a package:</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">yolov3</span><span class="o">.</span><span class="n">scripts</span><span class="o">.</span><span class="n">train</span> <span class="n">yolov3</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">input_train</span><span class="o">.</span><span class="n">dat</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.</p>
+<p>Mulitple-GPU support is currently not available for any
+part of this software. Please run in either CPU or single-GPU mode
+only. If you have multiple GPUs on your machine, you may use the
+CUDA_VISIBLE_DEVICES flag to enforce single-GPU mode, e.g.:</p>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="mi">0</span> <span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">yolov3</span><span class="o">.</span><span class="n">scripts</span><span class="o">.</span><span class="n">train</span> <span class="n">yolov3</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">input_train</span><span class="o">.</span><span class="n">dat</span>
+</pre></div>
 </div>
+</div>
+</div></blockquote>
 <p>Notes on the training inputfile:</p>
 <ol class="arabic">
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">traindir</span></code> : This option sets the full filepath to the location on
@@ -290,30 +315,50 @@ precompute the YOLO architecture:</p>
 <span class="n">resume</span>           <span class="o">=</span> <span class="kc">False</span>
 <span class="n">invalid_class_list</span>         <span class="o">=</span> <span class="mi">75</span><span class="p">,</span><span class="mi">82</span>
 <span class="n">boundingboxclusters</span>        <span class="o">=</span> <span class="mi">30</span>
-<span class="n">computeboundingboxclusters</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">computeboundingboxclusters</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">class_path</span>       <span class="o">=</span> <span class="o">/</span><span class="n">full</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">xview_names_and_labels</span><span class="o">.</span><span class="n">csv</span>
 <span class="n">sampling_weight</span>  <span class="o">=</span> <span class="n">inverse_class_frequency</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="testing-script">
-<h2>Testing Script<a class="headerlink" href="#testing-script" title="Permalink to this headline">¶</a></h2>
-<p>Network testing is handled by the driver script <code class="docutils literal notranslate"><span class="pre">src/detect.py</span></code>. To
-run this, make sure you are in the <code class="docutils literal notranslate"><span class="pre">src/</span></code> subdirectory, and that
-your inputfile is also in that directory.</p>
-<p>CPU mode:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">detect</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">input_file_name</span><span class="o">&gt;</span>
-</pre></div>
+<div class="section" id="detection-example">
+<h2>Detection Example<a class="headerlink" href="#detection-example" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To run this example, the following pieces of data must exist
+and be specified in the input file: (1) a dataset for
+detection, (2) a .geojson target metadata file (used for testing,
+not necessary for detection), and (3) a .csv file where each line
+lists the class name and numeric label for all classes in the
+dataset (also only needed for testing). For more details, consult
+the Code Documentation on the InputFile class.</p>
 </div>
-<p>Single
-GPU mode:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="mi">0</span> <span class="n">python3</span> <span class="n">detect</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">input_file_name</span><span class="o">&gt;</span>
+<p>An example driver script demonstrating proper interface usage for
+network detection/testing is provided in <code class="docutils literal notranslate"><span class="pre">scripts/detect.py</span></code>,
+together with the <code class="docutils literal notranslate"><span class="pre">scripts/input_detect.dat</span></code> input file. To run it,
+do the following:</p>
+<ol class="arabic simple">
+<li>Edit the <code class="docutils literal notranslate"><span class="pre">scripts/input_detect.dat</span></code> input file so that those
+settings involving filepaths accurately reflect the data/filepaths
+on your machine.</li>
+<li>Navigate to the directory that contains yolov3, and issue the
+following shell command to run the script as a package:</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">yolov3</span><span class="o">.</span><span class="n">scripts</span><span class="o">.</span><span class="n">detect</span> <span class="n">yolov3</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">input_detect</span><span class="o">.</span><span class="n">dat</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Mulitple-GPU support is currently not available for any part of this software. Please run in either CPU or single-GPU mode only. Also, depending on your machine, the CUDA_VISIBLE_DEVICES flag may be set to an option other than 0, if for example you wish to use a GPU other than the first one.</p>
+<p>Mulitple-GPU support is currently not available for any
+part of this software. Please run in either CPU or single-GPU mode
+only. If you have multiple GPUs on your machine, you may use the
+CUDA_VISIBLE_DEVICES flag to enforce single-GPU mode, e.g.:</p>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="mi">0</span> <span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">yolov3</span><span class="o">.</span><span class="n">scripts</span><span class="o">.</span><span class="n">detect</span> <span class="n">yolov3</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">input_detect</span><span class="o">.</span><span class="n">dat</span>
+</pre></div>
 </div>
+</div>
+</div></blockquote>
 <p>Notes on the testing inputfile:</p>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">targetspath</span></code> , <code class="docutils literal notranslate"><span class="pre">invalid_class_list</span></code> , <code class="docutils literal notranslate"><span class="pre">imgsize</span></code> ,
