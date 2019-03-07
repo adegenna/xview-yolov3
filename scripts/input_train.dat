@@ -15,4 +15,3 @@ boundingboxclusters = 30
 computeboundingboxclusters = False
 class_path       = /home/adegennaro/Projects/OGA/cat/yolov3/data/xview_names_and_labels.csv
 sampling_weight  = inverse_class_frequency
-hardware         = single_gpu
