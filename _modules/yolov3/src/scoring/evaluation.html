@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>yolov3.src.scoring.evaluation &mdash; YOLOv3 0.5.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> YOLOv3
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../running.html">User Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">YOLOv3</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>yolov3.src.scoring.evaluation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for yolov3.src.scoring.evaluation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utility methods for computing the performance metrics.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.scoring.matching</span> <span class="k">import</span> <span class="n">Matching</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.scoring.rectangle</span> <span class="k">import</span> <span class="n">Rectangle</span>
+
+<div class="viewcode-block" id="safe_divide"><a class="viewcode-back" href="../../../../code.html#yolov3.src.scoring.evaluation.safe_divide">[docs]</a><span class="k">def</span> <span class="nf">safe_divide</span><span class="p">(</span><span class="n">numerator</span><span class="p">,</span> <span class="n">denominator</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Computes the safe division to avoid the divide by zero problem.&quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="n">denominator</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">0</span>
+  <span class="k">return</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span></div>
+
+
+<div class="viewcode-block" id="compute_statistics_given_rectangle_matches"><a class="viewcode-back" href="../../../../code.html#yolov3.src.scoring.evaluation.compute_statistics_given_rectangle_matches">[docs]</a><span class="k">def</span> <span class="nf">compute_statistics_given_rectangle_matches</span><span class="p">(</span><span class="n">groundtruth_rects_matched</span><span class="p">,</span> <span class="n">rects_matched</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Computes the staticstics given the groundtruth_rects and rects matches.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">      image_id: the image_id referring to the image to be evaluated.</span>
+<span class="sd">      groundtruth_rects_matched: the groundtruth_rects_matched represents</span>
+<span class="sd">        a list of integers returned from the Matching class instance to</span>
+<span class="sd">        indicate the matched rectangle indices from rects for each of the</span>
+<span class="sd">        groundtruth_rects.</span>
+<span class="sd">      rects_matched: the rects_matched represents a list of integers returned</span>
+<span class="sd">        from the Matching class instance to indicate the matched rectangle</span>
+<span class="sd">        indices from groundtruth_rects for each of the rects.</span>
+<span class="sd">  Returns:</span>
+<span class="sd">      A dictionary holding the computed statistics as well as the inputs.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="c1"># Calculate the total_positives, true_positives, and false_positives.</span>
+  <span class="n">total_positives</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">groundtruth_rects_matched</span><span class="p">)</span>
+  <span class="n">true_positives</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">groundtruth_rects_matched</span><span class="p">)</span>
+  <span class="n">false_positives</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">rects_matched</span><span class="p">)</span>
+  <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;groundtruth_rects_matched&#39;</span><span class="p">:</span> <span class="n">groundtruth_rects_matched</span><span class="p">,</span>
+          <span class="s1">&#39;rects_matched&#39;</span><span class="p">:</span> <span class="n">rects_matched</span><span class="p">,</span>
+          <span class="s1">&#39;total_positives&#39;</span><span class="p">:</span> <span class="n">total_positives</span><span class="p">,</span>
+          <span class="s1">&#39;true_positives&#39;</span><span class="p">:</span> <span class="n">true_positives</span><span class="p">,</span>
+          <span class="s1">&#39;false_positives&#39;</span><span class="p">:</span> <span class="n">false_positives</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="compute_precision_recall_given_image_statistics_list"><a class="viewcode-back" href="../../../../code.html#yolov3.src.scoring.evaluation.compute_precision_recall_given_image_statistics_list">[docs]</a><span class="k">def</span> <span class="nf">compute_precision_recall_given_image_statistics_list</span><span class="p">(</span>
+    <span class="n">iou_threshold</span><span class="p">,</span> <span class="n">image_statistics_list</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Computes the precision recall numbers given iou_threshold and statistics.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">      iou_threshold: the iou_threshold under which the statistics are computed.</span>
+<span class="sd">      image_statistics_list: a list of the statistics computed and returned</span>
+<span class="sd">      by the compute_statistics_given_rectangle_matches method for a list of</span>
+<span class="sd">      images.</span>
+<span class="sd">  Returns:</span>
+<span class="sd">      A dictionary holding the precision, recall as well as the inputs.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">total_positives</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">true_positives</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">false_positives</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">for</span> <span class="n">statistics</span> <span class="ow">in</span> <span class="n">image_statistics_list</span><span class="p">:</span>
+    <span class="n">total_positives</span> <span class="o">+=</span> <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;total_positives&#39;</span><span class="p">]</span>
+    <span class="n">true_positives</span> <span class="o">+=</span> <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;true_positives&#39;</span><span class="p">]</span>
+    <span class="n">false_positives</span> <span class="o">+=</span> <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;false_positives&#39;</span><span class="p">]</span>
+  <span class="n">precision</span> <span class="o">=</span> <span class="n">safe_divide</span><span class="p">(</span><span class="n">true_positives</span><span class="p">,</span> <span class="n">true_positives</span> <span class="o">+</span> <span class="n">false_positives</span><span class="p">)</span>
+  <span class="n">recall</span> <span class="o">=</span> <span class="n">safe_divide</span><span class="p">(</span><span class="n">true_positives</span><span class="p">,</span> <span class="n">total_positives</span><span class="p">)</span>
+  <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;iou_threshold&#39;</span><span class="p">:</span> <span class="n">iou_threshold</span><span class="p">,</span>
+          <span class="s1">&#39;precision&#39;</span><span class="p">:</span> <span class="n">precision</span><span class="p">,</span>
+          <span class="s1">&#39;recall&#39;</span><span class="p">:</span> <span class="n">recall</span><span class="p">,</span>
+          <span class="s1">&#39;image_statistics_list&#39;</span><span class="p">:</span> <span class="n">image_statistics_list</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="compute_average_precision_recall_given_precision_recall_dict"><a class="viewcode-back" href="../../../../code.html#yolov3.src.scoring.evaluation.compute_average_precision_recall_given_precision_recall_dict">[docs]</a><span class="k">def</span> <span class="nf">compute_average_precision_recall_given_precision_recall_dict</span><span class="p">(</span>
+    <span class="n">precision_recall_dict</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Computes the average precision (AP) and average recall (AR).</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">      precision_recall_dict: the precision_recall_dict holds the dictionary of</span>
+<span class="sd">      precision and recall information returned by the</span>
+<span class="sd">      compute_precision_recall_given_image_statistics_list method, which is</span>
+<span class="sd">      calcualted under a range of iou_thresholds, where the iou_threshold is</span>
+<span class="sd">      the key.</span>
+<span class="sd">  Returns:</span>
+<span class="sd">      average_precision, average_recall.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">precision</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">recall</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">precision_recall_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">precision</span> <span class="o">+=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">]</span>
+    <span class="n">recall</span> <span class="o">+=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;recall&#39;</span><span class="p">]</span>
+  <span class="n">average_precision</span> <span class="o">=</span> <span class="n">safe_divide</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">precision_recall_dict</span><span class="p">))</span>
+  <span class="n">average_recall</span> <span class="o">=</span> <span class="n">safe_divide</span><span class="p">(</span><span class="n">recall</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">precision_recall_dict</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">average_precision</span><span class="p">,</span> <span class="n">average_recall</span></div>
+
+
+<div class="viewcode-block" id="convert_to_rectangle_list"><a class="viewcode-back" href="../../../../code.html#yolov3.src.scoring.evaluation.convert_to_rectangle_list">[docs]</a><span class="k">def</span> <span class="nf">convert_to_rectangle_list</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Converts the coordinates in a list to the Rectangle list.&quot;&quot;&quot;</span>
+  <span class="n">rectangle_list</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">number_of_rects</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_rects</span><span class="p">):</span>
+    <span class="n">rectangle_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span>
+        <span class="n">coordinates</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">coordinates</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]))</span>
+  <span class="k">return</span> <span class="n">rectangle_list</span></div>
+
+
+<div class="viewcode-block" id="compute_average_precision_recall"><a class="viewcode-back" href="../../../../code.html#yolov3.src.scoring.evaluation.compute_average_precision_recall">[docs]</a><span class="k">def</span> <span class="nf">compute_average_precision_recall</span><span class="p">(</span>
+    <span class="n">groundtruth_coordinates</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Computes the average precision (AP) and average recall (AR).</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">      groundtruth_info_dict: the groundtruth_info_dict holds all the groundtruth</span>
+<span class="sd">        information for an evaluation dataset. The format of this groundtruth_info_dict is</span>
+<span class="sd">        as follows:</span>
+<span class="sd">        {&#39;image_id_0&#39;:</span>
+<span class="sd">         [xmin_0,ymin_0,xmax_0,ymax_0,...,xmin_N0,ymin_N0,xmax_N0,ymax_N0],</span>
+<span class="sd">         ...,</span>
+<span class="sd">         &#39;image_id_M&#39;:</span>
+<span class="sd">         [xmin_0,ymin_0,xmax_0,ymax_0,...,xmin_NM,ymin_NM,xmax_NM,ymax_NM]},</span>
+<span class="sd">        where</span>
+<span class="sd">          image_id_* is an image_id that has the groundtruth rectangles labeled.</span>
+<span class="sd">          xmin_*,ymin_*,xmax_*,ymax_* is the top-left and bottom-right corners</span>
+<span class="sd">            of one groundtruth rectangle.</span>
+
+<span class="sd">      test_info_dict: the test_info_dict holds all the test information for an</span>
+<span class="sd">        evaluation dataset.</span>
+<span class="sd">         The format of this test_info_dict is the same</span>
+<span class="sd">        as the above groundtruth_info_dict.</span>
+
+<span class="sd">      iou_threshold_range: the IOU threshold range to compute the average</span>
+<span class="sd">        precision (AP) and average recall (AR). For example:</span>
+<span class="sd">        iou_threshold_range = [0.50:0.05:0.95]</span>
+<span class="sd">  Returns:</span>
+<span class="sd">      average_precision, average_recall, as well as the precision_recall_dict,</span>
+<span class="sd">      where precision_recall_dict holds the full precision/recall information</span>
+<span class="sd">      for each of the iou_threshold in the iou_threshold_range.</span>
+<span class="sd">  Raises:</span>
+<span class="sd">      ValueError: if the input groundtruth_info_dict and test_info_dict show</span>
+<span class="sd">      inconsistent information.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c1"># Start to build up the Matching instances for each of the image_id_*, which</span>
+  <span class="c1"># is to hold the IOU computation between the rectangle pairs for the same</span>
+  <span class="c1"># image_id_*.</span>
+  <span class="n">matchings</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">groundtruth_coordinates</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;groundtruth_info_dict and test_info_dict should hold &#39;</span>
+                     <span class="s1">&#39;only 4 * N numbers.&#39;</span><span class="p">)</span>
+
+  <span class="n">groundtruth_rects</span> <span class="o">=</span> <span class="n">convert_to_rectangle_list</span><span class="p">(</span><span class="n">groundtruth_coordinates</span><span class="p">)</span>
+  <span class="n">rects</span> <span class="o">=</span> <span class="n">convert_to_rectangle_list</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+  <span class="n">matching</span> <span class="o">=</span> <span class="n">Matching</span><span class="p">(</span><span class="n">groundtruth_rects</span><span class="p">,</span> <span class="n">rects</span><span class="p">)</span>
+
+  <span class="n">image_statistics_list</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">groundtruth_rects_matched</span><span class="p">,</span> <span class="n">rects_matched</span> <span class="o">=</span> <span class="p">(</span>
+      <span class="n">matching</span><span class="o">.</span><span class="n">matching_by_greedy_assignment</span><span class="p">(</span><span class="n">iou_threshold</span><span class="p">))</span>
+
+  <span class="n">image_statistics</span> <span class="o">=</span> <span class="n">compute_statistics_given_rectangle_matches</span><span class="p">(</span>
+      <span class="n">groundtruth_rects_matched</span><span class="p">,</span> <span class="n">rects_matched</span><span class="p">)</span>
+  <span class="n">image_statistics_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_statistics</span><span class="p">)</span>
+
+  <span class="c1"># Compute the precision and recall under this iou_threshold.</span>
+  <span class="n">precision_recall</span> <span class="o">=</span> <span class="n">compute_precision_recall_given_image_statistics_list</span><span class="p">(</span>
+      <span class="n">iou_threshold</span><span class="p">,</span> <span class="n">image_statistics_list</span><span class="p">)</span>
+
+  <span class="c1"># Compute the average_precision and average_recall.</span>
+  <span class="c1">#average_precision, average_recall = (</span>
+  <span class="c1">#    compute_average_precision_recall_given_precision_recall_dict(</span>
+  <span class="c1">#        precision_recall_dict))</span>
+
+  <span class="k">return</span> <span class="n">precision_recall</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony DeGennaro
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

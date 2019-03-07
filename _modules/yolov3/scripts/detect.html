@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>yolov3.scripts.detect &mdash; YOLOv3 0.5.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> YOLOv3
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">User Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">YOLOv3</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>yolov3.scripts.detect</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for yolov3.scripts.detect</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">yolov3.utils.utils</span> <span class="k">import</span> <span class="n">assert_single_gpu_support</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.InputFile</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.models</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.datasets.ImageFolder</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.NetworkTester</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.scoring.score</span> <span class="k">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="detect"><a class="viewcode-back" href="../../../code.html#yolov3.scripts.detect.detect">[docs]</a><span class="k">def</span> <span class="nf">detect</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main driver script for testing the YOLOv3 network.</span>
+
+<span class="sd">    **Inputs**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    args : command line arguments</span>
+<span class="sd">        command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</span>
+
+<span class="sd">    **Outputs**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    inputs.outdir/metrics.txt : text file</span>
+<span class="sd">        output metrics for specified test image given by inputs.imagepath</span>
+<span class="sd">    inputs.loaddir/&lt;inputs.imagepath&gt;.jpg : jpeg image</span>
+<span class="sd">        test image with detected bounding boxes, classes and confidence scores</span>
+<span class="sd">    inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt : text file</span>
+<span class="sd">        text file with bounding boxes, classes and confidence scores for all detections</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Read input file options</span>
+    <span class="n">parser</span>  <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Input filename&#39;</span><span class="p">);</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;inputfilename&#39;</span><span class="p">,</span>\
+                        <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;inputfilename&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>\
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Filename of the input file&#39;</span><span class="p">)</span>
+    <span class="n">args</span>          <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">inputfilename</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">inputfilename</span>
+    <span class="n">opt</span>           <span class="o">=</span> <span class="n">InputFile</span><span class="p">(</span><span class="n">inputfilename</span><span class="p">);</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">printInputs</span><span class="p">();</span>
+    
+    <span class="c1"># Setup testing problem</span>
+    <span class="n">assert_single_gpu_support</span><span class="p">()</span>
+    <span class="n">model</span>      <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">networkcfg</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">imgsize</span><span class="p">)</span>
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">ImageFolder</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+    <span class="n">tester</span>     <span class="o">=</span> <span class="n">NetworkTester</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">dataloader</span><span class="p">,</span><span class="n">opt</span><span class="p">)</span>
+    
+    <span class="c1"># Object detection on test dataset</span>
+    <span class="n">tester</span><span class="o">.</span><span class="n">detect</span><span class="p">()</span>
+    <span class="n">tester</span><span class="o">.</span><span class="n">plotDetection</span><span class="p">()</span>
+
+    <span class="c1"># Metrics</span>
+    <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">plot_flag</span><span class="p">:</span>
+        <span class="n">score</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+    <span class="n">detect</span><span class="p">()</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony DeGennaro
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

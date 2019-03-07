@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>utils.utils &mdash; YOLOv3 0.5.3 documentation</title>
+  <title>yolov3.utils.utils &mdash; YOLOv3 0.5.3 documentation</title>
   
 
   
@@ -24,14 +24,14 @@
 
   
 
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 
   
-  <script src="../../_static/js/modernizr.min.js"></script>
+  <script src="../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -47,7 +47,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> YOLOv3
+            <a href="../../../index.html" class="icon icon-home"> YOLOv3
           
 
           
@@ -64,7 +64,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -83,13 +83,13 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../running.html">User Instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">User Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
 </ul>
 
             
@@ -104,7 +104,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">YOLOv3</a>
+          <a href="../../../index.html">YOLOv3</a>
         
       </nav>
 
@@ -133,11 +133,11 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>utils.utils</li>
+      <li>yolov3.utils.utils</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -152,7 +152,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for utils.utils</h1><div class="highlight"><pre>
+  <h1>Source code for yolov3.utils.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">random</span>
 
 <span class="kn">import</span> <span class="nn">cv2</span>
@@ -169,7 +169,7 @@
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1320</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s1">&#39;long&#39;</span><span class="p">)</span>
 <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">320</span><span class="p">,</span> <span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;float_kind&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{:11.5g}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">})</span>  <span class="c1"># format short g, %precision=5</span>
 
-<div class="viewcode-block" id="load_classes"><a class="viewcode-back" href="../../code.html#utils.utils.load_classes">[docs]</a><span class="k">def</span> <span class="nf">load_classes</span><span class="p">(</span><span class="n">xview_names_and_labels_filepath</span><span class="p">):</span>
+<div class="viewcode-block" id="load_classes"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.load_classes">[docs]</a><span class="k">def</span> <span class="nf">load_classes</span><span class="p">(</span><span class="n">xview_names_and_labels_filepath</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads class labels at &#39;xview_names_and_labels_filepath&#39;</span>
 <span class="sd">    Format shall be assumed to be csv where one line is (name , label)_i</span>
@@ -187,7 +187,7 @@
     <span class="n">names</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">names</span><span class="p">)[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">names</span><span class="p">,</span><span class="n">labels</span></div>
 
-<div class="viewcode-block" id="convert_class_labels_to_indices"><a class="viewcode-back" href="../../code.html#utils.utils.convert_class_labels_to_indices">[docs]</a><span class="k">def</span> <span class="nf">convert_class_labels_to_indices</span><span class="p">(</span><span class="n">class_labels</span><span class="p">,</span><span class="n">unique_class_labels</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_class_labels_to_indices"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.convert_class_labels_to_indices">[docs]</a><span class="k">def</span> <span class="nf">convert_class_labels_to_indices</span><span class="p">(</span><span class="n">class_labels</span><span class="p">,</span><span class="n">unique_class_labels</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function that takes a list of N class labels and the list of all M&lt;N unique class labels and returns a list of size N, where each entry is the index of the corresponding label in the list of unique class labels. For example, given class_labels = [34,89,34,34,11] and unique_class_labels = [11,34,89], the output = [1,2,1,1,0]. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -208,7 +208,7 @@
             <span class="n">i</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">(),</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">p</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">%g</span><span class="s1"> layers, </span><span class="si">%g</span><span class="s1"> parameters, </span><span class="si">%g</span><span class="s1"> gradients&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nparams</span><span class="p">,</span> <span class="n">ngradients</span><span class="p">))</span>
 
-<div class="viewcode-block" id="zerocenter_class_indices"><a class="viewcode-back" href="../../code.html#utils.utils.zerocenter_class_indices">[docs]</a><span class="k">def</span> <span class="nf">zerocenter_class_indices</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
+<div class="viewcode-block" id="zerocenter_class_indices"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.zerocenter_class_indices">[docs]</a><span class="k">def</span> <span class="nf">zerocenter_class_indices</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function takes a list of N elements with M&lt;N unique labels, and relabels them such that the labels are 0,1,...,M-1. Note that this function assumes that all class labels of interest appear at least once in classes.</span>
 
@@ -294,7 +294,7 @@
     <span class="k">return</span> <span class="n">xywh</span>
 
 
-<div class="viewcode-block" id="compute_ap"><a class="viewcode-back" href="../../code.html#utils.utils.compute_ap">[docs]</a><span class="k">def</span> <span class="nf">compute_ap</span><span class="p">(</span><span class="n">recall</span><span class="p">,</span> <span class="n">precision</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_ap"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.compute_ap">[docs]</a><span class="k">def</span> <span class="nf">compute_ap</span><span class="p">(</span><span class="n">recall</span><span class="p">,</span> <span class="n">precision</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Compute the average precision, given the recall and precision curves.</span>
 <span class="sd">    Code originally from https://github.com/rbgirshick/py-faster-rcnn.</span>
 <span class="sd">    # Arguments</span>
@@ -321,7 +321,7 @@
     <span class="k">return</span> <span class="n">ap</span></div>
 
 
-<div class="viewcode-block" id="bbox_iou"><a class="viewcode-back" href="../../code.html#utils.utils.bbox_iou">[docs]</a><span class="k">def</span> <span class="nf">bbox_iou</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">,</span> <span class="n">x1y1x2y2</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="bbox_iou"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.bbox_iou">[docs]</a><span class="k">def</span> <span class="nf">bbox_iou</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">,</span> <span class="n">x1y1x2y2</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="c1"># if len(box1.shape) == 1:</span>
     <span class="c1">#    box1 = box1.reshape(1, 4)</span>
 
@@ -353,7 +353,7 @@
     <span class="k">return</span> <span class="n">inter_area</span> <span class="o">/</span> <span class="p">(</span><span class="n">b1_area</span> <span class="o">+</span> <span class="n">b2_area</span> <span class="o">-</span> <span class="n">inter_area</span> <span class="o">+</span> <span class="mf">1e-16</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="build_targets"><a class="viewcode-back" href="../../code.html#utils.utils.build_targets">[docs]</a><span class="k">def</span> <span class="nf">build_targets</span><span class="p">(</span><span class="n">pred_boxes</span><span class="p">,</span> <span class="n">pred_conf</span><span class="p">,</span> <span class="n">pred_cls</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">anchor_wh</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="n">nC</span><span class="p">,</span> <span class="n">nG</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="p">):</span>
+<div class="viewcode-block" id="build_targets"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.build_targets">[docs]</a><span class="k">def</span> <span class="nf">build_targets</span><span class="p">(</span><span class="n">pred_boxes</span><span class="p">,</span> <span class="n">pred_conf</span><span class="p">,</span> <span class="n">pred_cls</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">anchor_wh</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="n">nC</span><span class="p">,</span> <span class="n">nG</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    returns nGT, nCorrect, tx, ty, tw, th, tconf, tcls</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -776,7 +776,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<div class="viewcode-block" id="readBmpDataset"><a class="viewcode-back" href="../../code.html#utils.utils.readBmpDataset">[docs]</a><span class="k">def</span> <span class="nf">readBmpDataset</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="readBmpDataset"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.readBmpDataset">[docs]</a><span class="k">def</span> <span class="nf">readBmpDataset</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to read a .bmp dataset. If the provided directory does not contain .bmp files, a conversion is attempted.</span>
 
@@ -801,7 +801,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">filesbmp</span><span class="p">;</span></div>
 
-<div class="viewcode-block" id="convert_tif2bmp"><a class="viewcode-back" href="../../code.html#utils.utils.convert_tif2bmp">[docs]</a><span class="k">def</span> <span class="nf">convert_tif2bmp</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_tif2bmp"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.convert_tif2bmp">[docs]</a><span class="k">def</span> <span class="nf">convert_tif2bmp</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to convert .tif --&gt; .bmp</span>
 
@@ -816,7 +816,7 @@
         <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;.bmp&#39;</span><span class="p">),</span> <span class="n">img</span><span class="p">)</span></div>
         <span class="c1">#os.system(&#39;rm -rf &#39; + f)</span>
 
-<div class="viewcode-block" id="assert_single_gpu_support"><a class="viewcode-back" href="../../code.html#utils.utils.assert_single_gpu_support">[docs]</a><span class="k">def</span> <span class="nf">assert_single_gpu_support</span><span class="p">():</span>
+<div class="viewcode-block" id="assert_single_gpu_support"><a class="viewcode-back" href="../../../code.html#yolov3.utils.utils.assert_single_gpu_support">[docs]</a><span class="k">def</span> <span class="nf">assert_single_gpu_support</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to check that only a single GPU is being used.</span>
 <span class="sd">    Currently, all software must be run with a single GPU only, so this routine does a simple assert check on the environment variable that ensures this.</span>
@@ -860,15 +860,15 @@
 
     
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
     
 
   
 
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

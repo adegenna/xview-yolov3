@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; YOLOv3 0.5.2 documentation</title>
+  <title>Index &mdash; YOLOv3 0.5.3 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.3
               </div>
             
           
@@ -174,7 +174,6 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
- | <a href="#U"><strong>U</strong></a>
  | <a href="#W"><strong>W</strong></a>
  | <a href="#Y"><strong>Y</strong></a>
  | <a href="#Z"><strong>Z</strong></a>
@@ -183,17 +182,17 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.scoring.ap_from_pr">ap_from_pr() (in module src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.scoringfunctions.ap_from_pr">ap_from_pr() (in module yolov3.src.scoring.scoringfunctions)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.apply_mask_to_filtered_data">apply_mask_to_filtered_data() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.apply_mask_to_filtered_data">apply_mask_to_filtered_data() (yolov3.src.targets.Target.Target method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.scoring.Rectangle.area">area() (src.scoring.Rectangle method)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle.area">area() (yolov3.src.scoring.rectangle.Rectangle method)</a>
 </li>
-      <li><a href="code.html#utils.utils.assert_single_gpu_support">assert_single_gpu_support() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.assert_single_gpu_support">assert_single_gpu_support() (in module yolov3.utils.utils)</a>
 </li>
-      <li><a href="code.html#src.datasets.augmentHSV">augmentHSV() (in module src.datasets)</a>
+      <li><a href="code.html#yolov3.src.datasets.datasetTransformations.augmentHSV">augmentHSV() (in module yolov3.src.datasets.datasetTransformations)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -201,11 +200,11 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#utils.utils.bbox_iou">bbox_iou() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.bbox_iou">bbox_iou() (in module yolov3.utils.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#utils.utils.build_targets">build_targets() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.build_targets">build_targets() (in module yolov3.utils.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -213,49 +212,57 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.scoring.cartesian">cartesian() (in module src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.matching.cartesian">cartesian() (in module yolov3.src.scoring.matching)</a>
 </li>
-      <li><a href="code.html#utils.utils.compute_ap">compute_ap() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.compute_ap">compute_ap() (in module yolov3.utils.utils)</a>
 </li>
-      <li><a href="code.html#src.scoring.compute_average_precision_recall">compute_average_precision_recall() (in module src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.evaluation.compute_average_precision_recall">compute_average_precision_recall() (in module yolov3.src.scoring.evaluation)</a>
 </li>
-      <li><a href="code.html#src.scoring.compute_average_precision_recall_given_precision_recall_dict">compute_average_precision_recall_given_precision_recall_dict() (in module src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.evaluation.compute_average_precision_recall_given_precision_recall_dict">compute_average_precision_recall_given_precision_recall_dict() (in module yolov3.src.scoring.evaluation)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.compute_bounding_box_clusters_using_kmeans">compute_bounding_box_clusters_using_kmeans() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans">compute_bounding_box_clusters_using_kmeans() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.compute_class_weights_with_filtered_data">compute_class_weights_with_filtered_data() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.compute_class_weights_with_filtered_data">compute_class_weights_with_filtered_data() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.compute_cropped_data">compute_cropped_data() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.compute_cropped_data">compute_cropped_data() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.compute_filtered_data_mask">compute_filtered_data_mask() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.datasets.datasetStats.compute_dataset_rgb_stats">compute_dataset_rgb_stats() (in module yolov3.src.datasets.datasetStats)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.compute_filtered_variables_from_filtered_coords">compute_filtered_variables_from_filtered_coords() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.datasets.datasetStats.compute_dataset_rgb_stats_load_into_memory">compute_dataset_rgb_stats_load_into_memory() (in module yolov3.src.datasets.datasetStats)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.compute_filtered_variables_from_filtered_xy">compute_filtered_variables_from_filtered_xy() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.compute_filtered_data_mask">compute_filtered_data_mask() (yolov3.src.targets.Target.Target method)</a>
+</li>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.compute_filtered_variables_from_filtered_coords">compute_filtered_variables_from_filtered_coords() (yolov3.src.targets.Target.Target method)</a>
+</li>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.compute_filtered_variables_from_filtered_xy">compute_filtered_variables_from_filtered_xy() (yolov3.src.targets.Target.Target method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.targets.Target.compute_image_weights_with_filtered_data">compute_image_weights_with_filtered_data() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.compute_image_weights_with_filtered_data">compute_image_weights_with_filtered_data() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#src.scoring.compute_precision_recall_given_image_statistics_list">compute_precision_recall_given_image_statistics_list() (in module src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.evaluation.compute_precision_recall_given_image_statistics_list">compute_precision_recall_given_image_statistics_list() (in module yolov3.src.scoring.evaluation)</a>
 </li>
-      <li><a href="code.html#src.scoring.compute_statistics_given_rectangle_matches">compute_statistics_given_rectangle_matches() (in module src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.evaluation.compute_statistics_given_rectangle_matches">compute_statistics_given_rectangle_matches() (in module yolov3.src.scoring.evaluation)</a>
 </li>
-      <li><a href="code.html#src.scoring.Rectangle.contains">contains() (src.scoring.Rectangle method)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle.contains">contains() (yolov3.src.scoring.rectangle.Rectangle method)</a>
 </li>
-      <li><a href="code.html#utils.utils.convert_class_labels_to_indices">convert_class_labels_to_indices() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.convert_class_labels_to_indices">convert_class_labels_to_indices() (in module yolov3.utils.utils)</a>
 </li>
-      <li><a href="code.html#utils.utils.convert_tif2bmp">convert_tif2bmp() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.convert_tif2bmp">convert_tif2bmp() (in module yolov3.utils.utils)</a>
 </li>
-      <li><a href="code.html#src.scoring.convert_to_rectangle_list">convert_to_rectangle_list() (in module src.scoring)</a>, <a href="code.html#src.scoring.convert_to_rectangle_list">[1]</a>
+      <li><a href="code.html#yolov3.src.scoring.evaluation.convert_to_rectangle_list">convert_to_rectangle_list() (in module yolov3.src.scoring.evaluation)</a>
+
+      <ul>
+        <li><a href="code.html#yolov3.src.scoring.scoringfunctions.convert_to_rectangle_list">(in module yolov3.src.scoring.scoringfunctions)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.count_number_of_nonexistent_chips">count_number_of_nonexistent_chips() (src.targets.Target method)</a>
+      </ul></li>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.count_number_of_nonexistent_chips">count_number_of_nonexistent_chips() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#src.models.create_modules">create_modules() (in module src.models)</a>
+      <li><a href="code.html#yolov3.src.models.create_modules">create_modules() (in module yolov3.src.models)</a>
 </li>
-      <li><a href="code.html#src.models.create_yolo_architecture">create_yolo_architecture() (in module src.models)</a>
+      <li><a href="code.html#yolov3.src.models.create_yolo_architecture">create_yolo_architecture() (in module yolov3.src.models)</a>
 </li>
-      <li><a href="code.html#src.models.create_yolo_config_file">create_yolo_config_file() (in module src.models)</a>
+      <li><a href="code.html#yolov3.src.models.create_yolo_config_file">create_yolo_config_file() (in module yolov3.src.models)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -263,25 +270,25 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.models.Darknet">Darknet (class in src.models)</a>
+      <li><a href="code.html#yolov3.src.models.Darknet">Darknet (class in yolov3.src.models)</a>
 </li>
-      <li><a href="code.html#tests.unittests.DataProcessingTests">DataProcessingTests (class in tests.unittests)</a>
+      <li><a href="code.html#yolov3.tests.unittests.DataProcessingTests">DataProcessingTests (class in yolov3.tests.unittests)</a>
 </li>
-      <li><a href="code.html#src.detect.detect">detect() (in module src.detect)</a>
+      <li><a href="code.html#yolov3.scripts.detect.detect">detect() (in module yolov3.scripts.detect)</a>
 
       <ul>
-        <li><a href="code.html#src.NetworkTester.NetworkTester.detect">(src.NetworkTester.NetworkTester method)</a>
+        <li><a href="code.html#yolov3.src.NetworkTester.NetworkTester.detect">(yolov3.src.NetworkTester.NetworkTester method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.targets.Target.detect_nonexistent_chip">detect_nonexistent_chip() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.detect_nonexistent_chip">detect_nonexistent_chip() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#utils.datasetProcessing.determine_common_and_rare_classes">determine_common_and_rare_classes() (in module utils.datasetProcessing)</a>
+      <li><a href="code.html#yolov3.utils.datasetProcessing.determine_common_and_rare_classes">determine_common_and_rare_classes() (in module yolov3.utils.datasetProcessing)</a>
 </li>
-      <li><a href="code.html#utils.datasetProcessing.determine_number_of_class_members">determine_number_of_class_members() (in module utils.datasetProcessing)</a>
+      <li><a href="code.html#yolov3.utils.datasetProcessing.determine_number_of_class_members">determine_number_of_class_members() (in module yolov3.utils.datasetProcessing)</a>
 </li>
-      <li><a href="code.html#utils.datasetProcessing.determine_small_medium_large_classes">determine_small_medium_large_classes() (in module utils.datasetProcessing)</a>
+      <li><a href="code.html#yolov3.utils.datasetProcessing.determine_small_medium_large_classes">determine_small_medium_large_classes() (in module yolov3.utils.datasetProcessing)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -289,11 +296,11 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.targets.Target.edge_requirements">edge_requirements() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.edge_requirements">edge_requirements() (yolov3.src.targets.Target.Target method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.models.EmptyLayer">EmptyLayer (class in src.models)</a>
+      <li><a href="code.html#yolov3.src.models.EmptyLayer">EmptyLayer (class in yolov3.src.models)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -301,14 +308,14 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.targets.fcn_sigma_rejection">fcn_sigma_rejection() (in module src.targets)</a>
+      <li><a href="code.html#yolov3.src.targets.fcn_sigma_rejection.fcn_sigma_rejection">fcn_sigma_rejection() (in module yolov3.src.targets.fcn_sigma_rejection)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.models.Darknet.forward">forward() (src.models.Darknet method)</a>
+      <li><a href="code.html#yolov3.src.models.Darknet.forward">forward() (yolov3.src.models.Darknet method)</a>
 
       <ul>
-        <li><a href="code.html#src.models.YOLOLayer.forward">(src.models.YOLOLayer method)</a>
+        <li><a href="code.html#yolov3.src.models.YOLOLayer.forward">(yolov3.src.models.YOLOLayer method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -317,11 +324,11 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#utils.datasetProcessing.get_labels_geojson">get_labels_geojson() (in module utils.datasetProcessing)</a>
+      <li><a href="code.html#yolov3.utils.datasetProcessing.get_labels_geojson">get_labels_geojson() (in module yolov3.utils.datasetProcessing)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#tests.unittests.GPUtests">GPUtests (class in tests.unittests)</a>
+      <li><a href="code.html#yolov3.tests.unittests.GPUtests">GPUtests (class in yolov3.tests.unittests)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -329,7 +336,7 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.scoring.Rectangle.height">height() (src.scoring.Rectangle method)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle.height">height() (yolov3.src.scoring.rectangle.Rectangle method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -337,17 +344,17 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.InputFile.InputFile">InputFile (class in src.InputFile)</a>
+      <li><a href="code.html#yolov3.src.InputFile.InputFile">InputFile (class in yolov3.src.InputFile)</a>
 </li>
-      <li><a href="code.html#src.scoring.Rectangle.intersect">intersect() (src.scoring.Rectangle method)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle.intersect">intersect() (yolov3.src.scoring.rectangle.Rectangle method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.scoring.Rectangle.intersect_over_union">intersect_over_union() (src.scoring.Rectangle method)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle.intersect_over_union">intersect_over_union() (yolov3.src.scoring.rectangle.Rectangle method)</a>
 </li>
-      <li><a href="code.html#src.scoring.Rectangle.intersects">intersects() (src.scoring.Rectangle method)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle.intersects">intersects() (yolov3.src.scoring.rectangle.Rectangle method)</a>
 </li>
-      <li><a href="code.html#src.scoring.Rectangle.is_empty">is_empty() (src.scoring.Rectangle method)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle.is_empty">is_empty() (yolov3.src.scoring.rectangle.Rectangle method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -355,17 +362,17 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.datasets.ListDataset">ListDataset (class in src.datasets)</a>
+      <li><a href="code.html#yolov3.src.datasets.datasets.ListDataset">ListDataset (class in yolov3.src.datasets.datasets)</a>
 </li>
-      <li><a href="code.html#utils.utils.load_classes">load_classes() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.load_classes">load_classes() (in module yolov3.utils.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.targets.Target.load_target_file">load_target_file() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.load_target_file">load_target_file() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#src.NetworkTester.NetworkTester.loadClasses">loadClasses() (src.NetworkTester.NetworkTester method)</a>
+      <li><a href="code.html#yolov3.src.NetworkTester.NetworkTester.loadClasses">loadClasses() (yolov3.src.NetworkTester.NetworkTester method)</a>
 </li>
-      <li><a href="code.html#src.NetworkTester.NetworkTester.loadSavedModels">loadSavedModels() (src.NetworkTester.NetworkTester method)</a>
+      <li><a href="code.html#yolov3.src.NetworkTester.NetworkTester.loadSavedModels">loadSavedModels() (yolov3.src.NetworkTester.NetworkTester method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -373,15 +380,15 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.train.main">main() (in module src.train)</a>
+      <li><a href="code.html#yolov3.scripts.train.main">main() (in module yolov3.scripts.train)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.manual_dimension_requirements">manual_dimension_requirements() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.manual_dimension_requirements">manual_dimension_requirements() (yolov3.src.targets.Target.Target method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.scoring.Matching">Matching (class in src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.matching.Matching">Matching (class in yolov3.src.scoring.matching)</a>
 </li>
-      <li><a href="code.html#tests.unittests.ModelsTests">ModelsTests (class in tests.unittests)</a>
+      <li><a href="code.html#yolov3.tests.unittests.ModelsTests">ModelsTests (class in yolov3.tests.unittests)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -389,7 +396,7 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.NetworkTester.NetworkTester">NetworkTester (class in src.NetworkTester)</a>
+      <li><a href="code.html#yolov3.src.NetworkTester.NetworkTester">NetworkTester (class in yolov3.src.NetworkTester)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -397,7 +404,7 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.targets.Target.output_data_for_listdataset">output_data_for_listdataset() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.output_data_for_listdataset">output_data_for_listdataset() (yolov3.src.targets.Target.Target method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -405,19 +412,19 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.models.parse_model_config">parse_model_config() (in module src.models)</a>
+      <li><a href="code.html#yolov3.src.models.parse_model_config">parse_model_config() (in module yolov3.src.models)</a>
 </li>
-      <li><a href="code.html#src.targets.per_class_stats">per_class_stats() (in module src.targets)</a>
+      <li><a href="code.html#yolov3.src.targets.per_class_stats.per_class_stats">per_class_stats() (in module yolov3.src.targets.per_class_stats)</a>
 </li>
-      <li><a href="code.html#src.datasets.pickRandomPoints">pickRandomPoints() (in module src.datasets)</a>
+      <li><a href="code.html#yolov3.src.datasets.datasetTransformations.pickRandomPoints">pickRandomPoints() (in module yolov3.src.datasets.datasetTransformations)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.NetworkTester.NetworkTester.plotDetection">plotDetection() (src.NetworkTester.NetworkTester method)</a>
+      <li><a href="code.html#yolov3.src.NetworkTester.NetworkTester.plotDetection">plotDetection() (yolov3.src.NetworkTester.NetworkTester method)</a>
 </li>
-      <li><a href="code.html#src.InputFile.InputFile.printInputs">printInputs() (src.InputFile.InputFile method)</a>
+      <li><a href="code.html#yolov3.src.InputFile.InputFile.printInputs">printInputs() (yolov3.src.InputFile.InputFile method)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.process_target_data">process_target_data() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.process_target_data">process_target_data() (yolov3.src.targets.Target.Target method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -425,21 +432,21 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.datasets.random_affine">random_affine() (in module src.datasets)</a>
+      <li><a href="code.html#yolov3.src.datasets.datasetTransformations.random_affine">random_affine() (in module yolov3.src.datasets.datasetTransformations)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.read_list_of_class_names_and_labels">read_list_of_class_names_and_labels() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.read_list_of_class_names_and_labels">read_list_of_class_names_and_labels() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#src.models.read_yolo_config_file_anchors">read_yolo_config_file_anchors() (in module src.models)</a>
+      <li><a href="code.html#yolov3.src.models.read_yolo_config_file_anchors">read_yolo_config_file_anchors() (in module yolov3.src.models)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#utils.utils.readBmpDataset">readBmpDataset() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.readBmpDataset">readBmpDataset() (in module yolov3.utils.utils)</a>
 </li>
-      <li><a href="code.html#src.scoring.Rectangle">Rectangle (class in src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle">Rectangle (class in yolov3.src.scoring.rectangle)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.remove_nonexistent_chips_from_database">remove_nonexistent_chips_from_database() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.remove_nonexistent_chips_from_database">remove_nonexistent_chips_from_database() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#src.datasets.resize_square">resize_square() (in module src.datasets)</a>
+      <li><a href="code.html#yolov3.src.datasets.datasetTransformations.resize_square">resize_square() (in module yolov3.src.datasets.datasetTransformations)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -447,47 +454,31 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.scoring.safe_divide">safe_divide() (in module src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.evaluation.safe_divide">safe_divide() (in module yolov3.src.scoring.evaluation)</a>
 </li>
-      <li><a href="code.html#src.scoring.score">score() (in module src.scoring)</a>
+      <li><a href="code.html#yolov3.src.scoring.score.score">score() (in module yolov3.src.scoring.score)</a>
 </li>
-      <li><a href="code.html#src.targets.Target.set_image_w_and_h">set_image_w_and_h() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.scoring.scoringfunctions.ScoringData">ScoringData (class in yolov3.src.scoring.scoringfunctions)</a>
 </li>
-      <li><a href="code.html#tests.unittests.DataProcessingTests.setUp">setUp() (tests.unittests.DataProcessingTests method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.set_image_w_and_h">set_image_w_and_h() (yolov3.src.targets.Target.Target method)</a>
+</li>
+      <li><a href="code.html#yolov3.tests.unittests.DataProcessingTests.setUp">setUp() (yolov3.tests.unittests.DataProcessingTests method)</a>
 
       <ul>
-        <li><a href="code.html#tests.unittests.GPUtests.setUp">(tests.unittests.GPUtests method)</a>
+        <li><a href="code.html#yolov3.tests.unittests.GPUtests.setUp">(yolov3.tests.unittests.GPUtests method)</a>
 </li>
-        <li><a href="code.html#tests.unittests.ModelsTests.setUp">(tests.unittests.ModelsTests method)</a>
+        <li><a href="code.html#yolov3.tests.unittests.ModelsTests.setUp">(yolov3.tests.unittests.ModelsTests method)</a>
 </li>
-        <li><a href="code.html#tests.unittests.TargetTests.setUp">(tests.unittests.TargetTests method)</a>
+        <li><a href="code.html#yolov3.tests.unittests.TargetTests.setUp">(yolov3.tests.unittests.TargetTests method)</a>
 </li>
       </ul></li>
-      <li><a href="code.html#src.NetworkTester.NetworkTester.setupCuda">setupCuda() (src.NetworkTester.NetworkTester method)</a>
-</li>
-      <li><a href="code.html#src.targets.Target.sigma_rejection_indices">sigma_rejection_indices() (src.targets.Target method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#module-src.datasets">src.datasets (module)</a>
+      <li><a href="code.html#yolov3.src.NetworkTester.NetworkTester.setupCuda">setupCuda() (yolov3.src.NetworkTester.NetworkTester method)</a>
 </li>
-      <li><a href="code.html#module-src.detect">src.detect (module)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.sigma_rejection_indices">sigma_rejection_indices() (yolov3.src.targets.Target.Target method)</a>
 </li>
-      <li><a href="code.html#module-src.InputFile">src.InputFile (module)</a>
-</li>
-      <li><a href="code.html#module-src.models">src.models (module)</a>
-</li>
-      <li><a href="code.html#module-src.NetworkTester">src.NetworkTester (module)</a>
-</li>
-      <li><a href="code.html#module-src.NetworkTrainer">src.NetworkTrainer (module)</a>
-</li>
-      <li><a href="code.html#module-src.scoring">src.scoring (module)</a>
-</li>
-      <li><a href="code.html#module-src.targets">src.targets (module)</a>
-</li>
-      <li><a href="code.html#module-src.train">src.train (module)</a>
-</li>
-      <li><a href="code.html#src.targets.Target.strip_image_number_from_chips_and_files">strip_image_number_from_chips_and_files() (src.targets.Target method)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target.strip_image_number_from_chips_and_files">strip_image_number_from_chips_and_files() (yolov3.src.targets.Target.Target method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -495,73 +486,57 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.targets.Target">Target (class in src.targets)</a>
+      <li><a href="code.html#yolov3.src.targets.Target.Target">Target (class in yolov3.src.targets.Target)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests">TargetTests (class in tests.unittests)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests">TargetTests (class in yolov3.tests.unittests)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_apply_mask_to_filtered_data">test_apply_mask_to_filtered_data() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_apply_mask_to_filtered_data">test_apply_mask_to_filtered_data() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_area_requirements">test_area_requirements() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_area_requirements">test_area_requirements() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_compute_bounding_box_clusters_using_kmeans">test_compute_bounding_box_clusters_using_kmeans() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_compute_bounding_box_clusters_using_kmeans">test_compute_bounding_box_clusters_using_kmeans() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_compute_cropped_data">test_compute_cropped_data() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_compute_cropped_data">test_compute_cropped_data() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_compute_image_weights_with_filtered_data">test_compute_image_weights_with_filtered_data() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_compute_image_weights_with_filtered_data">test_compute_image_weights_with_filtered_data() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_compute_width_height_area">test_compute_width_height_area() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_compute_width_height_area">test_compute_width_height_area() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.ModelsTests.test_create_yolo_config_file">test_create_yolo_config_file() (tests.unittests.ModelsTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.ModelsTests.test_create_yolo_config_file">test_create_yolo_config_file() (yolov3.tests.unittests.ModelsTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.GPUtests.test_cuda_available">test_cuda_available() (tests.unittests.GPUtests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.GPUtests.test_cuda_available">test_cuda_available() (yolov3.tests.unittests.GPUtests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.GPUtests.test_cuda_version">test_cuda_version() (tests.unittests.GPUtests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.GPUtests.test_cuda_version">test_cuda_version() (yolov3.tests.unittests.GPUtests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_edge_requirements">test_edge_requirements() (tests.unittests.TargetTests method)</a>
-</li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_fcn_sigma_rejection">test_fcn_sigma_rejection() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_edge_requirements">test_edge_requirements() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#tests.unittests.DataProcessingTests.test_get_dataset_filenames">test_get_dataset_filenames() (tests.unittests.DataProcessingTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_fcn_sigma_rejection">test_fcn_sigma_rejection() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.DataProcessingTests.test_get_dataset_height_width_channels">test_get_dataset_height_width_channels() (tests.unittests.DataProcessingTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.DataProcessingTests.test_get_dataset_filenames">test_get_dataset_filenames() (yolov3.tests.unittests.DataProcessingTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.DataProcessingTests.test_get_labels_geojson">test_get_labels_geojson() (tests.unittests.DataProcessingTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.DataProcessingTests.test_get_dataset_height_width_channels">test_get_dataset_height_width_channels() (yolov3.tests.unittests.DataProcessingTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.GPUtests.test_gpu_avail">test_gpu_avail() (tests.unittests.GPUtests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.DataProcessingTests.test_get_labels_geojson">test_get_labels_geojson() (yolov3.tests.unittests.DataProcessingTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_invalid_class_requirement">test_invalid_class_requirement() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.GPUtests.test_gpu_avail">test_gpu_avail() (yolov3.tests.unittests.GPUtests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_load_target_file">test_load_target_file() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_invalid_class_requirement">test_invalid_class_requirement() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_manual_dimension_requirements">test_manual_dimension_requirements() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_load_target_file">test_load_target_file() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_nan_inf_size_requirements">test_nan_inf_size_requirements() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_manual_dimension_requirements">test_manual_dimension_requirements() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_per_class_stats">test_per_class_stats() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_nan_inf_size_requirements">test_nan_inf_size_requirements() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_sigma_rejection_indices">test_sigma_rejection_indices() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_per_class_stats">test_per_class_stats() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.DataProcessingTests.test_strip_image_number_from_filename">test_strip_image_number_from_filename() (tests.unittests.DataProcessingTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_sigma_rejection_indices">test_sigma_rejection_indices() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
-      <li><a href="code.html#tests.unittests.TargetTests.test_xy_coords">test_xy_coords() (tests.unittests.TargetTests method)</a>
+      <li><a href="code.html#yolov3.tests.unittests.DataProcessingTests.test_strip_image_number_from_filename">test_strip_image_number_from_filename() (yolov3.tests.unittests.DataProcessingTests method)</a>
 </li>
-      <li><a href="code.html#module-tests.unittests">tests.unittests (module)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="U">U</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#module-utils.datasetProcessing">utils.datasetProcessing (module)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#module-utils.utils">utils.utils (module)</a>
-</li>
-      <li><a href="code.html#module-utils.utils_xview">utils.utils_xview (module)</a>
+      <li><a href="code.html#yolov3.tests.unittests.TargetTests.test_xy_coords">test_xy_coords() (yolov3.tests.unittests.TargetTests method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -569,7 +544,7 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.scoring.Rectangle.width">width() (src.scoring.Rectangle method)</a>
+      <li><a href="code.html#yolov3.src.scoring.rectangle.Rectangle.width">width() (yolov3.src.scoring.rectangle.Rectangle method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -577,7 +552,53 @@
 <h2 id="Y">Y</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#src.models.YOLOLayer">YOLOLayer (class in src.models)</a>
+      <li><a href="code.html#yolov3.src.models.YOLOLayer">YOLOLayer (class in yolov3.src.models)</a>
+</li>
+      <li><a href="code.html#module-yolov3.scripts.detect">yolov3.scripts.detect (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.scripts.train">yolov3.scripts.train (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.datasets.datasets">yolov3.src.datasets.datasets (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.datasets.datasetStats">yolov3.src.datasets.datasetStats (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.datasets.datasetTransformations">yolov3.src.datasets.datasetTransformations (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.datasets.ImageFolder">yolov3.src.datasets.ImageFolder (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.InputFile">yolov3.src.InputFile (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.models">yolov3.src.models (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.NetworkTester">yolov3.src.NetworkTester (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.NetworkTrainer">yolov3.src.NetworkTrainer (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#module-yolov3.src.scoring.evaluation">yolov3.src.scoring.evaluation (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.scoring.matching">yolov3.src.scoring.matching (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.scoring.rectangle">yolov3.src.scoring.rectangle (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.scoring.score">yolov3.src.scoring.score (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.scoring.scoringfunctions">yolov3.src.scoring.scoringfunctions (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.targets.fcn_sigma_rejection">yolov3.src.targets.fcn_sigma_rejection (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.targets.per_class_stats">yolov3.src.targets.per_class_stats (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.src.targets.Target">yolov3.src.targets.Target (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.tests.unittests">yolov3.tests.unittests (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.utils.datasetProcessing">yolov3.utils.datasetProcessing (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.utils.utils">yolov3.utils.utils (module)</a>
+</li>
+      <li><a href="code.html#module-yolov3.utils.utils_xview">yolov3.utils.utils_xview (module)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -585,7 +606,7 @@
 <h2 id="Z">Z</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#utils.utils.zerocenter_class_indices">zerocenter_class_indices() (in module utils.utils)</a>
+      <li><a href="code.html#yolov3.utils.utils.zerocenter_class_indices">zerocenter_class_indices() (in module yolov3.utils.utils)</a>
 </li>
   </ul></td>
 </tr></table>

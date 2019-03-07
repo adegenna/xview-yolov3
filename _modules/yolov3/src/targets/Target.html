@@ -1,0 +1,626 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>yolov3.src.targets.Target &mdash; YOLOv3 0.5.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> YOLOv3
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../running.html">User Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">YOLOv3</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>yolov3.src.targets.Target</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for yolov3.src.targets.Target</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="k">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.targets.fcn_sigma_rejection</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.targets.per_class_stats</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.utils.datasetProcessing</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.utils.utils</span> <span class="k">import</span> <span class="n">convert_tif2bmp</span><span class="p">,</span> <span class="n">readBmpDataset</span><span class="p">,</span> <span class="n">load_classes</span><span class="p">,</span> <span class="n">convert_class_labels_to_indices</span>
+
+<span class="c1"># This is a python-conversion of utils/analysis.m and all related target preprocessing</span>
+
+<span class="c1"># ****************** ASSUMPTIONS ******************</span>
+<span class="c1"># 1) Training data filenames have to be of form &#39;string[split]number.extension&#39; or &#39;number.extension&#39;</span>
+<span class="c1"># 2) Training datatype is .bmp (this should probably not be hardcoded...)</span>
+<span class="c1"># *************************************************</span>
+
+<div class="viewcode-block" id="Target"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target">[docs]</a><span class="k">class</span> <span class="nc">Target</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for handling target pre-processing tasks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class constructor. Performs all target processing in Target::process_target_data()</span>
+
+<span class="sd">        | **Inputs:**</span>
+<span class="sd">        |    *inputs:* input file formatted according to InputFile class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Start by converting traindir/ dataset to .bmp (if necessary)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">readBmpDataset</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">traindir</span><span class="p">);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span>             <span class="o">=</span> <span class="n">inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__datatype_extension</span> <span class="o">=</span> <span class="s1">&#39;.bmp&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_target_file</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__HWC</span>  <span class="o">=</span> <span class="n">get_dataset_height_width_channels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">traindir</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__datatype_extension</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strip_image_number_from_chips_and_files</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__x1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__y1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__x2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__y2</span>  <span class="o">=</span> <span class="n">parse_xy_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__w</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__h</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__area</span>            <span class="o">=</span> <span class="n">compute_width_height_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__x1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__y1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__x2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__y2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_image_w_and_h</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_target_data</span><span class="p">()</span>
+        <span class="c1"># Read in list of class names/labels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_list_of_class_names_and_labels</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Target.count_number_of_nonexistent_chips"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.count_number_of_nonexistent_chips">[docs]</a>    <span class="k">def</span> <span class="nf">count_number_of_nonexistent_chips</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to count the number of chips that exist in the target metadata file, but not in the actual database.</span>
+<span class="sd">        Returns: number of nonexistent objects, and number of nonexistent files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size_nonexistent</span>       <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">num_nonexistent_chips</span>  <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">idx</span>               <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__files</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__HWC</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="mi">0</span><span class="p">];</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__HWC</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">idx_i</span>                  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect_nonexistent_chip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">size_nonexistent</span>      <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx_i</span><span class="p">)</span>
+                <span class="n">num_nonexistent_chips</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">size_nonexistent</span> <span class="p">,</span> <span class="n">num_nonexistent_chips</span></div>
+        
+<div class="viewcode-block" id="Target.set_image_w_and_h"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.set_image_w_and_h">[docs]</a>    <span class="k">def</span> <span class="nf">set_image_w_and_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set width and height of images associated with targets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__x1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__x1</span><span class="p">)</span>
+        <span class="n">size_nonexistent</span><span class="p">,</span><span class="n">num_nonexistent_chips</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_number_of_nonexistent_chips</span><span class="p">()</span>
+        <span class="n">idx_nonexistent</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">size_nonexistent</span><span class="p">)</span>
+        <span class="n">chip_nonexistent</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nonexistent_chips</span><span class="p">)</span>
+        <span class="n">count1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">count2</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="p">)):</span>
+            <span class="n">idx</span>               <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__files</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">idx_i</span>             <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect_nonexistent_chip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">idx_nonexistent</span><span class="p">[</span><span class="n">count1</span><span class="p">:</span><span class="n">count1</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">idx_i</span>
+                <span class="n">chip_nonexistent</span><span class="p">[</span><span class="n">count2</span><span class="p">]</span>                  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">count1</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx_i</span><span class="p">)</span>
+                <span class="n">count2</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">chip_nonexistent</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">chip_nonexistent</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chip_nonexistent</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Chip &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">chip_nonexistent</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; not found, ignoring...&#39;</span><span class="p">)</span>
+        <span class="n">idx_nonexistent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">idx_nonexistent</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_nonexistent_chips_from_database</span><span class="p">(</span><span class="n">idx_nonexistent</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Target.detect_nonexistent_chip"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.detect_nonexistent_chip">[docs]</a>    <span class="k">def</span> <span class="nf">detect_nonexistent_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">chip_i</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to detect all instances in database of a chip that does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">idx</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__chips</span> <span class="o">==</span> <span class="n">chip_i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">idx</span></div>
+
+<div class="viewcode-block" id="Target.remove_nonexistent_chips_from_database"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.remove_nonexistent_chips_from_database">[docs]</a>    <span class="k">def</span> <span class="nf">remove_nonexistent_chips_from_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">idx_nonexistent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to remove all nonexistent chips from database</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__chips</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__chips</span>   <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__coords</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__coords</span>  <span class="p">,</span> <span class="n">idx_nonexistent</span> <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__classes</span> <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span> <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span> <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__x1</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__x1</span>      <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__x2</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__x2</span>      <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__y1</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__y1</span>      <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__y2</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__y2</span>      <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__w</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__w</span>       <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__h</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__h</span>       <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__area</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__area</span>    <span class="p">,</span> <span class="n">idx_nonexistent</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Target.strip_image_number_from_chips_and_files"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.strip_image_number_from_chips_and_files">[docs]</a>    <span class="k">def</span> <span class="nf">strip_image_number_from_chips_and_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to strip numbers from image filenames from both chips and files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">strip_image_number_from_filename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">strip_image_number_from_filename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__files</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span></div>
+            
+<div class="viewcode-block" id="Target.load_target_file"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.load_target_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_target_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to load a targetfile of type specified in the input file. Supported types: .json.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">targetfiletype</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__extension</span> <span class="o">=</span> <span class="s1">&#39;.json&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__classes</span> <span class="o">=</span> <span class="n">get_labels_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">targetspath</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__class_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__classes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Target file either not specified or not supported&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Target.compute_cropped_data"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.compute_cropped_data">[docs]</a>    <span class="k">def</span> <span class="nf">compute_cropped_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to crop image data based on the width and height. Filtered variables are then computed based on the updated image coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__x1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="p">);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__y1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span><span class="p">);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__x2</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="p">);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__y2</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span><span class="p">);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_variables_from_filtered_xy</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Target.sigma_rejection_indices"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.sigma_rejection_indices">[docs]</a>    <span class="k">def</span> <span class="nf">sigma_rejection_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filtered_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute a mask based on a sigma rejection criterion.</span>
+<span class="sd">        </span>
+<span class="sd">        | **Inputs:** </span>
+<span class="sd">        |    *filtered_data:* data to which sigma rejection is applied and from which mask is computed</span>
+<span class="sd">        </span>
+<span class="sd">        | **Outputs:**</span>
+<span class="sd">        |    *mask_reject:* binary mask computed from sigma rejection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mask_reject</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class_labels</span><span class="p">)):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__classes</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">_</span><span class="p">,</span><span class="n">v</span>   <span class="o">=</span> <span class="n">fcn_sigma_rejection</span><span class="p">(</span><span class="n">filtered_data</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">mask_reject</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask_reject</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">mask_reject</span></div>
+
+<div class="viewcode-block" id="Target.manual_dimension_requirements"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.manual_dimension_requirements">[docs]</a>    <span class="k">def</span> <span class="nf">manual_dimension_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">area_lim</span><span class="p">,</span><span class="n">w_lim</span><span class="p">,</span><span class="n">h_lim</span><span class="p">,</span><span class="n">AR_lim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute filtering based on specified dimension requirements.</span>
+<span class="sd">        </span>
+<span class="sd">        | **Inputs:** </span>
+<span class="sd">        |    *area_lim:* limit for image area</span>
+<span class="sd">        |    *w_lim:* limit for image width</span>
+<span class="sd">        |    *h_lim:* limit for image height</span>
+<span class="sd">        |    *AR_lim:* limit for image aspect ratio</span>
+<span class="sd">        </span>
+<span class="sd">        | **Outputs:**</span>
+<span class="sd">        |    indices where filtered variables satisfy the dimension requirements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_area</span> <span class="o">&gt;=</span> <span class="n">area_lim</span><span class="p">)</span> <span class="o">&amp;</span> \
+                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span> <span class="o">&gt;</span> <span class="n">w_lim</span><span class="p">)</span> <span class="o">&amp;</span> \
+                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span> <span class="o">&gt;</span> <span class="n">h_lim</span><span class="p">)</span> <span class="o">&amp;</span> \
+                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_AR</span> <span class="o">&lt;</span> <span class="n">AR_lim</span><span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Target.edge_requirements"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.edge_requirements">[docs]</a>    <span class="k">def</span> <span class="nf">edge_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">w_lim</span><span class="p">,</span><span class="n">h_lim</span><span class="p">,</span><span class="n">x2_lim</span><span class="p">,</span><span class="n">y2_lim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute filtering based on edge specifications.</span>
+<span class="sd">        </span>
+<span class="sd">        | **Inputs:** </span>
+<span class="sd">        |    *w_lim:* limit for image width</span>
+<span class="sd">        |    *h_lim:* limit for image height</span>
+<span class="sd">        |    *x2_lim:* limit for image x2</span>
+<span class="sd">        |    *y2_lim:* limit for image y2</span>
+<span class="sd">        </span>
+<span class="sd">        | **Outputs:**</span>
+<span class="sd">        |    indices where filtered variables satisfy the dimension requirements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Extreme edges (i.e. don&#39;t start an x1 10 pixels from the right side)</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span> <span class="o">&lt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="o">-</span><span class="n">w_lim</span><span class="p">))</span> <span class="o">&amp;</span> \
+                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y1</span> <span class="o">&lt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span><span class="o">-</span><span class="n">h_lim</span><span class="p">))</span> <span class="o">&amp;</span> \
+                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span> <span class="o">&gt;</span> <span class="n">x2_lim</span><span class="p">)</span> <span class="o">&amp;</span> \
+                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span> <span class="o">&gt;</span> <span class="n">y2_lim</span><span class="p">)</span> <span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Target.compute_filtered_data_mask"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.compute_filtered_data_mask">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_data_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute filtered data by applying several filtering operations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_cropped_data</span><span class="p">()</span>
+        <span class="n">i0</span>         <span class="o">=</span> <span class="n">detect_nans_and_infs_by_row</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__coords</span><span class="p">)</span>
+        <span class="n">i1</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_rejection_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_area</span><span class="p">)</span>
+        <span class="n">i2</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_rejection_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">)</span>
+        <span class="n">i3</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_rejection_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">)</span>
+        <span class="n">i4</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manual_dimension_requirements</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">i5</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_requirements</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">i6</span>         <span class="o">=</span> <span class="n">area_requirement</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_area</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__area</span><span class="p">,</span><span class="mf">0.25</span><span class="p">)</span>
+        <span class="n">i7</span>         <span class="o">=</span> <span class="n">nan_inf_size_requirements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="p">,</span><span class="mi">32</span><span class="p">)</span>
+        <span class="n">i8</span>         <span class="o">=</span> <span class="n">invalid_class_requirement</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">invalid_class_list</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__classes</span><span class="p">)</span>
+        <span class="n">valid</span>      <span class="o">=</span> <span class="n">i0</span> <span class="o">&amp;</span> <span class="n">i1</span> <span class="o">&amp;</span> <span class="n">i2</span> <span class="o">&amp;</span> <span class="n">i3</span> <span class="o">&amp;</span> <span class="n">i4</span> <span class="o">&amp;</span> <span class="n">i5</span> <span class="o">&amp;</span> <span class="n">i6</span> <span class="o">&amp;</span> <span class="n">i7</span> <span class="o">&amp;</span> <span class="n">i8</span><span class="p">;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mask</span> <span class="o">=</span> <span class="n">valid</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Target.apply_mask_to_filtered_data"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.apply_mask_to_filtered_data">[docs]</a>    <span class="k">def</span> <span class="nf">apply_mask_to_filtered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to apply mask to filtered data variables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">assert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;Filtered data elements must be computed prior to using this function&#39;</span><span class="p">,)</span>
+            <span class="k">raise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_coords</span>       <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__mask</span><span class="p">];</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_chips</span>        <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__chips</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__mask</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__classes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__mask</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_image_h</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_h</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__mask</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_image_w</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_w</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__mask</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_variables_from_filtered_coords</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Target.compute_filtered_variables_from_filtered_coords"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.compute_filtered_variables_from_filtered_coords">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_variables_from_filtered_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute filtered variables from filtered coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span>  <span class="o">=</span> <span class="n">parse_xy_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_area</span>  <span class="o">=</span> \
+                <span class="n">compute_width_height_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_AR</span>            <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="Target.compute_filtered_variables_from_filtered_xy"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.compute_filtered_variables_from_filtered_xy">[docs]</a>    <span class="k">def</span> <span class="nf">compute_filtered_variables_from_filtered_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute filtered variables from filtered xy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_area</span>  <span class="o">=</span> \
+                <span class="n">compute_width_height_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_AR</span>            <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_coords</span>        <span class="o">=</span> <span class="n">concatenate_xy_to_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_x2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_y2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Target.compute_class_weights_with_filtered_data"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.compute_class_weights_with_filtered_data">[docs]</a>    <span class="k">def</span> <span class="nf">compute_class_weights_with_filtered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute class weights from filtered data. Weight is simply inverse of class frequency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">assert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;Filtered data elements must be computed prior to using this function&#39;</span><span class="p">,)</span>
+            <span class="k">raise</span>
+        <span class="n">class_mu</span><span class="p">,</span> <span class="n">class_sigma</span><span class="p">,</span> <span class="n">class_cov</span> <span class="o">=</span> <span class="n">per_class_stats</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">)</span>
+        <span class="n">num_class_objects</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span><span class="p">,</span><span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">weights</span>           <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">num_class_objects</span>
+        <span class="n">weights</span>          <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">outdir</span> <span class="o">+</span> <span class="s1">&#39;training_class_mean.out&#39;</span>   <span class="p">,</span> <span class="n">class_mu</span>    <span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">outdir</span> <span class="o">+</span> <span class="s1">&#39;training_class_sigma.out&#39;</span>  <span class="p">,</span> <span class="n">class_sigma</span> <span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_freq</span>    <span class="o">=</span> <span class="n">num_class_objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_weights</span> <span class="o">=</span> <span class="n">weights</span></div>
+
+<div class="viewcode-block" id="Target.compute_image_weights_with_filtered_data"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.compute_image_weights_with_filtered_data">[docs]</a>    <span class="k">def</span> <span class="nf">compute_image_weights_with_filtered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute image weights from filtered data. Weight for a given image is the sum of the class weights for each of the objects present in that given image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">assert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;Filtered data elements must be computed prior to using this function&#39;</span><span class="p">,)</span>
+            <span class="k">raise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__image_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">)):</span>
+            <span class="n">idx_label_i</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_chips</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__files</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">classes_image_i</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span><span class="p">[</span><span class="n">idx_label_i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">zerocentered_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_labels</span> <span class="o">==</span> <span class="n">classes_image_i</span><span class="p">[:,</span><span class="kc">None</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">classes_image_i</span>  <span class="o">=</span> <span class="n">zerocentered_idx</span>
+            <span class="n">weight_image_i</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_weights</span><span class="p">[</span><span class="n">classes_image_i</span><span class="p">]</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__image_weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_image_i</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__image_weights</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__image_weights</span><span class="p">)</span>        </div>
+
+<div class="viewcode-block" id="Target.compute_bounding_box_clusters_using_kmeans"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans">[docs]</a>    <span class="k">def</span> <span class="nf">compute_bounding_box_clusters_using_kmeans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">n_clusters</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        | Method to compute bounding box clusters using kmeans.</span>
+<span class="sd">        </span>
+<span class="sd">        | **Inputs:**</span>
+<span class="sd">        |    *n_clusters:* number of desired kmeans clusters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Computing bounding box anchors for YOLOv3 architecture using kmeans...&#39;</span><span class="p">)</span>
+        <span class="n">HW</span>                 <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_w</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_h</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">kmeans_wh</span>          <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">HW</span><span class="p">)</span>
+        <span class="n">clusters_wh</span>        <span class="o">=</span> <span class="n">kmeans_wh</span><span class="o">.</span><span class="n">cluster_centers_</span>
+        <span class="n">idx</span>                <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">clusters_wh</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">clusters_wh</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__clusters_wh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">clusters_wh</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Target.process_target_data"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.process_target_data">[docs]</a>    <span class="k">def</span> <span class="nf">process_target_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to perform all target processing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_cropped_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_data_mask</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_mask_to_filtered_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_class_weights_with_filtered_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_image_weights_with_filtered_data</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">computeboundingboxclusters</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_bounding_box_clusters_using_kmeans</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">boundingboxclusters</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Target.read_list_of_class_names_and_labels"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.read_list_of_class_names_and_labels">[docs]</a>    <span class="k">def</span> <span class="nf">read_list_of_class_names_and_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to read in the user-provided list of class names and associated numeric labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">class_names</span><span class="p">,</span><span class="n">class_labels</span>            <span class="o">=</span> <span class="n">load_classes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">class_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__list_of_unique_class_names</span>   <span class="o">=</span> <span class="n">class_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__list_of_unique_class_labels</span>  <span class="o">=</span> <span class="n">class_labels</span></div>
+
+    <span class="k">def</span> <span class="nf">get_number_of_filtered_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_labels</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Target.output_data_for_listdataset"><a class="viewcode-back" href="../../../../code.html#yolov3.src.targets.Target.Target.output_data_for_listdataset">[docs]</a>    <span class="k">def</span> <span class="nf">output_data_for_listdataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to output data needed for the ListDataset dataloader.</span>
+
+<span class="sd">        **Outputs**</span>
+
+<span class="sd">        ----------</span>
+<span class="sd">        object_data : list</span>
+<span class="sd">            list containing three pieces of data on all objects: [filtered_chips,filtered_coords,filtered_classes]</span>
+<span class="sd">        class_weights : array</span>
+<span class="sd">            array containing the weights for each class</span>
+<span class="sd">        image_weights : array</span>
+<span class="sd">            array containing the weights for each image</span>
+<span class="sd">        files : list</span>
+<span class="sd">            list of all files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">classes</span>             <span class="o">=</span> <span class="n">convert_class_labels_to_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_of_unique_class_labels</span><span class="p">)</span>
+        <span class="n">object_data</span>         <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__filtered_chips</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_coords</span> <span class="p">,</span> <span class="n">classes</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">object_data</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_weights</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_weights</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__files</span></div>
+        
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filtered_chips</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_chips</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filtered_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_coords</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filtered_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_classes</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">list_of_unique_class_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__list_of_unique_class_labels</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filtered_class_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_weights</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filtered_class_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_class_labels</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__files</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">image_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__image_weights</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">clusters_wh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__clusters_wh</span></div>
+
+
+<span class="c1"># Little auxiliary functions</span>
+<span class="k">def</span> <span class="nf">parse_xy_coords</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
+    <span class="n">xmin</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ymin</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">ymax</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">xmin</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span>
+
+<span class="k">def</span> <span class="nf">concatenate_xy_to_coords</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span><span class="p">):</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">xmin</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">coords</span>
+
+<span class="k">def</span> <span class="nf">compute_width_height_area</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span><span class="p">):</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">ymax</span><span class="o">-</span><span class="n">ymin</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="n">w</span><span class="o">*</span><span class="n">h</span>
+    <span class="k">return</span> <span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">area</span>    
+
+<span class="k">def</span> <span class="nf">detect_nans_and_infs_by_row</span><span class="p">(</span><span class="n">arr2d</span><span class="p">):</span>
+    <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arr2d</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr2d</span><span class="p">)</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">arr2d</span><span class="p">)</span> <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">area_requirement</span><span class="p">(</span><span class="n">crop_area</span><span class="p">,</span><span class="n">area</span><span class="p">,</span><span class="n">area_ratio</span><span class="p">):</span>
+    <span class="c1"># Cut objects that lost &gt;90% of their area during crop</span>
+    <span class="n">crop_area_ratio</span> <span class="o">=</span> <span class="n">crop_area</span> <span class="o">/</span> <span class="n">area</span><span class="p">;</span>
+    <span class="n">i6</span>              <span class="o">=</span> <span class="n">crop_area_ratio</span> <span class="o">&gt;</span> <span class="n">area_ratio</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">i6</span>
+
+<span class="k">def</span> <span class="nf">nan_inf_size_requirements</span><span class="p">(</span><span class="n">image_h</span><span class="p">,</span><span class="n">image_w</span><span class="p">,</span><span class="n">size</span><span class="p">):</span>
+    <span class="c1"># no image dimension nans or infs, or smaller than 32 pix</span>
+    <span class="n">hw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">image_h</span><span class="p">,</span> <span class="n">image_w</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">i7</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">hw</span><span class="p">)</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">hw</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">hw</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">)</span> <span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">i7</span>
+
+<span class="k">def</span> <span class="nf">invalid_class_requirement</span><span class="p">(</span><span class="n">invalid_class_list</span><span class="p">,</span><span class="n">classes</span><span class="p">):</span>
+    <span class="c1"># remove invalid classes (e.g., &#39;None&#39; class in xview)</span>
+    <span class="n">invalid_idx</span>        <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="n">classes</span> <span class="o">==</span> <span class="n">invalid_class_list</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">i8</span>                 <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+    <span class="n">i8</span><span class="p">[</span><span class="n">invalid_idx</span><span class="p">]</span>    <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">i8</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony DeGennaro
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

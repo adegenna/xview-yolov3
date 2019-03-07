@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>yolov3.src.models &mdash; YOLOv3 0.5.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> YOLOv3
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">User Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">YOLOv3</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>yolov3.src.models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for yolov3.src.models</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">yolov3.utils.utils</span> <span class="k">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="create_modules"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.create_modules">[docs]</a><span class="k">def</span> <span class="nf">create_modules</span><span class="p">(</span><span class="n">module_defs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs module list of layer blocks from module configuration in module_defs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hyperparams</span> <span class="o">=</span> <span class="n">module_defs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">output_filters</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">[</span><span class="s1">&#39;channels&#39;</span><span class="p">])]</span>
+    <span class="n">module_list</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">module_def</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">module_defs</span><span class="p">):</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;convolutional&#39;</span><span class="p">:</span>
+            <span class="n">bn</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;batch_normalize&#39;</span><span class="p">])</span>
+            <span class="n">filters</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;filters&#39;</span><span class="p">])</span>
+            <span class="n">kernel_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">])</span>
+            <span class="n">pad</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;pad&#39;</span><span class="p">])</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="s1">&#39;conv_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="n">output_filters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                        <span class="n">out_channels</span><span class="o">=</span><span class="n">filters</span><span class="p">,</span>
+                                                        <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+                                                        <span class="n">stride</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;stride&#39;</span><span class="p">]),</span>
+                                                        <span class="n">dilation</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                        <span class="n">padding</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span>
+                                                        <span class="n">bias</span><span class="o">=</span><span class="ow">not</span> <span class="n">bn</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">bn</span><span class="p">:</span>
+                <span class="n">modules</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="s1">&#39;batch_norm_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">filters</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;activation&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;leaky&#39;</span><span class="p">:</span>
+                <span class="n">modules</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="s1">&#39;leaky_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">())</span>
+
+        <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;upsample&#39;</span><span class="p">:</span>
+            <span class="n">upsample</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Upsample</span><span class="p">(</span><span class="n">scale_factor</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;stride&#39;</span><span class="p">]))</span>  <span class="c1"># , mode=&#39;bilinear&#39;, align_corners=True)</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="s1">&#39;upsample_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">upsample</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;route&#39;</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">module_def</span><span class="p">[</span><span class="s2">&quot;layers&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+            <span class="n">filters</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">output_filters</span><span class="p">[</span><span class="n">layer_i</span><span class="p">]</span> <span class="k">for</span> <span class="n">layer_i</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">])</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="s1">&#39;route_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">EmptyLayer</span><span class="p">())</span>
+
+        <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;shortcut&#39;</span><span class="p">:</span>
+            <span class="n">filters</span> <span class="o">=</span> <span class="n">output_filters</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">])]</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="s2">&quot;shortcut_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">EmptyLayer</span><span class="p">())</span>
+
+        <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;yolo&quot;</span><span class="p">:</span>
+            <span class="n">anchor_idxs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">module_def</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+            <span class="c1"># Extract anchors</span>
+            <span class="n">anchors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">module_def</span><span class="p">[</span><span class="s2">&quot;anchors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+            <span class="n">anchors</span> <span class="o">=</span> <span class="p">[(</span><span class="n">anchors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">anchors</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">anchors</span><span class="p">),</span> <span class="mi">2</span><span class="p">)]</span>
+            <span class="n">anchors</span> <span class="o">=</span> <span class="p">[</span><span class="n">anchors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">anchor_idxs</span><span class="p">]</span>
+            <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">])</span>
+            <span class="n">img_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">])</span>
+            <span class="c1"># Define detection layer</span>
+            <span class="n">yolo_layer</span> <span class="o">=</span> <span class="n">YOLOLayer</span><span class="p">(</span><span class="n">anchors</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">img_height</span><span class="p">,</span> <span class="n">anchor_idxs</span><span class="p">)</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="s1">&#39;yolo_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">yolo_layer</span><span class="p">)</span>
+
+        <span class="c1"># Register module list and number of output filters</span>
+        <span class="n">module_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
+        <span class="n">output_filters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">hyperparams</span><span class="p">,</span> <span class="n">module_list</span></div>
+
+
+<div class="viewcode-block" id="EmptyLayer"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.EmptyLayer">[docs]</a><span class="k">class</span> <span class="nc">EmptyLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Placeholder for &#39;route&#39; and &#39;shortcut&#39; layers&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EmptyLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="YOLOLayer"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.YOLOLayer">[docs]</a><span class="k">class</span> <span class="nc">YOLOLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="c1"># YOLO Layer 0</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchors</span><span class="p">,</span> <span class="n">nC</span><span class="p">,</span> <span class="n">img_dim</span><span class="p">,</span> <span class="n">anchor_idxs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">YOLOLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="n">anchors</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a_w</span><span class="p">,</span> <span class="n">a_h</span><span class="p">)</span> <span class="k">for</span> <span class="n">a_w</span><span class="p">,</span> <span class="n">a_h</span> <span class="ow">in</span> <span class="n">anchors</span><span class="p">]</span>  <span class="c1"># (pixels)</span>
+        <span class="n">nA</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">anchors</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">anchors</span> <span class="o">=</span> <span class="n">anchors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nA</span> <span class="o">=</span> <span class="n">nA</span>  <span class="c1"># number of anchors (3)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nC</span> <span class="o">=</span> <span class="n">nC</span>  <span class="c1"># number of classes (60)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bbox_attrs</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">nC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img_dim</span> <span class="o">=</span> <span class="n">img_dim</span>  <span class="c1"># from hyperparams in cfg file, NOT from parser</span>
+
+        <span class="k">if</span> <span class="n">anchor_idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">nA</span> <span class="o">*</span> <span class="mi">2</span><span class="p">):</span>  <span class="c1"># 6</span>
+            <span class="n">stride</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="k">elif</span> <span class="n">anchor_idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">nA</span><span class="p">:</span>  <span class="c1"># 3</span>
+            <span class="n">stride</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stride</span> <span class="o">=</span> <span class="mi">8</span>
+
+        <span class="c1"># Build anchor grids</span>
+        <span class="n">nG</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img_dim</span> <span class="o">/</span> <span class="n">stride</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nG</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">nG</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nG</span><span class="p">,</span> <span class="n">nG</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nG</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">nG</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">t</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nG</span><span class="p">,</span> <span class="n">nG</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaled_anchors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">([(</span><span class="n">a_w</span> <span class="o">/</span> <span class="n">stride</span><span class="p">,</span> <span class="n">a_h</span> <span class="o">/</span> <span class="n">stride</span><span class="p">)</span> <span class="k">for</span> <span class="n">a_w</span><span class="p">,</span> <span class="n">a_h</span> <span class="ow">in</span> <span class="n">anchors</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anchor_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaled_anchors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anchor_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaled_anchors</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<div class="viewcode-block" id="YOLOLayer.forward"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.YOLOLayer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">FT</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">FloatTensor</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_cuda</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda:0&#39;</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_cuda</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+
+        <span class="n">bs</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">nG</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">stride</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_dim</span> <span class="o">/</span> <span class="n">nG</span>
+
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_cuda</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_x</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_x</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_y</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">anchor_w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor_w</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor_h</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+            <span class="c1"># self.scaled_anchors = self.scaled_anchors.cuda()</span>
+
+        <span class="c1"># x.view(4, 650, 19, 19) -- &gt; (4, 10, 19, 19, 65)  # (bs, anchors, grid, grid, classes + xywh)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_attrs</span><span class="p">,</span> <span class="n">nG</span><span class="p">,</span> <span class="n">nG</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>  <span class="c1"># prediction</span>
+
+        <span class="c1"># Get outputs</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># Center x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># Center y</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>  <span class="c1"># Width</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>  <span class="c1"># Height</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="p">((</span><span class="n">w</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor_w</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="p">((</span><span class="n">h</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor_h</span>
+
+        <span class="c1"># Add offset and scale with anchors (in grid space, i.e. 0-13)</span>
+        <span class="n">pred_boxes</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">pred_conf</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>  <span class="c1"># Conf</span>
+        <span class="n">pred_cls</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">5</span><span class="p">:]</span>  <span class="c1"># Class</span>
+
+        <span class="c1"># Training</span>
+        <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># BCEWithLogitsLoss1 = nn.BCEWithLogitsLoss(reduction=&#39;sum&#39;)  # version 0.4.1</span>
+            <span class="n">BCEWithLogitsLoss1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCEWithLogitsLoss</span><span class="p">(</span><span class="n">size_average</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># version 0.4.0</span>
+            <span class="n">BCEWithLogitsLoss0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCEWithLogitsLoss</span><span class="p">()</span>
+            <span class="c1"># BCEWithLogitsLoss2 = nn.BCEWithLogitsLoss(weight=weight, reduction=&#39;sum&#39;)</span>
+            <span class="c1"># MSELoss = nn.MSELoss(reduction=&#39;sum&#39;)  # version 0.4.1</span>
+            <span class="n">MSELoss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(</span><span class="n">size_average</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># version 0.4.0</span>
+            <span class="n">CrossEntropyLoss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">requestPrecision</span><span class="p">:</span>
+                <span class="n">gx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">nG</span><span class="p">,</span> <span class="p">:</span><span class="n">nG</span><span class="p">]</span>
+                <span class="n">gy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_y</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">nG</span><span class="p">,</span> <span class="p">:</span><span class="n">nG</span><span class="p">]</span>
+                <span class="n">pred_boxes</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">gx</span> <span class="o">-</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+                <span class="n">pred_boxes</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">gy</span> <span class="o">-</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+                <span class="n">pred_boxes</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">gx</span> <span class="o">+</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+                <span class="n">pred_boxes</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">gy</span> <span class="o">+</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+
+            <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tcls</span><span class="p">,</span> <span class="n">TP</span><span class="p">,</span> <span class="n">FP</span><span class="p">,</span> <span class="n">FN</span><span class="p">,</span> <span class="n">TC</span> <span class="o">=</span> \
+                <span class="n">build_targets</span><span class="p">(</span><span class="n">pred_boxes</span><span class="p">,</span> <span class="n">pred_conf</span><span class="p">,</span> <span class="n">pred_cls</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaled_anchors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="p">,</span> <span class="n">nG</span><span class="p">,</span>
+                              <span class="n">requestPrecision</span><span class="p">)</span>
+            <span class="n">tcls</span> <span class="o">=</span> <span class="n">tcls</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">:</span>
+                <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">tcls</span> <span class="o">=</span> <span class="n">tx</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">ty</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">tw</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">th</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">mask</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">tcls</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+            <span class="c1"># Mask outputs to ignore non-existing objects (but keep confidence predictions)</span>
+            <span class="n">nM</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+            <span class="n">nGT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">nM</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># wC = weight[torch.argmax(tcls, 1)]  # weight class</span>
+                <span class="c1"># wC /= sum(wC)</span>
+                <span class="n">lx</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">MSELoss</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">tx</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+                <span class="n">ly</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">MSELoss</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">ty</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+                <span class="n">lw</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">MSELoss</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">tw</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+                <span class="n">lh</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">MSELoss</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">th</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+                <span class="n">lconf</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">BCEWithLogitsLoss1</span><span class="p">(</span><span class="n">pred_conf</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">mask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">float</span><span class="p">())</span>
+
+                <span class="n">lcls</span> <span class="o">=</span> <span class="n">nM</span> <span class="o">*</span> <span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">pred_cls</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">tcls</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># * min(epoch*.01 + 0.125, 1)</span>
+                <span class="c1"># lcls = BCEWithLogitsLoss2(pred_cls[mask], tcls.float())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lx</span><span class="p">,</span> <span class="n">ly</span><span class="p">,</span> <span class="n">lw</span><span class="p">,</span> <span class="n">lh</span><span class="p">,</span> <span class="n">lcls</span><span class="p">,</span> <span class="n">lconf</span> <span class="o">=</span> <span class="n">FT</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">FT</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">FT</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">FT</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">FT</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">FT</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">lconf</span> <span class="o">+=</span> <span class="n">nM</span> <span class="o">*</span> <span class="n">BCEWithLogitsLoss0</span><span class="p">(</span><span class="n">pred_conf</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">],</span> <span class="n">mask</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">float</span><span class="p">())</span>
+
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">lx</span> <span class="o">+</span> <span class="n">ly</span> <span class="o">+</span> <span class="n">lw</span> <span class="o">+</span> <span class="n">lh</span> <span class="o">+</span> <span class="n">lconf</span> <span class="o">+</span> <span class="n">lcls</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">pred_conf</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.999</span>
+            <span class="n">FPe</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">FP_classes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_cls</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">FP_classes</span><span class="p">:</span>
+                    <span class="n">FPe</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">lx</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">ly</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">lw</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">lh</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">lconf</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">lcls</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> \
+                   <span class="n">nGT</span><span class="p">,</span> <span class="n">TP</span><span class="p">,</span> <span class="n">FP</span><span class="p">,</span> <span class="n">FPe</span><span class="p">,</span> <span class="n">FN</span><span class="p">,</span> <span class="n">TC</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pred_boxes</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_x</span>
+            <span class="n">pred_boxes</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_y</span>
+            <span class="n">pred_boxes</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">width</span>
+            <span class="n">pred_boxes</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">height</span>
+
+            <span class="c1"># If not in training phase return predictions</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">pred_boxes</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">stride</span><span class="p">,</span>
+                                <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">pred_conf</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">pred_cls</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="p">)),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">data</span></div></div>
+
+
+<div class="viewcode-block" id="Darknet"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.Darknet">[docs]</a><span class="k">class</span> <span class="nc">Darknet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    YOLOv3 object detection model. This class, the modules that comprise its architecture, and its interface are inherited from ``torch.nn.Module``.</span>
+<span class="sd">    </span>
+<span class="sd">    **Inputs**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    networkcfg : string </span>
+<span class="sd">        Absolute path to YOLOv3 network architecture file.</span>
+<span class="sd">    imgsize : int</span>
+<span class="sd">        Desired cropped image size</span>
+
+<span class="sd">    **Member Variables**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    losses : dict, only created if in training mode</span>
+<span class="sd">        Dictionary containing </span>
+<span class="sd">        quantities on training loss</span>
+<span class="sd">    </span>
+<span class="sd">        =======  ============================================================</span>
+<span class="sd">        key      meaning</span>
+<span class="sd">        =======  ============================================================</span>
+<span class="sd">        &#39;loss&#39;   total value of training loss.</span>
+<span class="sd">        &#39;x&#39;      bounding box x-position loss.</span>
+<span class="sd">        &#39;y&#39;      bounding box y-position loss.</span>
+<span class="sd">        &#39;w&#39;      bounding box width loss.</span>
+<span class="sd">        &#39;h&#39;      bounding box height loss.</span>
+<span class="sd">        &#39;conf&#39;   objectness confidence loss.</span>
+<span class="sd">        &#39;cls&#39;    object classification loss.</span>
+<span class="sd">        &#39;nGT&#39;    number of ground truths.</span>
+<span class="sd">        &#39;TP&#39;     number of true positives.</span>
+<span class="sd">        &#39;FP&#39;     number of false positives.</span>
+<span class="sd">        &#39;FN&#39;     number of false negatives.</span>
+<span class="sd">        &#39;FPe&#39;    number of false positives in each class.</span>
+<span class="sd">        =======  ============================================================</span>
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    --------</span>
+<span class="sd">    Here is an example </span>
+<span class="sd">    of how this class may be instantiated::</span>
+<span class="sd">        networkcfg = &#39;/full/path/to/network_cfg_file.dat&#39;</span>
+<span class="sd">        imgsize    = 800</span>
+<span class="sd">        darknet    = Darknet(networkcfg, imgsize)</span>
+
+<span class="sd">    ``network_cfg_file.dat`` is a configuration file that specifies a valid YOLOv3 architecture.</span>
+<span class="sd">    Please consult the ``cfg/`` subdirectory of the main project repo for examples.</span>
+
+<span class="sd">    The interface to forward-pass an image through the network uses the recipe implemented </span>
+<span class="sd">    in the ``forward()`` routine and takes an image as input and returns the network output as a result::</span>
+<span class="sd">        output = darknet(image)</span>
+
+<span class="sd">    If you are training this network, you would also provide corresponding image targets, </span>
+<span class="sd">    and possibly other inputs defined in the ``forward`` method::</span>
+<span class="sd">        output = darknet(image,target)</span>
+
+<span class="sd">    Typically, the images/targets are provided by a dataloader like ``ListDataset`` </span>
+<span class="sd">    that produces iterable pairs of images/targets, which would look like this::</span>
+<span class="sd">        for i , (image_i , target_i) in enumerate(dataloader):</span>
+<span class="sd">            output_i = darknet(image_i,target_i)</span>
+
+<span class="sd">    During training, a detection loss would be calculated in the ``YOLOLayer`` submodules and stored as the ``losses`` dictionary member,</span>
+<span class="sd">    whose members may be accessed directly, e.g.::</span>
+<span class="sd">        total_loss = darknet.losses[&#39;loss&#39;]</span>
+<span class="sd">    </span>
+<span class="sd">    Other functionality is inherited directly from the ``torch.nn.Module`` module </span>
+<span class="sd">    of PyTorch, so consult those documents for assistance in using it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">networkcfg</span><span class="p">,</span> <span class="n">imgsize</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Darknet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span> <span class="o">=</span> <span class="n">parse_model_config</span><span class="p">(</span><span class="n">networkcfg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nC</span>          <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;classes&#39;</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Loading YOLOv3 config file failed...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="n">imgsize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hyperparams</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_list</span> <span class="o">=</span> <span class="n">create_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span>                      <span class="o">=</span> <span class="n">imgsize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;conf&#39;</span><span class="p">,</span> <span class="s1">&#39;cls&#39;</span><span class="p">,</span> <span class="s1">&#39;nGT&#39;</span><span class="p">,</span> <span class="s1">&#39;TP&#39;</span><span class="p">,</span> <span class="s1">&#39;FP&#39;</span><span class="p">,</span> <span class="s1">&#39;FPe&#39;</span><span class="p">,</span> <span class="s1">&#39;FN&#39;</span><span class="p">,</span> <span class="s1">&#39;TC&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Darknet.forward"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.Darknet.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">is_training</span> <span class="o">=</span> <span class="n">targets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">losses</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">layer_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">module_def</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_defs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_list</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;convolutional&#39;</span><span class="p">,</span> <span class="s1">&#39;upsample&#39;</span><span class="p">]:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;route&#39;</span><span class="p">:</span>
+                <span class="n">layer_i</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">layer_outputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">layer_i</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;shortcut&#39;</span><span class="p">:</span>
+                <span class="n">layer_i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">])</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">layer_outputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">layer_outputs</span><span class="p">[</span><span class="n">layer_i</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">module_def</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;yolo&#39;</span><span class="p">:</span>
+                <span class="c1"># Train phase: get loss</span>
+                <span class="k">if</span> <span class="n">is_training</span><span class="p">:</span>
+                    <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">losses</span> <span class="o">=</span> <span class="n">module</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">x</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">requestPrecision</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">loss</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_names</span><span class="p">,</span> <span class="n">losses</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+=</span> <span class="n">loss</span>
+                <span class="c1"># Test phase: Get detections</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">layer_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_training</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;nGT&#39;</span><span class="p">]</span> <span class="o">/=</span> <span class="mi">3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;TC&#39;</span><span class="p">]</span> <span class="o">/=</span> <span class="mi">3</span>
+            <span class="n">metrics</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="p">)</span>  <span class="c1"># TP, FP, FN, target_count</span>
+
+            <span class="n">ui</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;TC&#39;</span><span class="p">])[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ui</span><span class="p">:</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;TC&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;TP&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>  <span class="c1"># TP</span>
+                <span class="n">metrics</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FP&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>  <span class="c1"># FP</span>
+                <span class="n">metrics</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FN&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>  <span class="c1"># FN</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FPe&#39;</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;TP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;FN&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;TC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span>
+
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_training</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="parse_model_config"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.parse_model_config">[docs]</a><span class="k">def</span> <span class="nf">parse_model_config</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parses the yolo-v3 layer configuration file and returns module definitions&quot;&quot;&quot;</span>
+    <span class="n">lines</span>       <span class="o">=</span> <span class="n">read_config_file_to_string_list</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">module_defs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">):</span>  <span class="c1"># This marks the start of a new block</span>
+            <span class="n">module_defs</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+            <span class="n">module_defs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">module_defs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;convolutional&#39;</span><span class="p">:</span>
+                <span class="n">module_defs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;batch_normalize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">module_defs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">module_defs</span></div>
+
+<div class="viewcode-block" id="create_yolo_architecture"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.create_yolo_architecture">[docs]</a><span class="k">def</span> <span class="nf">create_yolo_architecture</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">n_classes</span><span class="p">,</span><span class="n">anchor_coordinates</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a yolo-v3 layer configuration file from desired options</span>
+
+<span class="sd">    **Inputs**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    inputs : InputFile object </span>
+<span class="sd">        Specifies some necessary user options.</span>
+<span class="sd">    n_classes : int</span>
+<span class="sd">        Specifies number of classes in the dataset</span>
+<span class="sd">    anchor_coordinates : list&lt;double&gt;</span>
+<span class="sd">        List of doubles of form [x1,y1,x2,y2, ... , xN,yN] where N = number of anchors and (xi,yi) are the i&#39;th anchor coordinates.</span>
+
+<span class="sd">    **Outputs**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    output_config_file_path : string</span>
+<span class="sd">        Absolute filepath of the network config file created by this function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Creating custom YOLOv3 architecture from desired specifications...&#39;</span><span class="p">)</span>
+    <span class="n">output_config_file_path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/yolov3_custom.cfg&#39;</span>
+    <span class="n">create_yolo_config_file</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">networkcfg</span><span class="p">,</span>\
+                            <span class="n">output_config_file_path</span><span class="p">,</span>\
+                            <span class="n">inputs</span><span class="o">.</span><span class="n">boundingboxclusters</span><span class="p">,</span>\
+                            <span class="n">n_classes</span><span class="p">,</span>\
+                            <span class="n">anchor_coordinates</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_config_file_path</span></div>
+
+<div class="viewcode-block" id="create_yolo_config_file"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.create_yolo_config_file">[docs]</a><span class="k">def</span> <span class="nf">create_yolo_config_file</span><span class="p">(</span><span class="n">template_file_path</span><span class="p">,</span><span class="n">output_config_file_path</span><span class="p">,</span><span class="n">n_anchors</span><span class="p">,</span><span class="n">n_classes</span><span class="p">,</span><span class="n">anchor_coordinates</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a yolo-v3 layer configuration file from desired options&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">anchor_coordinates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_anchors</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Error: length of anchor_coordinates must equal 2*n_anchors&#39;</span><span class="p">)</span>
+    <span class="n">lines</span>                       <span class="o">=</span> <span class="n">read_config_file_to_string_list</span><span class="p">(</span><span class="n">template_file_path</span><span class="p">)</span>
+    <span class="n">num_yolo_filters</span><span class="p">,</span><span class="n">n_anchors</span>  <span class="o">=</span> <span class="n">calculate_number_of_yolo_filters</span><span class="p">(</span><span class="n">n_anchors</span><span class="p">,</span><span class="n">n_classes</span><span class="p">)</span>
+    <span class="n">anchors_per_yolo_layer</span>      <span class="o">=</span> <span class="n">n_anchors</span> <span class="o">//</span> <span class="mi">3</span>
+    <span class="n">lineidx</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;NUM_YOLO_FILTERS&#39;</span><span class="p">):</span>
+            <span class="n">line</span>           <span class="o">=</span> <span class="s1">&#39;filters = &#39;</span>
+            <span class="n">line</span>          <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">num_yolo_filters</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;YOLO_MASK_LARGE&#39;</span><span class="p">):</span>
+            <span class="n">line</span>  <span class="o">=</span> <span class="s1">&#39;mask = &#39;</span>
+            <span class="n">mask</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">anchors_per_yolo_layer</span><span class="p">,</span><span class="n">n_anchors</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">mask</span><span class="p">))[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;YOLO_MASK_MEDIUM&#39;</span><span class="p">):</span>
+            <span class="n">line</span>  <span class="o">=</span> <span class="s1">&#39;mask = &#39;</span>
+            <span class="n">mask</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">anchors_per_yolo_layer</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">anchors_per_yolo_layer</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">mask</span><span class="p">))[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;YOLO_MASK_SMALL&#39;</span><span class="p">):</span>
+            <span class="n">line</span>  <span class="o">=</span> <span class="s1">&#39;mask = &#39;</span>
+            <span class="n">mask</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">*</span><span class="n">anchors_per_yolo_layer</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">mask</span><span class="p">))[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;YOLO_ANCHORS&#39;</span><span class="p">):</span>
+            <span class="n">line</span>  <span class="o">=</span> <span class="s1">&#39;anchors = &#39;</span>
+            <span class="n">line</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">anchor_coordinates</span><span class="p">))[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;CLASSES&#39;</span><span class="p">):</span>
+            <span class="n">line</span>  <span class="o">=</span> <span class="s1">&#39;classes = &#39;</span>
+            <span class="n">line</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_classes</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;NUM_ANCHORS&#39;</span><span class="p">):</span>
+            <span class="n">line</span>  <span class="o">=</span> <span class="s1">&#39;num = &#39;</span>
+            <span class="n">line</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_anchors</span><span class="p">)</span>
+        <span class="n">lines</span><span class="p">[</span><span class="n">lineidx</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span>
+        <span class="n">lineidx</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">write_string_list_to_config_file</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span><span class="n">output_config_file_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="read_yolo_config_file_anchors"><a class="viewcode-back" href="../../../code.html#yolov3.src.models.read_yolo_config_file_anchors">[docs]</a><span class="k">def</span> <span class="nf">read_yolo_config_file_anchors</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reads the anchor coordinates from a specified YOLO configuration file&quot;&quot;&quot;</span>
+    <span class="n">lines</span>  <span class="o">=</span> <span class="n">read_config_file_to_string_list</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;anchors = &#39;</span><span class="p">):</span>
+            <span class="n">anchors</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">10</span><span class="p">:]</span>
+            <span class="n">anchors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">anchors</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">anchors</span></div>
+    
+<span class="k">def</span> <span class="nf">read_config_file_to_string_list</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">file</span>  <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)]</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>  <span class="c1"># get rid of fringe whitespaces</span>
+    <span class="k">return</span> <span class="n">lines</span>
+
+<span class="k">def</span> <span class="nf">write_string_list_to_config_file</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">calculate_number_of_yolo_filters</span><span class="p">(</span><span class="n">n_anchors</span><span class="p">,</span><span class="n">n_classes</span><span class="p">):</span>
+    <span class="n">anchorsmod3</span>    <span class="o">=</span> <span class="n">n_anchors</span> <span class="o">%</span> <span class="mi">3</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">anchorsmod3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of anchors must be a multiple of 3 in the YOLO architecture. Therefore, the number of anchors is being changed from &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_anchors</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; to &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_anchors</span> <span class="o">-</span> <span class="n">mod3</span><span class="p">))</span>
+        <span class="n">n_anchors</span> <span class="o">-=</span> <span class="n">mod3</span>
+    <span class="n">num_yolo_filters</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_classes</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">n_anchors</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">num_yolo_filters</span><span class="p">,</span><span class="n">n_anchors</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony DeGennaro
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

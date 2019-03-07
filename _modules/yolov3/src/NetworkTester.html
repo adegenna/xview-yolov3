@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>yolov3.src.NetworkTester &mdash; YOLOv3 0.5.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> YOLOv3
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">User Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">YOLOv3</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>yolov3.src.NetworkTester</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for yolov3.src.NetworkTester</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.models</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.datasets.datasets</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.utils.utils</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yolov3.src.InputFile</span> <span class="k">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="NetworkTester"><a class="viewcode-back" href="../../../code.html#yolov3.src.NetworkTester.NetworkTester">[docs]</a><span class="k">class</span> <span class="nc">NetworkTester</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for handling testing and assessing the performance of a trained YOLOv3 model.</span>
+<span class="sd">    | **Inputs:**</span>
+<span class="sd">    |    *model:* trained YOLOv3 network (PyTorch .pt file).</span>
+<span class="sd">    |    *dataloader:* dataloader object (usually an instantiation of the ImageFolder class)</span>
+<span class="sd">    |    *inputs:* input file with various user-specified options</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span>      <span class="o">=</span> <span class="n">inputs</span><span class="p">;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dataloader</span>  <span class="o">=</span> <span class="n">dataloader</span><span class="p">;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span>         <span class="o">=</span> <span class="n">model</span><span class="p">;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setupCuda</span><span class="p">();</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadSavedModels</span><span class="p">();</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadClasses</span><span class="p">()</span>
+
+<div class="viewcode-block" id="NetworkTester.setupCuda"><a class="viewcode-back" href="../../../code.html#yolov3.src.NetworkTester.NetworkTester.setupCuda">[docs]</a>    <span class="k">def</span> <span class="nf">setupCuda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Basic method to setup GPU/cuda support, if available </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cuda</span>          <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda:0&#39;</span> <span class="k">if</span> <span class="n">cuda</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cuda</span><span class="p">:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">manual_seed_all</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">cudnn</span><span class="o">.</span><span class="n">benchmark</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using &#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">(),</span> <span class="s1">&#39; GPUs&#39;</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="NetworkTester.loadSavedModels"><a class="viewcode-back" href="../../../code.html#yolov3.src.NetworkTester.NetworkTester.loadSavedModels">[docs]</a>    <span class="k">def</span> <span class="nf">loadSavedModels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to load a saved YOLOv3 model from a PyTorch (.pt) file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">networksavefile</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="NetworkTester.loadClasses"><a class="viewcode-back" href="../../../code.html#yolov3.src.NetworkTester.NetworkTester.loadClasses">[docs]</a>    <span class="k">def</span> <span class="nf">loadClasses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to load class names from specified path in user-input file.</span>
+<span class="sd">        Format assumed shall be a csv list of (class_name , class_label)_i</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">class_names</span><span class="p">,</span><span class="n">class_labels</span> <span class="o">=</span> <span class="n">load_classes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">class_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__classes</span>      <span class="o">=</span> <span class="n">class_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__class_labels</span> <span class="o">=</span> <span class="n">class_labels</span></div>
+
+<div class="viewcode-block" id="NetworkTester.detect"><a class="viewcode-back" href="../../../code.html#yolov3.src.NetworkTester.NetworkTester.detect">[docs]</a>    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method to compute object detections over testing dataset&quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;********************* NETWORK TESTING *********************&#39;</span><span class="p">)</span>
+        <span class="n">imgs</span>           <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Stores image paths</span>
+        <span class="n">img_detections</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Stores detections for each image index</span>
+        <span class="n">prev_time</span>      <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">detections</span>     <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">batch_i</span><span class="p">,</span> <span class="p">(</span><span class="n">img_paths</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dataloader</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">batch_i</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+            <span class="n">img_ud</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">img_lr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+            <span class="n">preds</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">imgsize</span>
+            <span class="n">ni</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">length</span><span class="p">))</span>  <span class="c1"># up-down</span>
+            <span class="n">nj</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">length</span><span class="p">))</span>  <span class="c1"># left-right</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ni</span><span class="p">):</span>  <span class="c1"># for i in range(ni - 1):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;row </span><span class="si">%g</span><span class="s1">/</span><span class="si">%g</span><span class="s1">: &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ni</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nj</span><span class="p">):</span>  <span class="c1"># for j in range(nj if i==0 else nj - 1):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                    <span class="c1"># forward scan</span>
+                    <span class="n">y2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">length</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">y1</span> <span class="o">=</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">length</span>
+                    <span class="n">x2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">length</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                    <span class="n">x1</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">length</span>
+
+                    <span class="c1"># Get detections</span>
+                    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                        <span class="c1"># Normal orientation</span>
+                        <span class="n">chip</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">img</span><span class="p">[:,</span> <span class="n">y1</span><span class="p">:</span><span class="n">y2</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span><span class="n">x2</span><span class="p">])</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">chip</span><span class="p">)</span>
+                        <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="p">[</span><span class="n">pred</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">conf_thres</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">pred</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x1</span>
+                            <span class="n">pred</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">y1</span>
+                            <span class="n">preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">detections</span> <span class="o">=</span> <span class="n">non_max_suppression</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">conf_thres</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">nms_thres</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="p">,</span> <span class="n">img</span><span class="o">=</span><span class="n">img</span><span class="p">)</span>
+                <span class="n">img_detections</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">detections</span><span class="p">)</span>
+                <span class="n">imgs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">img_paths</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Batch </span><span class="si">%d</span><span class="s1">... (Done </span><span class="si">%.3f</span><span class="s1">s)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">batch_i</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">prev_time</span><span class="p">))</span>
+            <span class="n">prev_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__img_detections</span> <span class="o">=</span> <span class="n">img_detections</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__imgs</span>           <span class="o">=</span> <span class="n">imgs</span></div>
+
+<div class="viewcode-block" id="NetworkTester.plotDetection"><a class="viewcode-back" href="../../../code.html#yolov3.src.NetworkTester.NetworkTester.plotDetection">[docs]</a>    <span class="k">def</span> <span class="nf">plotDetection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method to plot and display all detected objects in the testing dataset&quot;&quot;&quot;</span>
+
+        <span class="c1"># Bounding-box colors</span>
+        <span class="n">color_list</span> <span class="o">=</span> <span class="p">[[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__classes</span><span class="p">))]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__img_detections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Iterate through images and save plot of detections</span>
+        <span class="k">for</span> <span class="n">img_i</span><span class="p">,</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">detections</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__imgs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__img_detections</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;image </span><span class="si">%g</span><span class="s2">: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">img_i</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">plot_flag</span><span class="p">:</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+            <span class="c1"># Draw bounding boxes and labels of detections</span>
+            <span class="k">if</span> <span class="n">detections</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">unique_classes</span> <span class="o">=</span> <span class="n">detections</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+                <span class="n">bbox_colors</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">color_list</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">))</span>
+
+                <span class="c1"># write results to .txt file</span>
+                <span class="n">results_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">results_path</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_path</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+
+                <span class="n">results_img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">outdir</span> <span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">results_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.bmp&#39;</span><span class="p">,</span> <span class="s1">&#39;.tif&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">unique_classes</span><span class="p">:</span>
+                        <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">detections</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1"> </span><span class="si">%s</span><span class="s1">s&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__classes</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)]))</span>
+
+                    <span class="k">for</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">cls_conf</span><span class="p">,</span> <span class="n">cls_pred</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
+                        <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+                        <span class="c1"># write to file</span>
+                        <span class="n">class_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class_labels</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">cls_pred</span><span class="p">)]</span>
+                        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">((</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1"> </span><span class="si">%g</span><span class="s1"> </span><span class="si">%g</span><span class="s1"> </span><span class="si">%g</span><span class="s1"> </span><span class="si">%g</span><span class="s1"> </span><span class="si">%g</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">class_labels</span><span class="p">,</span> <span class="n">cls_conf</span> <span class="o">*</span> <span class="n">conf</span><span class="p">))</span>
+
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">plot_flag</span><span class="p">:</span>
+                            <span class="c1"># Add the bbox to the plot</span>
+                            <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__classes</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">cls_pred</span><span class="p">)],</span> <span class="n">cls_conf</span><span class="p">)</span> <span class="k">if</span> <span class="n">cls_conf</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">cls_thres</span> <span class="k">else</span> <span class="kc">None</span>
+                            <span class="n">color</span> <span class="o">=</span> <span class="n">bbox_colors</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">unique_classes</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">cls_pred</span><span class="p">))[</span><span class="mi">0</span><span class="p">])]</span>
+                            <span class="n">plot_one_box</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="n">img</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">line_thickness</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inputs</span><span class="o">.</span><span class="n">plot_flag</span><span class="p">:</span>
+                    <span class="c1"># Save generated image with detections</span>
+                    <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">results_img_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.bmp&#39;</span><span class="p">,</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">),</span> <span class="n">img</span><span class="p">)</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony DeGennaro
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

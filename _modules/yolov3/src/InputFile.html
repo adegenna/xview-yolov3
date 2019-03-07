@@ -1,0 +1,450 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>yolov3.src.InputFile &mdash; YOLOv3 0.5.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> YOLOv3
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">User Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">YOLOv3</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>yolov3.src.InputFile</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for yolov3.src.InputFile</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
+
+<div class="viewcode-block" id="InputFile"><a class="viewcode-back" href="../../../code.html#yolov3.src.InputFile.InputFile">[docs]</a><span class="k">class</span> <span class="nc">InputFile</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for packaging all input/config file options together. </span>
+
+<span class="sd">    .. note:: </span>
+<span class="sd">         There are separate options required by InputFile depending on whether the intended goal is training or testing. The user must declare on the first line of the InputFile either ``[TRAIN]`` or ``[TEST]``, depending on their desired objective.</span>
+
+<span class="sd">    **Inputs**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    inputfilename : string </span>
+<span class="sd">        String specifying the desired inputfile name.     </span>
+
+<span class="sd">    **Train Options**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    Below are a list of options that must be specified in an inputfile</span>
+<span class="sd">    of type ``[TRAIN]``:</span>
+
+<span class="sd">    ==============================  ============  ===============================================</span>
+<span class="sd">    option                          data type     meaning</span>
+<span class="sd">    ==============================  ============  ===============================================</span>
+<span class="sd">    loaddir                         string        Absolute path to load directory.        </span>
+<span class="sd">    outdir                          string        Absolute path to output directory.</span>
+<span class="sd">    targetspath                     string        Absolute path to target file.</span>
+<span class="sd">    targetfiletype                  string        Type of target file.</span>
+<span class="sd">    traindir                        string        Type of target file.</span>
+<span class="sd">    epochs                          int           Number of training epochs.</span>
+<span class="sd">    epochstart                      int           Starting epoch.</span>
+<span class="sd">    batchsize                       int           Training batch size.</span>
+<span class="sd">    networkcfg                      string        Absolute path to network architecture file.</span>
+<span class="sd">    imgsize                         int           Base image crop size.</span>
+<span class="sd">    resume                          bool          Boolean value specifying whether training is </span>
+<span class="sd">                                                  resuming from previous iteration.</span>
+<span class="sd">    invalid_class_list              string        Comma-separated list of classes to be </span>
+<span class="sd">                                                  ignored from training data.</span>
+<span class="sd">    boundingboxclusters             int           Desired number of bounding-box clusters for </span>
+<span class="sd">                                                  the YOLO architecture.</span>
+<span class="sd">    computeboundingboxclusters      bool          Boolean value specifying whether to compute </span>
+<span class="sd">                                                  bounding box clusters.</span>
+<span class="sd">    class_path                      string        Absolute path to class.</span>
+<span class="sd">    sampling_weight                 string        String specifying type of sampling weight. </span>
+<span class="sd">                                                  Options are inverse_class_frequency and uniform</span>
+<span class="sd">    ==============================  ============  ===============================================</span>
+<span class="sd">    </span>
+<span class="sd">    **Test Options**</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    Below are a list of options that must be specified in an inputfile</span>
+<span class="sd">    of type ``[TEST]``:</span>
+
+<span class="sd">    ==============================  ============  ===============================================</span>
+<span class="sd">    option                          data type     meaning</span>
+<span class="sd">    ==============================  ============  ===============================================</span>
+<span class="sd">    loaddir                         string        Absolute path to load directory.        </span>
+<span class="sd">    outdir                          string        Absolute path to output directory.</span>
+<span class="sd">    targetspath                     string        Absolute path to target file.</span>
+<span class="sd">    targetfiletype                  string        Type of target file.</span>
+<span class="sd">    imagepath                       string        Absolute path to directory containing images.</span>
+<span class="sd">    plot_flag                       bool          Flag to indicate whether to plot and output </span>
+<span class="sd">                                                  object detections.</span>
+<span class="sd">    networkcfg                      string        Absolute path to network architecture file.</span>
+<span class="sd">    networksavefile                 string        Absolute path to trained YOLOv3 network file, </span>
+<span class="sd">                                                  saved by PyTorch (.pt).</span>
+<span class="sd">    class_path                      string        Absolute path to .csv file containing list </span>
+<span class="sd">                                                  of classes/labels.</span>
+<span class="sd">    conf_thres                      float         Confidence threshold for detection.</span>
+<span class="sd">    cls_thres                       float         Class threshold for detection.</span>
+<span class="sd">    nms_thres                       float         NMS threshold.</span>
+<span class="sd">    batch_size                      int           Batch size.</span>
+<span class="sd">    imgsize                         int           Desired cropped image size.</span>
+<span class="sd">    rgb_mean                        string        Absolute path to dataset RGB mean file.</span>
+<span class="sd">    rgb_std                         string        Absolute path to dataset RGB standard deviation file.</span>
+<span class="sd">    class_mean                      string        Absolute path to class mean file.</span>
+<span class="sd">    class_sigma                     string        Absolute path to class standard deviation file.</span>
+<span class="sd">    invalid_class_list              string        Comma-separated list of classes to be ignored</span>
+<span class="sd">                                                  from training data.</span>
+<span class="sd">    ==============================  ============  ===============================================</span>
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    --------</span>
+<span class="sd">    To use this class, </span>
+<span class="sd">    follow this interface::</span>
+<span class="sd">        input_file_object = InputFile(&#39;/full/path/to/input_file.dat&#39;)</span>
+
+<span class="sd">    For the ``[TRAIN]`` case, here is an example</span>
+<span class="sd">    of what ``input_file.dat`` might contain::</span>
+<span class="sd">        [TRAIN]</span>
+<span class="sd">        loaddir          = /full/path/to/loaddir/</span>
+<span class="sd">        outdir           = /full/path/to/outdir/</span>
+<span class="sd">        targetspath      = /full/path/to/targetsdir/xView_train.geojson</span>
+<span class="sd">        targetfiletype   = json</span>
+<span class="sd">        traindir         = /full/path/to/traindir/</span>
+<span class="sd">        epochs           = 300</span>
+<span class="sd">        epochstart       = 0</span>
+<span class="sd">        batchsize        = 8</span>
+<span class="sd">        networkcfg       = /full/path/to/networkdir/yolov3_template.cfg</span>
+<span class="sd">        imgsize          = 800</span>
+<span class="sd">        resume           = False</span>
+<span class="sd">        invalid_class_list         = 75,82</span>
+<span class="sd">        boundingboxclusters        = 30</span>
+<span class="sd">        computeboundingboxclusters = False</span>
+<span class="sd">        class_path       = /full/path/to/xview_names_and_labels.csv</span>
+<span class="sd">        sampling_weight  = inverse_class_frequency</span>
+
+<span class="sd">    For the ``[TEST]`` case, here is an example</span>
+<span class="sd">    of what ``input_file.dat`` might contain::</span>
+<span class="sd">      [TEST]</span>
+<span class="sd">      loaddir              = /full/path/to/loaddir/</span>
+<span class="sd">      outdir               = /full/path/to/outdir/</span>
+<span class="sd">      targetspath          = /full/path/to/targetdir/xView_train.geojson</span>
+<span class="sd">      targetfiletype       = json</span>
+<span class="sd">      imagepath            = /full/path/to/testdir/</span>
+<span class="sd">      plot_flag            = True</span>
+<span class="sd">      networkcfg           = /full/path/to/networksavedir/yolov3_custom.cfg</span>
+<span class="sd">      networksavefile      = /full/path/to/networksavedir/best.pt</span>
+<span class="sd">      class_path           = /full/path/to/classpathdir/xview_names_and_labels.csv</span>
+<span class="sd">      conf_thres           = 0.99</span>
+<span class="sd">      cls_thres            = 0.05</span>
+<span class="sd">      nms_thres            = 0.4</span>
+<span class="sd">      batch_size           = 1</span>
+<span class="sd">      imgsize              = 1632</span>
+<span class="sd">      rgb_mean             = /full/path/to/statdir/training_rgb_mean.out</span>
+<span class="sd">      rgb_std              = /full/path/to/statdir/training_rgb_std.out</span>
+<span class="sd">      class_mean           = /full/path/to/statdir/training_class_mean.out</span>
+<span class="sd">      class_sigma          = /full/path/to/statdir/training_class_sigma.out</span>
+<span class="sd">      invalid_class_list   = 75,82</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">):</span>
+        <span class="n">config</span>    <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">inputfile</span><span class="p">)</span>
+        <span class="n">keys</span><span class="p">,</span><span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assert_everything_included</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span><span class="n">vals</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convert_strings_to_appropriate_datatypes</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">assert_everything_included</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">config</span><span class="p">):</span>
+        <span class="c1"># Check that correct section header is used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sections</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">assert</span><span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s1">&#39;TRAIN&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s1">&#39;TEST&#39;</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;Please specify as the inputfile section header either [TRAIN] or [TEST]&#39;</span><span class="p">,)</span>
+            <span class="k">raise</span>
+        <span class="c1"># Get keys</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span><span class="p">]]</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span><span class="p">][</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s1">&#39;TRAIN&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_necessary_keys_train</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s1">&#39;TEST&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_necessary_keys_test</span><span class="p">()</span>
+        <span class="c1"># Check that all necessary keys are included</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">assert</span><span class="p">(</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;The following necessary argument was not specified in the input file: &#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">,)</span>
+                <span class="k">raise</span>
+        <span class="k">return</span> <span class="n">keys</span><span class="p">,</span><span class="n">vals</span>
+
+    <span class="k">def</span> <span class="nf">set_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">keys</span><span class="p">,</span><span class="n">vals</span><span class="p">):</span>
+        <span class="c1"># Set all options</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keys</span><span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">vals</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">convert_strings_to_appropriate_datatypes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">invalid_class_list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">invalid_class_list</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">invalid_class_list</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span> <span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">invalid_class_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="c1"># Train-specific</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s2">&quot;TRAIN&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">epochs</span>     <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">epochstart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epochstart</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">batchsize</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batchsize</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resume</span>     <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">resume</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">boundingboxclusters</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingboxclusters</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">computeboundingboxclusters</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">computeboundingboxclusters</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">computeboundingboxclusters</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">))</span>
+        <span class="c1"># Test-specific</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputtype</span> <span class="o">==</span> <span class="s2">&quot;TEST&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_flag</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_flag</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_flag</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conf_thres</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf_thres</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cls_thres</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cls_thres</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nms_thres</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">set_necessary_keys_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Set list defining necessary keys for training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loaddir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;outdir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;targetspath&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;targetfiletype&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;traindir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;epochs&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;epochstart&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;batchsize&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;networkcfg&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;imgsize&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;resume&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;invalid_class_list&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;boundingboxclusters&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;computeboundingboxclusters&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;class_path&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;sampling_weight&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">set_necessary_keys_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Set list defining necessary keys for testing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">necessary_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loaddir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;outdir&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;targetspath&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;targetfiletype&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;imagepath&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;plot_flag&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;networkcfg&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;networksavefile&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;class_path&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;conf_thres&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;cls_thres&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;nms_thres&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;batch_size&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;imgsize&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;rgb_mean&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;rgb_std&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;class_mean&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;class_sigma&#39;</span><span class="p">,</span> \
+                               <span class="s1">&#39;invalid_class_list&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="InputFile.printInputs"><a class="viewcode-back" href="../../../code.html#yolov3.src.InputFile.InputFile.printInputs">[docs]</a>    <span class="k">def</span> <span class="nf">printInputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to print all config options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">);</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">);</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;********************* INPUTS *********************&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;**************************************************&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">);</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony DeGennaro
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

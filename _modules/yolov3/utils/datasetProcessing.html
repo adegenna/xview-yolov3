@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>utils.datasetProcessing &mdash; YOLOv3 0.5.3 documentation</title>
+  <title>yolov3.utils.datasetProcessing &mdash; YOLOv3 0.5.3 documentation</title>
   
 
   
@@ -24,14 +24,14 @@
 
   
 
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 
   
-  <script src="../../_static/js/modernizr.min.js"></script>
+  <script src="../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -47,7 +47,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> YOLOv3
+            <a href="../../../index.html" class="icon icon-home"> YOLOv3
           
 
           
@@ -64,7 +64,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -83,13 +83,13 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../running.html">User Instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../flowdiagrams.html">Flow Diagrams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">User Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">Code Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../flowdiagrams.html">Flow Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
 </ul>
 
             
@@ -104,7 +104,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">YOLOv3</a>
+          <a href="../../../index.html">YOLOv3</a>
         
       </nav>
 
@@ -133,11 +133,11 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>utils.datasetProcessing</li>
+      <li>yolov3.utils.datasetProcessing</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -152,7 +152,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for utils.datasetProcessing</h1><div class="highlight"><pre>
+  <h1>Source code for yolov3.utils.datasetProcessing</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
@@ -184,7 +184,7 @@
             <span class="n">files</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">files</span><span class="p">,</span><span class="n">datum</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">files</span>
 
-<div class="viewcode-block" id="get_labels_geojson"><a class="viewcode-back" href="../../code.html#utils.datasetProcessing.get_labels_geojson">[docs]</a><span class="k">def</span> <span class="nf">get_labels_geojson</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s2">&quot;xView_train.geojson&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_labels_geojson"><a class="viewcode-back" href="../../../code.html#yolov3.utils.datasetProcessing.get_labels_geojson">[docs]</a><span class="k">def</span> <span class="nf">get_labels_geojson</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s2">&quot;xView_train.geojson&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Processes a WorldView3 GEOJSON file</span>
 
@@ -227,7 +227,7 @@
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">datafeatureskeep</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
 
-<div class="viewcode-block" id="determine_number_of_class_members"><a class="viewcode-back" href="../../code.html#utils.datasetProcessing.determine_number_of_class_members">[docs]</a><span class="k">def</span> <span class="nf">determine_number_of_class_members</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+<div class="viewcode-block" id="determine_number_of_class_members"><a class="viewcode-back" href="../../../code.html#yolov3.utils.datasetProcessing.determine_number_of_class_members">[docs]</a><span class="k">def</span> <span class="nf">determine_number_of_class_members</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to determine the number of elements in each class of a dataset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -239,7 +239,7 @@
         <span class="n">num_members</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">classes</span> <span class="o">==</span> <span class="n">unique_classes</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
     <span class="k">return</span> <span class="n">unique_classes</span><span class="p">,</span> <span class="n">num_members</span></div>
 
-<div class="viewcode-block" id="determine_common_and_rare_classes"><a class="viewcode-back" href="../../code.html#utils.datasetProcessing.determine_common_and_rare_classes">[docs]</a><span class="k">def</span> <span class="nf">determine_common_and_rare_classes</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+<div class="viewcode-block" id="determine_common_and_rare_classes"><a class="viewcode-back" href="../../../code.html#yolov3.utils.datasetProcessing.determine_common_and_rare_classes">[docs]</a><span class="k">def</span> <span class="nf">determine_common_and_rare_classes</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to determine the common and rare classes in a dataset using 2-means.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -249,7 +249,7 @@
     <span class="n">common_classes</span>              <span class="o">=</span> <span class="n">unique_classes</span><span class="p">[</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">k_classes</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">common_classes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">rare_classes</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="determine_small_medium_large_classes"><a class="viewcode-back" href="../../code.html#utils.datasetProcessing.determine_small_medium_large_classes">[docs]</a><span class="k">def</span> <span class="nf">determine_small_medium_large_classes</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+<div class="viewcode-block" id="determine_small_medium_large_classes"><a class="viewcode-back" href="../../../code.html#yolov3.utils.datasetProcessing.determine_small_medium_large_classes">[docs]</a><span class="k">def</span> <span class="nf">determine_small_medium_large_classes</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to determine the small/medium/large size classes in a dataset using 3-means.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -298,15 +298,15 @@
 
     
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
     
 
   
 
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Code Docs &mdash; YOLOv3 0.5.2 documentation</title>
+  <title>Code Docs &mdash; YOLOv3 0.5.3 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.3
               </div>
             
           
@@ -90,9 +90,10 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="running.html">User Instructions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-src.train">Src/</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-utils.datasetProcessing">Utils/</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tests.unittests">Tests/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-yolov3.src.InputFile">Src/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-yolov3.utils.datasetProcessing">Utils/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-yolov3.tests.unittests">Tests/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-yolov3.scripts.train">Scripts/</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="flowdiagrams.html">Flow Diagrams</a></li>
@@ -163,53 +164,11 @@
             
   <div class="section" id="code-docs">
 <h1>Code Docs<a class="headerlink" href="#code-docs" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-src.train">
-<span id="src"></span><h2>Src/<a class="headerlink" href="#module-src.train" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="src.train.main">
-<code class="descclassname">src.train.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/train.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.train.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main driver script for training the YOLOv3 network.</p>
-<p><strong>Inputs</strong></p>
-<dl class="docutils">
-<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments</span></dt>
-<dd>Command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
-</dl>
-<p><strong>Outputs</strong></p>
-<dl class="docutils">
-<dt>inputs.outdir/results.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file </span></dt>
-<dd>output metrics for each training epoch</dd>
-<dt>inputs.loaddir/latest.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
-<dd>checkpoint file for latest network configuration</dd>
-<dt>inputs.loaddir/best.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
-<dd>checkpoint file for best current network configuration</dd>
-<dt>inputs.loaddir/backup.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
-<dd>checkpoint file for backup purposes</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-src.detect"></span><dl class="function">
-<dt id="src.detect.detect">
-<code class="descclassname">src.detect.</code><code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/detect.html#detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.detect.detect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main driver script for testing the YOLOv3 network.</p>
-<p><strong>Inputs</strong></p>
-<dl class="docutils">
-<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments</span></dt>
-<dd>command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
-</dl>
-<p><strong>Outputs</strong></p>
-<dl class="docutils">
-<dt>inputs.outdir/metrics.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
-<dd>output metrics for specified test image given by inputs.imagepath</dd>
-<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.jpg <span class="classifier-delimiter">:</span> <span class="classifier">jpeg image</span></dt>
-<dd>test image with detected bounding boxes, classes and confidence scores</dd>
-<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
-<dd>text file with bounding boxes, classes and confidence scores for all detections</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-src.InputFile"></span><dl class="class">
-<dt id="src.InputFile.InputFile">
-<em class="property">class </em><code class="descclassname">src.InputFile.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>inputfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile" title="Permalink to this definition">¶</a></dt>
+<div class="section" id="module-yolov3.src.InputFile">
+<span id="src"></span><h2>Src/<a class="headerlink" href="#module-yolov3.src.InputFile" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="yolov3.src.InputFile.InputFile">
+<em class="property">class </em><code class="descclassname">yolov3.src.InputFile.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>inputfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/InputFile.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.InputFile.InputFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for packaging all input/config file options together.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -457,16 +416,16 @@ of what <code class="docutils literal notranslate"><span class="pre">input_file.
 </pre></div>
 </div>
 <dl class="method">
-<dt id="src.InputFile.InputFile.printInputs">
-<code class="descname">printInputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/InputFile.html#InputFile.printInputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.InputFile.InputFile.printInputs" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.InputFile.InputFile.printInputs">
+<code class="descname">printInputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/InputFile.html#InputFile.printInputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.InputFile.InputFile.printInputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to print all config options.</p>
 </dd></dl>
 
 </dd></dl>
 
-<span class="target" id="module-src.models"></span><dl class="class">
-<dt id="src.models.Darknet">
-<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>networkcfg</em>, <em>imgsize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-yolov3.src.models"></span><dl class="class">
+<dt id="yolov3.src.models.Darknet">
+<em class="property">class </em><code class="descclassname">yolov3.src.models.</code><code class="descname">Darknet</code><span class="sig-paren">(</span><em>networkcfg</em>, <em>imgsize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#Darknet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.Darknet" title="Permalink to this definition">¶</a></dt>
 <dd><p>YOLOv3 object detection model. This class, the modules that comprise its architecture, and its interface are inherited from <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>.</p>
 <p><strong>Inputs</strong></p>
 <dl class="docutils">
@@ -565,8 +524,8 @@ whose members may be accessed directly, e.g.:</p>
 <p>Other functionality is inherited directly from the <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> module 
 of PyTorch, so consult those documents for assistance in using it.</p>
 <dl class="method">
-<dt id="src.models.Darknet.forward">
-<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#Darknet.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.Darknet.forward" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.Darknet.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#Darknet.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.Darknet.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 <p>Should be overridden by all subclasses.</p>
 <div class="admonition note">
@@ -581,17 +540,17 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="src.models.EmptyLayer">
-<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">EmptyLayer</code><a class="reference internal" href="_modules/src/models.html#EmptyLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.EmptyLayer" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.EmptyLayer">
+<em class="property">class </em><code class="descclassname">yolov3.src.models.</code><code class="descname">EmptyLayer</code><a class="reference internal" href="_modules/yolov3/src/models.html#EmptyLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.EmptyLayer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Placeholder for ‘route’ and ‘shortcut’ layers</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="src.models.YOLOLayer">
-<em class="property">class </em><code class="descclassname">src.models.</code><code class="descname">YOLOLayer</code><span class="sig-paren">(</span><em>anchors</em>, <em>nC</em>, <em>img_dim</em>, <em>anchor_idxs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#YOLOLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.YOLOLayer" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.YOLOLayer">
+<em class="property">class </em><code class="descclassname">yolov3.src.models.</code><code class="descname">YOLOLayer</code><span class="sig-paren">(</span><em>anchors</em>, <em>nC</em>, <em>img_dim</em>, <em>anchor_idxs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#YOLOLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.YOLOLayer" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
-<dt id="src.models.YOLOLayer.forward">
-<code class="descname">forward</code><span class="sig-paren">(</span><em>p</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#YOLOLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.YOLOLayer.forward" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.YOLOLayer.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>p</em>, <em>targets=None</em>, <em>requestPrecision=False</em>, <em>weight=None</em>, <em>epoch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#YOLOLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.YOLOLayer.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 <p>Should be overridden by all subclasses.</p>
 <div class="admonition note">
@@ -606,14 +565,14 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.models.create_modules">
-<code class="descclassname">src.models.</code><code class="descname">create_modules</code><span class="sig-paren">(</span><em>module_defs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_modules" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.create_modules">
+<code class="descclassname">yolov3.src.models.</code><code class="descname">create_modules</code><span class="sig-paren">(</span><em>module_defs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#create_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.create_modules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs module list of layer blocks from module configuration in module_defs</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.models.create_yolo_architecture">
-<code class="descclassname">src.models.</code><code class="descname">create_yolo_architecture</code><span class="sig-paren">(</span><em>inputs</em>, <em>n_classes</em>, <em>anchor_coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_yolo_architecture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_yolo_architecture" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.create_yolo_architecture">
+<code class="descclassname">yolov3.src.models.</code><code class="descname">create_yolo_architecture</code><span class="sig-paren">(</span><em>inputs</em>, <em>n_classes</em>, <em>anchor_coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#create_yolo_architecture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.create_yolo_architecture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a yolo-v3 layer configuration file from desired options</p>
 <p><strong>Inputs</strong></p>
 <dl class="docutils">
@@ -632,77 +591,77 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.models.create_yolo_config_file">
-<code class="descclassname">src.models.</code><code class="descname">create_yolo_config_file</code><span class="sig-paren">(</span><em>template_file_path</em>, <em>output_config_file_path</em>, <em>n_anchors</em>, <em>n_classes</em>, <em>anchor_coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#create_yolo_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.create_yolo_config_file" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.create_yolo_config_file">
+<code class="descclassname">yolov3.src.models.</code><code class="descname">create_yolo_config_file</code><span class="sig-paren">(</span><em>template_file_path</em>, <em>output_config_file_path</em>, <em>n_anchors</em>, <em>n_classes</em>, <em>anchor_coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#create_yolo_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.create_yolo_config_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a yolo-v3 layer configuration file from desired options</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.models.parse_model_config">
-<code class="descclassname">src.models.</code><code class="descname">parse_model_config</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#parse_model_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.parse_model_config" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.parse_model_config">
+<code class="descclassname">yolov3.src.models.</code><code class="descname">parse_model_config</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#parse_model_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.parse_model_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses the yolo-v3 layer configuration file and returns module definitions</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.models.read_yolo_config_file_anchors">
-<code class="descclassname">src.models.</code><code class="descname">read_yolo_config_file_anchors</code><span class="sig-paren">(</span><em>cfg_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models.html#read_yolo_config_file_anchors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.models.read_yolo_config_file_anchors" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.models.read_yolo_config_file_anchors">
+<code class="descclassname">yolov3.src.models.</code><code class="descname">read_yolo_config_file_anchors</code><span class="sig-paren">(</span><em>cfg_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/models.html#read_yolo_config_file_anchors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.models.read_yolo_config_file_anchors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads the anchor coordinates from a specified YOLO configuration file</p>
 </dd></dl>
 
-<span class="target" id="module-src.NetworkTrainer"></span><span class="target" id="module-src.NetworkTester"></span><dl class="class">
-<dt id="src.NetworkTester.NetworkTester">
-<em class="property">class </em><code class="descclassname">src.NetworkTester.</code><code class="descname">NetworkTester</code><span class="sig-paren">(</span><em>model</em>, <em>dataloader</em>, <em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-yolov3.src.NetworkTrainer"></span><span class="target" id="module-yolov3.src.NetworkTester"></span><dl class="class">
+<dt id="yolov3.src.NetworkTester.NetworkTester">
+<em class="property">class </em><code class="descclassname">yolov3.src.NetworkTester.</code><code class="descname">NetworkTester</code><span class="sig-paren">(</span><em>model</em>, <em>dataloader</em>, <em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/NetworkTester.html#NetworkTester"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.NetworkTester.NetworkTester" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for handling testing and assessing the performance of a trained YOLOv3 model.
 | <strong>Inputs:</strong>
 |    <em>model:</em> trained YOLOv3 network (PyTorch .pt file).
 |    <em>dataloader:</em> dataloader object (usually an instantiation of the ImageFolder class)
 |    <em>inputs:</em> input file with various user-specified options</p>
 <dl class="method">
-<dt id="src.NetworkTester.NetworkTester.detect">
-<code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.detect" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.NetworkTester.NetworkTester.detect">
+<code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/NetworkTester.html#NetworkTester.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.NetworkTester.NetworkTester.detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute object detections over testing dataset</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.NetworkTester.NetworkTester.loadClasses">
-<code class="descname">loadClasses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.loadClasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.loadClasses" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.NetworkTester.NetworkTester.loadClasses">
+<code class="descname">loadClasses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/NetworkTester.html#NetworkTester.loadClasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.NetworkTester.NetworkTester.loadClasses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to load class names from specified path in user-input file.
 Format assumed shall be a csv list of (class_name , class_label)_i</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.NetworkTester.NetworkTester.loadSavedModels">
-<code class="descname">loadSavedModels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.loadSavedModels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.loadSavedModels" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.NetworkTester.NetworkTester.loadSavedModels">
+<code class="descname">loadSavedModels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/NetworkTester.html#NetworkTester.loadSavedModels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.NetworkTester.NetworkTester.loadSavedModels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to load a saved YOLOv3 model from a PyTorch (.pt) file.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.NetworkTester.NetworkTester.plotDetection">
-<code class="descname">plotDetection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.plotDetection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.plotDetection" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.NetworkTester.NetworkTester.plotDetection">
+<code class="descname">plotDetection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/NetworkTester.html#NetworkTester.plotDetection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.NetworkTester.NetworkTester.plotDetection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to plot and display all detected objects in the testing dataset</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.NetworkTester.NetworkTester.setupCuda">
-<code class="descname">setupCuda</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/NetworkTester.html#NetworkTester.setupCuda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.NetworkTester.NetworkTester.setupCuda" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.NetworkTester.NetworkTester.setupCuda">
+<code class="descname">setupCuda</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/NetworkTester.html#NetworkTester.setupCuda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.NetworkTester.NetworkTester.setupCuda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic method to setup GPU/cuda support, if available</p>
 </dd></dl>
 
 </dd></dl>
 
-<span class="target" id="module-src.targets"></span><dl class="class">
-<dt id="src.targets.Target">
-<em class="property">class </em><code class="descclassname">src.targets.</code><code class="descname">Target</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-yolov3.src.targets.Target"></span><dl class="class">
+<dt id="yolov3.src.targets.Target.Target">
+<em class="property">class </em><code class="descclassname">yolov3.src.targets.Target.</code><code class="descname">Target</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for handling target pre-processing tasks.</p>
 <dl class="method">
-<dt id="src.targets.Target.apply_mask_to_filtered_data">
-<code class="descname">apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.apply_mask_to_filtered_data">
+<code class="descname">apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.apply_mask_to_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to apply mask to filtered data variables.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.compute_bounding_box_clusters_using_kmeans">
-<code class="descname">compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><em>n_clusters</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans">
+<code class="descname">compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><em>n_clusters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.compute_bounding_box_clusters_using_kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
 <dd><div class="line-block">
 <div class="line">Method to compute bounding box clusters using kmeans.</div>
 </div>
@@ -715,57 +674,57 @@ Format assumed shall be a csv list of (class_name , class_label)_i</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.compute_class_weights_with_filtered_data">
-<code class="descname">compute_class_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_class_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.compute_class_weights_with_filtered_data">
+<code class="descname">compute_class_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.compute_class_weights_with_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.compute_class_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute class weights from filtered data. Weight is simply inverse of class frequency.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.compute_cropped_data">
-<code class="descname">compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_cropped_data" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.compute_cropped_data">
+<code class="descname">compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.compute_cropped_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.compute_cropped_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to crop image data based on the width and height. Filtered variables are then computed based on the updated image coordinates.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.compute_filtered_data_mask">
-<code class="descname">compute_filtered_data_mask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_filtered_data_mask" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.compute_filtered_data_mask">
+<code class="descname">compute_filtered_data_mask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.compute_filtered_data_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.compute_filtered_data_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtered data by applying several filtering operations.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.compute_filtered_variables_from_filtered_coords">
-<code class="descname">compute_filtered_variables_from_filtered_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_filtered_variables_from_filtered_coords" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.compute_filtered_variables_from_filtered_coords">
+<code class="descname">compute_filtered_variables_from_filtered_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.compute_filtered_variables_from_filtered_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.compute_filtered_variables_from_filtered_coords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtered variables from filtered coordinates.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.compute_filtered_variables_from_filtered_xy">
-<code class="descname">compute_filtered_variables_from_filtered_xy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_filtered_variables_from_filtered_xy" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.compute_filtered_variables_from_filtered_xy">
+<code class="descname">compute_filtered_variables_from_filtered_xy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.compute_filtered_variables_from_filtered_xy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.compute_filtered_variables_from_filtered_xy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtered variables from filtered xy.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.compute_image_weights_with_filtered_data">
-<code class="descname">compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.compute_image_weights_with_filtered_data">
+<code class="descname">compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.compute_image_weights_with_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute image weights from filtered data. Weight for a given image is the sum of the class weights for each of the objects present in that given image.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.count_number_of_nonexistent_chips">
-<code class="descname">count_number_of_nonexistent_chips</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.count_number_of_nonexistent_chips" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.count_number_of_nonexistent_chips">
+<code class="descname">count_number_of_nonexistent_chips</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.count_number_of_nonexistent_chips"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.count_number_of_nonexistent_chips" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to count the number of chips that exist in the target metadata file, but not in the actual database.
 Returns: number of nonexistent objects, and number of nonexistent files</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.detect_nonexistent_chip">
-<code class="descname">detect_nonexistent_chip</code><span class="sig-paren">(</span><em>chip_i</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.detect_nonexistent_chip" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.detect_nonexistent_chip">
+<code class="descname">detect_nonexistent_chip</code><span class="sig-paren">(</span><em>chip_i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.detect_nonexistent_chip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.detect_nonexistent_chip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to detect all instances in database of a chip that does not exist</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.edge_requirements">
-<code class="descname">edge_requirements</code><span class="sig-paren">(</span><em>w_lim</em>, <em>h_lim</em>, <em>x2_lim</em>, <em>y2_lim</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.edge_requirements" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.edge_requirements">
+<code class="descname">edge_requirements</code><span class="sig-paren">(</span><em>w_lim</em>, <em>h_lim</em>, <em>x2_lim</em>, <em>y2_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.edge_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.edge_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtering based on edge specifications.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong> </div>
@@ -785,14 +744,14 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.load_target_file">
-<code class="descname">load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.load_target_file" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.load_target_file">
+<code class="descname">load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.load_target_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.load_target_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to load a targetfile of type specified in the input file. Supported types: .json.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.manual_dimension_requirements">
-<code class="descname">manual_dimension_requirements</code><span class="sig-paren">(</span><em>area_lim</em>, <em>w_lim</em>, <em>h_lim</em>, <em>AR_lim</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.manual_dimension_requirements">
+<code class="descname">manual_dimension_requirements</code><span class="sig-paren">(</span><em>area_lim</em>, <em>w_lim</em>, <em>h_lim</em>, <em>AR_lim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.manual_dimension_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute filtering based on specified dimension requirements.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong> </div>
@@ -812,8 +771,8 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.output_data_for_listdataset">
-<code class="descname">output_data_for_listdataset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.output_data_for_listdataset" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.output_data_for_listdataset">
+<code class="descname">output_data_for_listdataset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.output_data_for_listdataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.output_data_for_listdataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to output data needed for the ListDataset dataloader.</p>
 <p><strong>Outputs</strong></p>
 <dl class="docutils">
@@ -829,32 +788,32 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.process_target_data">
-<code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.process_target_data">
+<code class="descname">process_target_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.process_target_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.process_target_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to perform all target processing.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.read_list_of_class_names_and_labels">
-<code class="descname">read_list_of_class_names_and_labels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.read_list_of_class_names_and_labels" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.read_list_of_class_names_and_labels">
+<code class="descname">read_list_of_class_names_and_labels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.read_list_of_class_names_and_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.read_list_of_class_names_and_labels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to read in the user-provided list of class names and associated numeric labels.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.remove_nonexistent_chips_from_database">
-<code class="descname">remove_nonexistent_chips_from_database</code><span class="sig-paren">(</span><em>idx_nonexistent</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.remove_nonexistent_chips_from_database" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.remove_nonexistent_chips_from_database">
+<code class="descname">remove_nonexistent_chips_from_database</code><span class="sig-paren">(</span><em>idx_nonexistent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.remove_nonexistent_chips_from_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.remove_nonexistent_chips_from_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to remove all nonexistent chips from database</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.set_image_w_and_h">
-<code class="descname">set_image_w_and_h</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.set_image_w_and_h" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.set_image_w_and_h">
+<code class="descname">set_image_w_and_h</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.set_image_w_and_h"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.set_image_w_and_h" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to set width and height of images associated with targets.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.sigma_rejection_indices">
-<code class="descname">sigma_rejection_indices</code><span class="sig-paren">(</span><em>filtered_data</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.sigma_rejection_indices">
+<code class="descname">sigma_rejection_indices</code><span class="sig-paren">(</span><em>filtered_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.sigma_rejection_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to compute a mask based on a sigma rejection criterion.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong> </div>
@@ -871,16 +830,16 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.targets.Target.strip_image_number_from_chips_and_files">
-<code class="descname">strip_image_number_from_chips_and_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.Target.strip_image_number_from_chips_and_files" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.targets.Target.Target.strip_image_number_from_chips_and_files">
+<code class="descname">strip_image_number_from_chips_and_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/Target.html#Target.strip_image_number_from_chips_and_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.Target.Target.strip_image_number_from_chips_and_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to strip numbers from image filenames from both chips and files.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="src.targets.fcn_sigma_rejection">
-<code class="descclassname">src.targets.</code><code class="descname">fcn_sigma_rejection</code><span class="sig-paren">(</span><em>x</em>, <em>srl=3</em>, <em>ni=3</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.fcn_sigma_rejection" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-yolov3.src.targets.fcn_sigma_rejection"></span><dl class="function">
+<dt id="yolov3.src.targets.fcn_sigma_rejection.fcn_sigma_rejection">
+<code class="descclassname">yolov3.src.targets.fcn_sigma_rejection.</code><code class="descname">fcn_sigma_rejection</code><span class="sig-paren">(</span><em>x</em>, <em>srl=3</em>, <em>ni=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/fcn_sigma_rejection.html#fcn_sigma_rejection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.fcn_sigma_rejection.fcn_sigma_rejection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to perform sigma rejection on a dataset.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -899,9 +858,9 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="src.targets.per_class_stats">
-<code class="descclassname">src.targets.</code><code class="descname">per_class_stats</code><span class="sig-paren">(</span><em>classes</em>, <em>w</em>, <em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#src.targets.per_class_stats" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-yolov3.src.targets.per_class_stats"></span><dl class="function">
+<dt id="yolov3.src.targets.per_class_stats.per_class_stats">
+<code class="descclassname">yolov3.src.targets.per_class_stats.</code><code class="descname">per_class_stats</code><span class="sig-paren">(</span><em>classes</em>, <em>w</em>, <em>h</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/targets/per_class_stats.html#per_class_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.targets.per_class_stats.per_class_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to calculate statistics of target data.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -921,9 +880,9 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </div>
 </dd></dl>
 
-<span class="target" id="module-src.datasets"></span><dl class="class">
-<dt id="src.datasets.ListDataset">
-<em class="property">class </em><code class="descclassname">src.datasets.</code><code class="descname">ListDataset</code><span class="sig-paren">(</span><em>inputs</em>, <em>object_data</em>, <em>class_weights</em>, <em>image_weights</em>, <em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasets.html#ListDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.ListDataset" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-yolov3.src.datasets.datasets"></span><dl class="class">
+<dt id="yolov3.src.datasets.datasets.ListDataset">
+<em class="property">class </em><code class="descclassname">yolov3.src.datasets.datasets.</code><code class="descname">ListDataset</code><span class="sig-paren">(</span><em>inputs</em>, <em>object_data</em>, <em>class_weights</em>, <em>image_weights</em>, <em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/datasets/datasets.html#ListDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.datasets.datasets.ListDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Image dataset class for training</p>
 <p><strong>Inputs</strong></p>
 <dl class="docutils">
@@ -940,9 +899,63 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </dl>
 </dd></dl>
 
+<span class="target" id="module-yolov3.src.datasets.ImageFolder"></span><span class="target" id="module-yolov3.src.datasets.datasetStats"></span><dl class="function">
+<dt id="yolov3.src.datasets.datasetStats.compute_dataset_rgb_stats">
+<code class="descclassname">yolov3.src.datasets.datasetStats.</code><code class="descname">compute_dataset_rgb_stats</code><span class="sig-paren">(</span><em>dataloader_files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/datasets/datasetStats.html#compute_dataset_rgb_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.datasets.datasetStats.compute_dataset_rgb_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute rgb statistics of a given dataset. Uses a two-pass sequential algorithm.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>dataloader_files:</em> list of absolute paths of all dataset files</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>(mean_rgb,std_rgb):</em> mean and standard deviation of RGB channels of dataset</div>
+</div>
+</div>
+</dd></dl>
+
 <dl class="function">
-<dt id="src.datasets.pickRandomPoints">
-<code class="descclassname">src.datasets.</code><code class="descname">pickRandomPoints</code><span class="sig-paren">(</span><em>pts</em>, <em>img0</em>, <em>height</em>, <em>M</em>, <em>img1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasetTransformations.html#pickRandomPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.pickRandomPoints" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.datasets.datasetStats.compute_dataset_rgb_stats_load_into_memory">
+<code class="descclassname">yolov3.src.datasets.datasetStats.</code><code class="descname">compute_dataset_rgb_stats_load_into_memory</code><span class="sig-paren">(</span><em>dataloader_files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/datasets/datasetStats.html#compute_dataset_rgb_stats_load_into_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.datasets.datasetStats.compute_dataset_rgb_stats_load_into_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute rgb statistics of a given dataset. Loads all data into memory and computes statistics in one-shot.</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>dataloader_files:</em> list of absolute paths of all dataset files</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>(mean_rgb,std_rgb):</em> mean and standard deviation of RGB channels of dataset</div>
+</div>
+</div>
+</dd></dl>
+
+<span class="target" id="module-yolov3.src.datasets.datasetTransformations"></span><dl class="function">
+<dt id="yolov3.src.datasets.datasetTransformations.augmentHSV">
+<code class="descclassname">yolov3.src.datasets.datasetTransformations.</code><code class="descname">augmentHSV</code><span class="sig-paren">(</span><em>img0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/datasets/datasetTransformations.html#augmentHSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.datasets.datasetTransformations.augmentHSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to perform HSV augmentation (by a random factor of +/- 50%)</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>img0:</em> dataset image loaded by OpenCV</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>img:</em> transformed image</div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="yolov3.src.datasets.datasetTransformations.pickRandomPoints">
+<code class="descclassname">yolov3.src.datasets.datasetTransformations.</code><code class="descname">pickRandomPoints</code><span class="sig-paren">(</span><em>pts</em>, <em>img0</em>, <em>height</em>, <em>M</em>, <em>img1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/datasets/datasetTransformations.html#pickRandomPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.datasets.datasetTransformations.pickRandomPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to select random points of a specified chip size from a specified transformed image</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong> </div>
@@ -963,46 +976,8 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.datasets.augmentHSV">
-<code class="descclassname">src.datasets.</code><code class="descname">augmentHSV</code><span class="sig-paren">(</span><em>img0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasetTransformations.html#augmentHSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.augmentHSV" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to perform HSV augmentation (by a random factor of +/- 50%)</p>
-<div class="line-block">
-<div class="line"><strong>Inputs:</strong> </div>
-<div class="line-block">
-<div class="line"><em>img0:</em> dataset image loaded by OpenCV</div>
-</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>Outputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>img:</em> transformed image</div>
-</div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="src.datasets.resize_square">
-<code class="descclassname">src.datasets.</code><code class="descname">resize_square</code><span class="sig-paren">(</span><em>img</em>, <em>height=416</em>, <em>color=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasetTransformations.html#resize_square"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.resize_square" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to resize a rectangular image to a padded square</p>
-<div class="line-block">
-<div class="line"><strong>Inputs:</strong> </div>
-<div class="line-block">
-<div class="line"><em>img:</em> dataset image loaded by OpenCV</div>
-<div class="line"><em>height:</em> desired image height</div>
-<div class="line"><em>color:</em> triplet specifying fill values for image borders</div>
-</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>Outputs:</strong></div>
-<div class="line-block">
-<div class="line"><em>img:</em> transformed image</div>
-</div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="src.datasets.random_affine">
-<code class="descclassname">src.datasets.</code><code class="descname">random_affine</code><span class="sig-paren">(</span><em>img</em>, <em>targets=None</em>, <em>degrees=(-10</em>, <em>10)</em>, <em>translate=(0.1</em>, <em>0.1)</em>, <em>scale=(0.9</em>, <em>1.1)</em>, <em>shear=(-3</em>, <em>3)</em>, <em>borderValue=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets/datasetTransformations.html#random_affine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.datasets.random_affine" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.datasets.datasetTransformations.random_affine">
+<code class="descclassname">yolov3.src.datasets.datasetTransformations.</code><code class="descname">random_affine</code><span class="sig-paren">(</span><em>img</em>, <em>targets=None</em>, <em>degrees=(-10</em>, <em>10)</em>, <em>translate=(0.1</em>, <em>0.1)</em>, <em>scale=(0.9</em>, <em>1.1)</em>, <em>shear=(-3</em>, <em>3)</em>, <em>borderValue=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/datasets/datasetTransformations.html#random_affine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.datasets.datasetTransformations.random_affine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to performs a random affine transformation on a specified image/target combination. See <a class="reference external" href="https://medium.com/uruvideo/dataset-augmentation-with-random-homographies-a8f4b44830d4">https://medium.com/uruvideo/dataset-augmentation-with-random-homographies-a8f4b44830d4</a> for a general discussion.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong> </div>
@@ -1026,145 +1001,30 @@ Returns: number of nonexistent objects, and number of nonexistent files</p>
 </div>
 </dd></dl>
 
-<span class="target" id="module-src.scoring"></span><dl class="function">
-<dt id="src.scoring.convert_to_rectangle_list">
-<code class="descclassname">src.scoring.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/scoringfunctions.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.convert_to_rectangle_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a list of coordinates to a list of rectangles</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>coordinates: a flattened list of bounding box coordinates in format</dt>
-<dd>(xmin,ymin,xmax,ymax)</dd>
-</dl>
-</dd>
-<dt>Outputs:</dt>
-<dd>A list of rectangles</dd>
-</dl>
-</dd></dl>
-
 <dl class="function">
-<dt id="src.scoring.ap_from_pr">
-<code class="descclassname">src.scoring.</code><code class="descname">ap_from_pr</code><span class="sig-paren">(</span><em>p</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/scoringfunctions.html#ap_from_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.ap_from_pr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates AP from precision and recall values as specified in
-the PASCAL VOC devkit.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>p: an array of precision values
-r: an array of recall values</dd>
-<dt>Outputs:</dt>
-<dd>An average precision value</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="src.scoring.score">
-<code class="descclassname">src.scoring.</code><code class="descname">score</code><span class="sig-paren">(</span><em>opt</em>, <em>iou_threshold=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/score.html#score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute metrics on a number of prediction files, given a folder of prediction files
-and a ground truth.  Primary metric is mean average precision (mAP).</p>
-<p><strong>Inputs</strong></p>
-<dl class="docutils">
-<dt>opt <span class="classifier-delimiter">:</span> <span class="classifier">InputFile</span></dt>
-<dd>InputFile member specifying all user options.</dd>
-</dl>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Prediction files in opt.outdir will have filename format ‘XYZ.tif.txt’, where ‘XYZ.tif’ is the .tif file used for prediction. Prediction files should be in space-delimited csv format; each line appears as: (xmin ymin xmax ymax class_prediction score_prediction).</p>
+<dt id="yolov3.src.datasets.datasetTransformations.resize_square">
+<code class="descclassname">yolov3.src.datasets.datasetTransformations.</code><code class="descname">resize_square</code><span class="sig-paren">(</span><em>img</em>, <em>height=416</em>, <em>color=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/datasets/datasetTransformations.html#resize_square"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.datasets.datasetTransformations.resize_square" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to resize a rectangular image to a padded square</p>
+<div class="line-block">
+<div class="line"><strong>Inputs:</strong> </div>
+<div class="line-block">
+<div class="line"><em>img:</em> dataset image loaded by OpenCV</div>
+<div class="line"><em>height:</em> desired image height</div>
+<div class="line"><em>color:</em> triplet specifying fill values for image borders</div>
 </div>
-<dl class="docutils">
-<dt>iou_threshold <span class="classifier-delimiter">:</span> <span class="classifier">float </span></dt>
-<dd>iou threshold (between 0 and 1) indicating the percentage iou required to count a prediction as a true positive</dd>
-</dl>
-<p><strong>Outputs</strong></p>
-<dl class="docutils">
-<dt>opt.outdir/metrics.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
-<dd>contains the scoring metrics in per-line format (metric/class_num: score_float)</dd>
-</dl>
-<p><strong>Raises</strong></p>
-<dl class="docutils">
-<dt>ValueError </dt>
-<dd>Raised if there are files in the prediction folder that are not in the ground truth file. For example, a prediction file is titled ‘15.tif.txt’, but the file ‘15.tif’ is not in the ground truth.</dd>
-</dl>
+</div>
+<div class="line-block">
+<div class="line"><strong>Outputs:</strong></div>
+<div class="line-block">
+<div class="line"><em>img:</em> transformed image</div>
+</div>
+</div>
 </dd></dl>
 
+<span class="target" id="module-yolov3.src.scoring.evaluation"></span><p>Utility methods for computing the performance metrics.</p>
 <dl class="function">
-<dt id="src.scoring.safe_divide">
-<code class="descclassname">src.scoring.</code><code class="descname">safe_divide</code><span class="sig-paren">(</span><em>numerator</em>, <em>denominator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#safe_divide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.safe_divide" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the safe division to avoid the divide by zero problem.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="src.scoring.compute_statistics_given_rectangle_matches">
-<code class="descclassname">src.scoring.</code><code class="descname">compute_statistics_given_rectangle_matches</code><span class="sig-paren">(</span><em>groundtruth_rects_matched</em>, <em>rects_matched</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#compute_statistics_given_rectangle_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.compute_statistics_given_rectangle_matches" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the staticstics given the groundtruth_rects and rects matches.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">image_id: the image_id referring to the image to be evaluated.
-groundtruth_rects_matched: the groundtruth_rects_matched represents</p>
-<blockquote>
-<div>a list of integers returned from the Matching class instance to
-indicate the matched rectangle indices from rects for each of the
-groundtruth_rects.</div></blockquote>
-<dl class="last docutils">
-<dt>rects_matched: the rects_matched represents a list of integers returned</dt>
-<dd>from the Matching class instance to indicate the matched rectangle
-indices from groundtruth_rects for each of the rects.</dd>
-</dl>
-</dd>
-<dt>Returns:</dt>
-<dd>A dictionary holding the computed statistics as well as the inputs.</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="src.scoring.compute_precision_recall_given_image_statistics_list">
-<code class="descclassname">src.scoring.</code><code class="descname">compute_precision_recall_given_image_statistics_list</code><span class="sig-paren">(</span><em>iou_threshold</em>, <em>image_statistics_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#compute_precision_recall_given_image_statistics_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.compute_precision_recall_given_image_statistics_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the precision recall numbers given iou_threshold and statistics.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>iou_threshold: the iou_threshold under which the statistics are computed.
-image_statistics_list: a list of the statistics computed and returned
-by the compute_statistics_given_rectangle_matches method for a list of
-images.</dd>
-<dt>Returns:</dt>
-<dd>A dictionary holding the precision, recall as well as the inputs.</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="src.scoring.compute_average_precision_recall_given_precision_recall_dict">
-<code class="descclassname">src.scoring.</code><code class="descname">compute_average_precision_recall_given_precision_recall_dict</code><span class="sig-paren">(</span><em>precision_recall_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#compute_average_precision_recall_given_precision_recall_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.compute_average_precision_recall_given_precision_recall_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the average precision (AP) and average recall (AR).</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>precision_recall_dict: the precision_recall_dict holds the dictionary of
-precision and recall information returned by the
-compute_precision_recall_given_image_statistics_list method, which is
-calcualted under a range of iou_thresholds, where the iou_threshold is
-the key.</dd>
-<dt>Returns:</dt>
-<dd>average_precision, average_recall.</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="descclassname">src.scoring.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/scoringfunctions.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Converts a list of coordinates to a list of rectangles</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>coordinates: a flattened list of bounding box coordinates in format</dt>
-<dd>(xmin,ymin,xmax,ymax)</dd>
-</dl>
-</dd>
-<dt>Outputs:</dt>
-<dd>A list of rectangles</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="src.scoring.compute_average_precision_recall">
-<code class="descclassname">src.scoring.</code><code class="descname">compute_average_precision_recall</code><span class="sig-paren">(</span><em>groundtruth_coordinates</em>, <em>coordinates</em>, <em>iou_threshold</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/evaluation.html#compute_average_precision_recall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.compute_average_precision_recall" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.evaluation.compute_average_precision_recall">
+<code class="descclassname">yolov3.src.scoring.evaluation.</code><code class="descname">compute_average_precision_recall</code><span class="sig-paren">(</span><em>groundtruth_coordinates</em>, <em>coordinates</em>, <em>iou_threshold</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/evaluation.html#compute_average_precision_recall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.evaluation.compute_average_precision_recall" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the average precision (AP) and average recall (AR).</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -1209,15 +1069,92 @@ inconsistent information.</dd>
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="yolov3.src.scoring.evaluation.compute_average_precision_recall_given_precision_recall_dict">
+<code class="descclassname">yolov3.src.scoring.evaluation.</code><code class="descname">compute_average_precision_recall_given_precision_recall_dict</code><span class="sig-paren">(</span><em>precision_recall_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/evaluation.html#compute_average_precision_recall_given_precision_recall_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.evaluation.compute_average_precision_recall_given_precision_recall_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the average precision (AP) and average recall (AR).</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>precision_recall_dict: the precision_recall_dict holds the dictionary of
+precision and recall information returned by the
+compute_precision_recall_given_image_statistics_list method, which is
+calcualted under a range of iou_thresholds, where the iou_threshold is
+the key.</dd>
+<dt>Returns:</dt>
+<dd>average_precision, average_recall.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="yolov3.src.scoring.evaluation.compute_precision_recall_given_image_statistics_list">
+<code class="descclassname">yolov3.src.scoring.evaluation.</code><code class="descname">compute_precision_recall_given_image_statistics_list</code><span class="sig-paren">(</span><em>iou_threshold</em>, <em>image_statistics_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/evaluation.html#compute_precision_recall_given_image_statistics_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.evaluation.compute_precision_recall_given_image_statistics_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the precision recall numbers given iou_threshold and statistics.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>iou_threshold: the iou_threshold under which the statistics are computed.
+image_statistics_list: a list of the statistics computed and returned
+by the compute_statistics_given_rectangle_matches method for a list of
+images.</dd>
+<dt>Returns:</dt>
+<dd>A dictionary holding the precision, recall as well as the inputs.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="yolov3.src.scoring.evaluation.compute_statistics_given_rectangle_matches">
+<code class="descclassname">yolov3.src.scoring.evaluation.</code><code class="descname">compute_statistics_given_rectangle_matches</code><span class="sig-paren">(</span><em>groundtruth_rects_matched</em>, <em>rects_matched</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/evaluation.html#compute_statistics_given_rectangle_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.evaluation.compute_statistics_given_rectangle_matches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the staticstics given the groundtruth_rects and rects matches.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">image_id: the image_id referring to the image to be evaluated.
+groundtruth_rects_matched: the groundtruth_rects_matched represents</p>
+<blockquote>
+<div>a list of integers returned from the Matching class instance to
+indicate the matched rectangle indices from rects for each of the
+groundtruth_rects.</div></blockquote>
+<dl class="last docutils">
+<dt>rects_matched: the rects_matched represents a list of integers returned</dt>
+<dd>from the Matching class instance to indicate the matched rectangle
+indices from groundtruth_rects for each of the rects.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>A dictionary holding the computed statistics as well as the inputs.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="yolov3.src.scoring.evaluation.convert_to_rectangle_list">
+<code class="descclassname">yolov3.src.scoring.evaluation.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/evaluation.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.evaluation.convert_to_rectangle_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the coordinates in a list to the Rectangle list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="yolov3.src.scoring.evaluation.safe_divide">
+<code class="descclassname">yolov3.src.scoring.evaluation.</code><code class="descname">safe_divide</code><span class="sig-paren">(</span><em>numerator</em>, <em>denominator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/evaluation.html#safe_divide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.evaluation.safe_divide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the safe division to avoid the divide by zero problem.</p>
+</dd></dl>
+
+<span class="target" id="module-yolov3.src.scoring.matching"></span><p>Copyright 2018 Defense Innovation Unit Experimental
+All rights reserved.</p>
+<p>Licensed under the Apache License, Version 2.0 (the “License”);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
 <dl class="class">
-<dt id="src.scoring.Matching">
-<em class="property">class </em><code class="descclassname">src.scoring.</code><code class="descname">Matching</code><span class="sig-paren">(</span><em>groundtruth_rects</em>, <em>rects</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/matching.html#Matching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Matching" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.matching.Matching">
+<em class="property">class </em><code class="descclassname">yolov3.src.scoring.matching.</code><code class="descname">Matching</code><span class="sig-paren">(</span><em>groundtruth_rects</em>, <em>rects</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/matching.html#Matching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.matching.Matching" title="Permalink to this definition">¶</a></dt>
 <dd><p>Matching class.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.scoring.cartesian">
-<code class="descclassname">src.scoring.</code><code class="descname">cartesian</code><span class="sig-paren">(</span><em>arrays</em>, <em>out=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/matching.html#cartesian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.cartesian" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.matching.cartesian">
+<code class="descclassname">yolov3.src.scoring.matching.</code><code class="descname">cartesian</code><span class="sig-paren">(</span><em>arrays</em>, <em>out=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/matching.html#cartesian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.matching.cartesian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a cartesian product of input arrays.</p>
 <dl class="docutils">
 <dt>arrays <span class="classifier-delimiter">:</span> <span class="classifier">list of array-like</span></dt>
@@ -1232,84 +1169,161 @@ formed of input arrays.</dd>
 </dl>
 </dd></dl>
 
+<span class="target" id="module-yolov3.src.scoring.rectangle"></span><p>Copyright 2018 Defense Innovation Unit Experimental
+All rights reserved.</p>
+<p>Licensed under the Apache License, Version 2.0 (the “License”);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
 <dl class="class">
-<dt id="src.scoring.Rectangle">
-<em class="property">class </em><code class="descclassname">src.scoring.</code><code class="descname">Rectangle</code><span class="sig-paren">(</span><em>xmin</em>, <em>ymin</em>, <em>xmax</em>, <em>ymax</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle">
+<em class="property">class </em><code class="descclassname">yolov3.src.scoring.rectangle.</code><code class="descname">Rectangle</code><span class="sig-paren">(</span><em>xmin</em>, <em>ymin</em>, <em>xmax</em>, <em>ymax</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rectangle class.</p>
 <dl class="method">
-<dt id="src.scoring.Rectangle.area">
-<code class="descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.area" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle.area">
+<code class="descname">area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle.area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the area of the Rectangle instance.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.scoring.Rectangle.contains">
-<code class="descname">contains</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.contains" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle.contains">
+<code class="descname">contains</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle.contains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests if a point is inside or on any of the edges of the rectangle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.scoring.Rectangle.height">
-<code class="descname">height</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.height" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle.height">
+<code class="descname">height</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle.height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle.height" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the height of the Rectangle instance.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.scoring.Rectangle.intersect">
-<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.intersect" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle.intersect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the intersection of this rectangle with the other rectangle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.scoring.Rectangle.intersect_over_union">
-<code class="descname">intersect_over_union</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersect_over_union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.intersect_over_union" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle.intersect_over_union">
+<code class="descname">intersect_over_union</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle.intersect_over_union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle.intersect_over_union" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the intersection over union ratio of this and other rectangle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.scoring.Rectangle.intersects">
-<code class="descname">intersects</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.intersects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.intersects" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle.intersects">
+<code class="descname">intersects</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle.intersects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle.intersects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests if this rectangle has an intersection with another rectangle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.scoring.Rectangle.is_empty">
-<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.is_empty" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle.is_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if the Rectangle instance is valid or not.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="src.scoring.Rectangle.width">
-<code class="descname">width</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scoring/rectangle.html#Rectangle.width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.scoring.Rectangle.width" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.rectangle.Rectangle.width">
+<code class="descname">width</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/rectangle.html#Rectangle.width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.rectangle.Rectangle.width" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the width of the Rectangle instance.</p>
 </dd></dl>
 
 </dd></dl>
 
+<span class="target" id="module-yolov3.src.scoring.score"></span><dl class="function">
+<dt id="yolov3.src.scoring.score.score">
+<code class="descclassname">yolov3.src.scoring.score.</code><code class="descname">score</code><span class="sig-paren">(</span><em>opt</em>, <em>iou_threshold=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/score.html#score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.score.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute metrics on a number of prediction files, given a folder of prediction files
+and a ground truth.  Primary metric is mean average precision (mAP).</p>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>opt <span class="classifier-delimiter">:</span> <span class="classifier">InputFile</span></dt>
+<dd>InputFile member specifying all user options.</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Prediction files in opt.outdir will have filename format ‘XYZ.tif.txt’, where ‘XYZ.tif’ is the .tif file used for prediction. Prediction files should be in space-delimited csv format; each line appears as: (xmin ymin xmax ymax class_prediction score_prediction).</p>
 </div>
-<div class="section" id="module-utils.datasetProcessing">
-<span id="utils"></span><h2>Utils/<a class="headerlink" href="#module-utils.datasetProcessing" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>iou_threshold <span class="classifier-delimiter">:</span> <span class="classifier">float </span></dt>
+<dd>iou threshold (between 0 and 1) indicating the percentage iou required to count a prediction as a true positive</dd>
+</dl>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>opt.outdir/metrics.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
+<dd>contains the scoring metrics in per-line format (metric/class_num: score_float)</dd>
+</dl>
+<p><strong>Raises</strong></p>
+<dl class="docutils">
+<dt>ValueError </dt>
+<dd>Raised if there are files in the prediction folder that are not in the ground truth file. For example, a prediction file is titled ‘15.tif.txt’, but the file ‘15.tif’ is not in the ground truth.</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-yolov3.src.scoring.scoringfunctions"></span><dl class="class">
+<dt id="yolov3.src.scoring.scoringfunctions.ScoringData">
+<em class="property">class </em><code class="descclassname">yolov3.src.scoring.scoringfunctions.</code><code class="descname">ScoringData</code><a class="reference internal" href="_modules/yolov3/src/scoring/scoringfunctions.html#ScoringData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.scoringfunctions.ScoringData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure to package various intermediate data/calculations together for scoring purposes.</p>
+</dd></dl>
+
 <dl class="function">
-<dt id="utils.datasetProcessing.determine_common_and_rare_classes">
-<code class="descclassname">utils.datasetProcessing.</code><code class="descname">determine_common_and_rare_classes</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/datasetProcessing.html#determine_common_and_rare_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.datasetProcessing.determine_common_and_rare_classes" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.src.scoring.scoringfunctions.ap_from_pr">
+<code class="descclassname">yolov3.src.scoring.scoringfunctions.</code><code class="descname">ap_from_pr</code><span class="sig-paren">(</span><em>p</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/scoringfunctions.html#ap_from_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.scoringfunctions.ap_from_pr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates AP from precision and recall values as specified in
+the PASCAL VOC devkit.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>p: an array of precision values
+r: an array of recall values</dd>
+<dt>Outputs:</dt>
+<dd>An average precision value</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="yolov3.src.scoring.scoringfunctions.convert_to_rectangle_list">
+<code class="descclassname">yolov3.src.scoring.scoringfunctions.</code><code class="descname">convert_to_rectangle_list</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/src/scoring/scoringfunctions.html#convert_to_rectangle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.src.scoring.scoringfunctions.convert_to_rectangle_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a list of coordinates to a list of rectangles</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>coordinates: a flattened list of bounding box coordinates in format</dt>
+<dd>(xmin,ymin,xmax,ymax)</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt>
+<dd>A list of rectangles</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-yolov3.utils.datasetProcessing">
+<span id="utils"></span><h2>Utils/<a class="headerlink" href="#module-yolov3.utils.datasetProcessing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="yolov3.utils.datasetProcessing.determine_common_and_rare_classes">
+<code class="descclassname">yolov3.utils.datasetProcessing.</code><code class="descname">determine_common_and_rare_classes</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/datasetProcessing.html#determine_common_and_rare_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.datasetProcessing.determine_common_and_rare_classes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to determine the common and rare classes in a dataset using 2-means.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.datasetProcessing.determine_number_of_class_members">
-<code class="descclassname">utils.datasetProcessing.</code><code class="descname">determine_number_of_class_members</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/datasetProcessing.html#determine_number_of_class_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.datasetProcessing.determine_number_of_class_members" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.datasetProcessing.determine_number_of_class_members">
+<code class="descclassname">yolov3.utils.datasetProcessing.</code><code class="descname">determine_number_of_class_members</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/datasetProcessing.html#determine_number_of_class_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.datasetProcessing.determine_number_of_class_members" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to determine the number of elements in each class of a dataset.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.datasetProcessing.determine_small_medium_large_classes">
-<code class="descclassname">utils.datasetProcessing.</code><code class="descname">determine_small_medium_large_classes</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/datasetProcessing.html#determine_small_medium_large_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.datasetProcessing.determine_small_medium_large_classes" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.datasetProcessing.determine_small_medium_large_classes">
+<code class="descclassname">yolov3.utils.datasetProcessing.</code><code class="descname">determine_small_medium_large_classes</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/datasetProcessing.html#determine_small_medium_large_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.datasetProcessing.determine_small_medium_large_classes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to determine the small/medium/large size classes in a dataset using 3-means.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.datasetProcessing.get_labels_geojson">
-<code class="descclassname">utils.datasetProcessing.</code><code class="descname">get_labels_geojson</code><span class="sig-paren">(</span><em>fname='xView_train.geojson'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/datasetProcessing.html#get_labels_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.datasetProcessing.get_labels_geojson" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.datasetProcessing.get_labels_geojson">
+<code class="descclassname">yolov3.utils.datasetProcessing.</code><code class="descname">get_labels_geojson</code><span class="sig-paren">(</span><em>fname='xView_train.geojson'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/datasetProcessing.html#get_labels_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.datasetProcessing.get_labels_geojson" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a WorldView3 GEOJSON file</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -1319,28 +1333,28 @@ formed of input arrays.</dd>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-utils.utils"></span><dl class="function">
-<dt id="utils.utils.assert_single_gpu_support">
-<code class="descclassname">utils.utils.</code><code class="descname">assert_single_gpu_support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#assert_single_gpu_support"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.assert_single_gpu_support" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-yolov3.utils.utils"></span><dl class="function">
+<dt id="yolov3.utils.utils.assert_single_gpu_support">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">assert_single_gpu_support</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#assert_single_gpu_support"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.assert_single_gpu_support" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to check that only a single GPU is being used.
 Currently, all software must be run with a single GPU only, so this routine does a simple assert check on the environment variable that ensures this.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.utils.bbox_iou">
-<code class="descclassname">utils.utils.</code><code class="descname">bbox_iou</code><span class="sig-paren">(</span><em>box1</em>, <em>box2</em>, <em>x1y1x2y2=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#bbox_iou"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.bbox_iou" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.utils.bbox_iou">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">bbox_iou</code><span class="sig-paren">(</span><em>box1</em>, <em>box2</em>, <em>x1y1x2y2=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#bbox_iou"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.bbox_iou" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the IoU of two bounding boxes</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.utils.build_targets">
-<code class="descclassname">utils.utils.</code><code class="descname">build_targets</code><span class="sig-paren">(</span><em>pred_boxes</em>, <em>pred_conf</em>, <em>pred_cls</em>, <em>target</em>, <em>anchor_wh</em>, <em>nA</em>, <em>nC</em>, <em>nG</em>, <em>requestPrecision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#build_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.build_targets" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.utils.build_targets">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">build_targets</code><span class="sig-paren">(</span><em>pred_boxes</em>, <em>pred_conf</em>, <em>pred_cls</em>, <em>target</em>, <em>anchor_wh</em>, <em>nA</em>, <em>nC</em>, <em>nG</em>, <em>requestPrecision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#build_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.build_targets" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns nGT, nCorrect, tx, ty, tw, th, tconf, tcls</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.utils.compute_ap">
-<code class="descclassname">utils.utils.</code><code class="descname">compute_ap</code><span class="sig-paren">(</span><em>recall</em>, <em>precision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#compute_ap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.compute_ap" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.utils.compute_ap">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">compute_ap</code><span class="sig-paren">(</span><em>recall</em>, <em>precision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#compute_ap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.compute_ap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the average precision, given the recall and precision curves.
 Code originally from <a class="reference external" href="https://github.com/rbgirshick/py-faster-rcnn">https://github.com/rbgirshick/py-faster-rcnn</a>.
 # Arguments</p>
@@ -1354,14 +1368,14 @@ precision: The precision curve (list).</div></blockquote>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.utils.convert_class_labels_to_indices">
-<code class="descclassname">utils.utils.</code><code class="descname">convert_class_labels_to_indices</code><span class="sig-paren">(</span><em>class_labels</em>, <em>unique_class_labels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#convert_class_labels_to_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.convert_class_labels_to_indices" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.utils.convert_class_labels_to_indices">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">convert_class_labels_to_indices</code><span class="sig-paren">(</span><em>class_labels</em>, <em>unique_class_labels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#convert_class_labels_to_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.convert_class_labels_to_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function that takes a list of N class labels and the list of all M&lt;N unique class labels and returns a list of size N, where each entry is the index of the corresponding label in the list of unique class labels. For example, given class_labels = [34,89,34,34,11] and unique_class_labels = [11,34,89], the output = [1,2,1,1,0].</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.utils.convert_tif2bmp">
-<code class="descclassname">utils.utils.</code><code class="descname">convert_tif2bmp</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#convert_tif2bmp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.convert_tif2bmp" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.utils.convert_tif2bmp">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">convert_tif2bmp</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#convert_tif2bmp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.convert_tif2bmp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to convert .tif –&gt; .bmp</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -1372,15 +1386,15 @@ precision: The precision curve (list).</div></blockquote>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.utils.load_classes">
-<code class="descclassname">utils.utils.</code><code class="descname">load_classes</code><span class="sig-paren">(</span><em>xview_names_and_labels_filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#load_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.load_classes" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.utils.load_classes">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">load_classes</code><span class="sig-paren">(</span><em>xview_names_and_labels_filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#load_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.load_classes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads class labels at ‘xview_names_and_labels_filepath’
 Format shall be assumed to be csv where one line is (name , label)_i</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.utils.readBmpDataset">
-<code class="descclassname">utils.utils.</code><code class="descname">readBmpDataset</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#readBmpDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.readBmpDataset" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.utils.readBmpDataset">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">readBmpDataset</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#readBmpDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.readBmpDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to read a .bmp dataset. If the provided directory does not contain .bmp files, a conversion is attempted.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -1391,8 +1405,8 @@ Format shall be assumed to be csv where one line is (name , label)_i</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.utils.zerocenter_class_indices">
-<code class="descclassname">utils.utils.</code><code class="descname">zerocenter_class_indices</code><span class="sig-paren">(</span><em>classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/utils.html#zerocenter_class_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.utils.zerocenter_class_indices" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.utils.utils.zerocenter_class_indices">
+<code class="descclassname">yolov3.utils.utils.</code><code class="descname">zerocenter_class_indices</code><span class="sig-paren">(</span><em>classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/utils/utils.html#zerocenter_class_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.utils.utils.zerocenter_class_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function takes a list of N elements with M&lt;N unique labels, and relabels them such that the labels are 0,1,…,M-1. Note that this function assumes that all class labels of interest appear at least once in classes.</p>
 <div class="line-block">
 <div class="line"><strong>Inputs:</strong></div>
@@ -1409,193 +1423,238 @@ Format shall be assumed to be csv where one line is (name , label)_i</p>
 </div>
 </dd></dl>
 
-<span class="target" id="module-utils.utils_xview"></span></div>
-<div class="section" id="module-tests.unittests">
-<span id="tests"></span><h2>Tests/<a class="headerlink" href="#module-tests.unittests" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-yolov3.utils.utils_xview"></span></div>
+<div class="section" id="module-yolov3.tests.unittests">
+<span id="tests"></span><h2>Tests/<a class="headerlink" href="#module-yolov3.tests.unittests" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="tests.unittests.DataProcessingTests">
-<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">DataProcessingTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.DataProcessingTests">
+<em class="property">class </em><code class="descclassname">yolov3.tests.unittests.</code><code class="descname">DataProcessingTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#DataProcessingTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.DataProcessingTests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for all data processing unit tests.</p>
 <dl class="method">
-<dt id="tests.unittests.DataProcessingTests.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.DataProcessingTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#DataProcessingTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.DataProcessingTests.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.DataProcessingTests.test_get_dataset_filenames">
-<code class="descname">test_get_dataset_filenames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.test_get_dataset_filenames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.test_get_dataset_filenames" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.DataProcessingTests.test_get_dataset_filenames">
+<code class="descname">test_get_dataset_filenames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#DataProcessingTests.test_get_dataset_filenames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.DataProcessingTests.test_get_dataset_filenames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test loading of dataset filenames.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.DataProcessingTests.test_get_dataset_height_width_channels">
-<code class="descname">test_get_dataset_height_width_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.test_get_dataset_height_width_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.test_get_dataset_height_width_channels" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.DataProcessingTests.test_get_dataset_height_width_channels">
+<code class="descname">test_get_dataset_height_width_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#DataProcessingTests.test_get_dataset_height_width_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.DataProcessingTests.test_get_dataset_height_width_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test loading sizes of dataset images.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.DataProcessingTests.test_get_labels_geojson">
-<code class="descname">test_get_labels_geojson</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.test_get_labels_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.test_get_labels_geojson" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.DataProcessingTests.test_get_labels_geojson">
+<code class="descname">test_get_labels_geojson</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#DataProcessingTests.test_get_labels_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.DataProcessingTests.test_get_labels_geojson" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test loading of geojson formatted data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.DataProcessingTests.test_strip_image_number_from_filename">
-<code class="descname">test_strip_image_number_from_filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#DataProcessingTests.test_strip_image_number_from_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.DataProcessingTests.test_strip_image_number_from_filename" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.DataProcessingTests.test_strip_image_number_from_filename">
+<code class="descname">test_strip_image_number_from_filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#DataProcessingTests.test_strip_image_number_from_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.DataProcessingTests.test_strip_image_number_from_filename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality to strip image number from image filename.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="tests.unittests.GPUtests">
-<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">GPUtests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.GPUtests">
+<em class="property">class </em><code class="descclassname">yolov3.tests.unittests.</code><code class="descname">GPUtests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#GPUtests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.GPUtests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for all GPU/cuda unit tests.</p>
 <dl class="method">
-<dt id="tests.unittests.GPUtests.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.GPUtests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#GPUtests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.GPUtests.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.GPUtests.test_cuda_available">
-<code class="descname">test_cuda_available</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.test_cuda_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.test_cuda_available" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.GPUtests.test_cuda_available">
+<code class="descname">test_cuda_available</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#GPUtests.test_cuda_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.GPUtests.test_cuda_available" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test whether cuda is available.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.GPUtests.test_cuda_version">
-<code class="descname">test_cuda_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.test_cuda_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.test_cuda_version" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.GPUtests.test_cuda_version">
+<code class="descname">test_cuda_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#GPUtests.test_cuda_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.GPUtests.test_cuda_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that cuda version is &gt;= 9.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.GPUtests.test_gpu_avail">
-<code class="descname">test_gpu_avail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#GPUtests.test_gpu_avail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.GPUtests.test_gpu_avail" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.GPUtests.test_gpu_avail">
+<code class="descname">test_gpu_avail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#GPUtests.test_gpu_avail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.GPUtests.test_gpu_avail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that GPU hardware is available.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="tests.unittests.ModelsTests">
-<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">ModelsTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.ModelsTests">
+<em class="property">class </em><code class="descclassname">yolov3.tests.unittests.</code><code class="descname">ModelsTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#ModelsTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.ModelsTests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for all models-involved unit tests.</p>
 <dl class="method">
-<dt id="tests.unittests.ModelsTests.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.ModelsTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#ModelsTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.ModelsTests.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.ModelsTests.test_create_yolo_config_file">
-<code class="descname">test_create_yolo_config_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#ModelsTests.test_create_yolo_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.ModelsTests.test_create_yolo_config_file" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.ModelsTests.test_create_yolo_config_file">
+<code class="descname">test_create_yolo_config_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#ModelsTests.test_create_yolo_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.ModelsTests.test_create_yolo_config_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality to create custom YOLOv3 config file from a template.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="tests.unittests.TargetTests">
-<em class="property">class </em><code class="descclassname">tests.unittests.</code><code class="descname">TargetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests">
+<em class="property">class </em><code class="descclassname">yolov3.tests.unittests.</code><code class="descname">TargetTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for all target-involved unit tests.</p>
 <dl class="method">
-<dt id="tests.unittests.TargetTests.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic setup method. Note that ResourceWarnings and DeprecationWarnings are ignored.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_apply_mask_to_filtered_data">
-<code class="descname">test_apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_apply_mask_to_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_apply_mask_to_filtered_data">
+<code class="descname">test_apply_mask_to_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_apply_mask_to_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_apply_mask_to_filtered_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test mask application to filtered data method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_area_requirements">
-<code class="descname">test_area_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_area_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_area_requirements" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_area_requirements">
+<code class="descname">test_area_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_area_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_area_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test area requirements method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_compute_bounding_box_clusters_using_kmeans">
-<code class="descname">test_compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_compute_bounding_box_clusters_using_kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_compute_bounding_box_clusters_using_kmeans">
+<code class="descname">test_compute_bounding_box_clusters_using_kmeans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_compute_bounding_box_clusters_using_kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_compute_bounding_box_clusters_using_kmeans" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test bounding box cluster computation method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_compute_cropped_data">
-<code class="descname">test_compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_compute_cropped_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_compute_cropped_data" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_compute_cropped_data">
+<code class="descname">test_compute_cropped_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_compute_cropped_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_compute_cropped_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality for cropping targets.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_compute_image_weights_with_filtered_data">
-<code class="descname">test_compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_compute_image_weights_with_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_compute_image_weights_with_filtered_data">
+<code class="descname">test_compute_image_weights_with_filtered_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_compute_image_weights_with_filtered_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_compute_image_weights_with_filtered_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test class weight computation method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_compute_width_height_area">
-<code class="descname">test_compute_width_height_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_compute_width_height_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_compute_width_height_area" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_compute_width_height_area">
+<code class="descname">test_compute_width_height_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_compute_width_height_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_compute_width_height_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality for computing target coordinate area.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_edge_requirements">
-<code class="descname">test_edge_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_edge_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_edge_requirements" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_edge_requirements">
+<code class="descname">test_edge_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_edge_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_edge_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality for computing edge requirements on target data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_fcn_sigma_rejection">
-<code class="descname">test_fcn_sigma_rejection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_fcn_sigma_rejection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_fcn_sigma_rejection" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_fcn_sigma_rejection">
+<code class="descname">test_fcn_sigma_rejection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_fcn_sigma_rejection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_fcn_sigma_rejection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality for computing sigma rejection.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_invalid_class_requirement">
-<code class="descname">test_invalid_class_requirement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_invalid_class_requirement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_invalid_class_requirement" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_invalid_class_requirement">
+<code class="descname">test_invalid_class_requirement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_invalid_class_requirement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_invalid_class_requirement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test invalid class requirement method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_load_target_file">
-<code class="descname">test_load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_load_target_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_load_target_file" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_load_target_file">
+<code class="descname">test_load_target_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_load_target_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_load_target_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality for loading target data (.json file).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_manual_dimension_requirements">
-<code class="descname">test_manual_dimension_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_manual_dimension_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_manual_dimension_requirements">
+<code class="descname">test_manual_dimension_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_manual_dimension_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_manual_dimension_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality for imposing manual dimensions requirements on target data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_nan_inf_size_requirements">
-<code class="descname">test_nan_inf_size_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_nan_inf_size_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_nan_inf_size_requirements" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_nan_inf_size_requirements">
+<code class="descname">test_nan_inf_size_requirements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_nan_inf_size_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_nan_inf_size_requirements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test nan/inf/size requirements method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_per_class_stats">
-<code class="descname">test_per_class_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_per_class_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_per_class_stats" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_per_class_stats">
+<code class="descname">test_per_class_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_per_class_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_per_class_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test per_class_stats function.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_sigma_rejection_indices">
-<code class="descname">test_sigma_rejection_indices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_sigma_rejection_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_sigma_rejection_indices">
+<code class="descname">test_sigma_rejection_indices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_sigma_rejection_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_sigma_rejection_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality for computing sigma rejection indices.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tests.unittests.TargetTests.test_xy_coords">
-<code class="descname">test_xy_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/unittests.html#TargetTests.test_xy_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.unittests.TargetTests.test_xy_coords" title="Permalink to this definition">¶</a></dt>
+<dt id="yolov3.tests.unittests.TargetTests.test_xy_coords">
+<code class="descname">test_xy_coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/tests/unittests.html#TargetTests.test_xy_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.tests.unittests.TargetTests.test_xy_coords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test functionality for target coordinate parsing.</p>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-yolov3.scripts.train">
+<span id="scripts"></span><h2>Scripts/<a class="headerlink" href="#module-yolov3.scripts.train" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="yolov3.scripts.train.main">
+<code class="descclassname">yolov3.scripts.train.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/scripts/train.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.scripts.train.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main driver script for training the YOLOv3 network.</p>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments</span></dt>
+<dd>Command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
+</dl>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>inputs.outdir/results.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file </span></dt>
+<dd>output metrics for each training epoch</dd>
+<dt>inputs.loaddir/latest.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
+<dd>checkpoint file for latest network configuration</dd>
+<dt>inputs.loaddir/best.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
+<dd>checkpoint file for best current network configuration</dd>
+<dt>inputs.loaddir/backup.pt <span class="classifier-delimiter">:</span> <span class="classifier">YOLOv3 network PyTorch save file </span></dt>
+<dd>checkpoint file for backup purposes</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-yolov3.scripts.detect"></span><dl class="function">
+<dt id="yolov3.scripts.detect.detect">
+<code class="descclassname">yolov3.scripts.detect.</code><code class="descname">detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yolov3/scripts/detect.html#detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yolov3.scripts.detect.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main driver script for testing the YOLOv3 network.</p>
+<p><strong>Inputs</strong></p>
+<dl class="docutils">
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">command line arguments</span></dt>
+<dd>command line arguments used in shell call for this main driver script. args must have a inputfilename member that specifies the desired inputfile name.</dd>
+</dl>
+<p><strong>Outputs</strong></p>
+<dl class="docutils">
+<dt>inputs.outdir/metrics.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
+<dd>output metrics for specified test image given by inputs.imagepath</dd>
+<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.jpg <span class="classifier-delimiter">:</span> <span class="classifier">jpeg image</span></dt>
+<dd>test image with detected bounding boxes, classes and confidence scores</dd>
+<dt>inputs.loaddir/&lt;inputs.imagepath&gt;.tif.txt <span class="classifier-delimiter">:</span> <span class="classifier">text file</span></dt>
+<dd>text file with bounding boxes, classes and confidence scores for all detections</dd>
+</dl>
 </dd></dl>
 
 </div>
