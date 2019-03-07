@@ -1,9 +1,10 @@
 Installation
 =====================
 
-The purpose of this document is to provide detailed, step-by-step
-instructions on how to install Pytorch, YOLOv3, and all associated
-dependencies.
+The purpose of this section is to provide detailed, step-by-step
+instructions on how to install Anaconda for Python virtual
+environments, the Pytorch framework, Nvidia GPU drivers, and the
+``yolov3`` project repository.
 
 Anaconda
 ---------------------
@@ -74,7 +75,14 @@ If successful, both commands should output the installed versions.
 GPU Support
 ---------------------
 
-If you have Nvidia GPU hardware but do not have the drivers installed, you may do so as follows. If you already have Nvidia drivers installed, skip this. Note: this may require sudo priveleges. Also, the following instructions assume a Redhat OS. The equivalent process for another Linux OS (e.g., Ubuntu) is very similar.
+.. note:: 
+   This section is only necessary if you have Nvidia GPU hardware, but have not yet installed drivers for it. Please be aware that installing Nvidia drivers can be tricky and should be handled with care. This section is a guide only; a thorough description of how to install GPU drivers is outside of the scope of this project.
+
+.. note:: 
+   These instructions may require sudo priveleges.
+
+.. note:: 
+   These instructions assume a Redhat OS. The equivalent process for another Linux OS (e.g., Ubuntu) is very similar.
 
 #. Prepare your machine by installing necessary prerequisite packages::
 
@@ -121,9 +129,9 @@ Note: For now, we are simply using a version of YOLOv3 freely available on Githu
 
 #. Clone the YOLOv3 git repo::
 
-     git clone https://github.com/adegenna/xview-yolov3
+     git clone https://github.com/adegenna/yolov3
 
-#. Navigate to the project directory (xview-yolov3) and open the file requirements.txt. All of Python packages listed there must be installed to your local conda environment. Check whether the listed packages are installed with::
+#. All of Python packages listed in the ``Requirements`` section of this documentation must be installed to your local conda environment. You may check whether the listed packages are installed with::
 
      conda list | grep [package]
 
