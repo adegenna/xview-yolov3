@@ -3,45 +3,77 @@ Code Docs
 
 Src/
 ---------------------
-.. automodule:: src.train
-   :members:
-      
-.. automodule:: src.detect
+.. automodule:: yolov3.src.InputFile
    :members:
 
-.. automodule:: src.InputFile
+.. automodule:: yolov3.src.models
    :members:
 
-.. automodule:: src.models
+.. automodule:: yolov3.src.NetworkTrainer
    :members:
 
-.. automodule:: src.NetworkTrainer
+.. automodule:: yolov3.src.NetworkTester
    :members:
 
-.. automodule:: src.NetworkTester
+.. automodule:: yolov3.src.targets.Target
+   :members: 
+
+.. automodule:: yolov3.src.targets.fcn_sigma_rejection
+   :members: 
+
+.. automodule:: yolov3.src.targets.per_class_stats
+   :members: 
+	     
+.. automodule:: yolov3.src.datasets.datasets
    :members:
 
-.. automodule:: src.targets
-   :members: Target, fcn_sigma_rejection, per_class_stats
+.. automodule:: yolov3.src.datasets.ImageFolder
+   :members: 
 
-.. automodule:: src.datasets
-   :members: ListDataset, ImageFolder, pickRandomPoints, augmentHSV, resize_square, random_affine
+.. automodule:: yolov3.src.datasets.datasetStats
+   :members: 
 
-.. automodule:: src.scoring
-   :members: get_labels, convert_to_rectangle_list, ap_from_pr, score, safe_divide, compute_statistics_given_rectangle_matches, compute_precision_recall_given_image_statistics_list, compute_average_precision_recall_given_precision_recall_dict, convert_to_rectangle_list, compute_average_precision_recall, Matching, cartesian, Rectangle
+.. automodule:: yolov3.src.datasets.datasetTransformations
+   :members:
+
+.. automodule:: yolov3.src.scoring.evaluation
+   :members:
+
+.. automodule:: yolov3.src.scoring.matching
+   :members:
+
+.. automodule:: yolov3.src.scoring.rectangle
+   :members:
+
+.. automodule:: yolov3.src.scoring.score
+   :members:
+
+.. automodule:: yolov3.src.scoring.scoringfunctions
+   :members:
+
+
+
 	     
 Utils/
 ---------------------
-.. automodule:: utils.datasetProcessing
+.. automodule:: yolov3.utils.datasetProcessing
    :members:
 
-.. automodule:: utils.utils
+.. automodule:: yolov3.utils.utils
    :members:
 
-.. automodule:: utils.utils_xview
+.. automodule:: yolov3.utils.utils_xview
    :members:
 
 Tests/
 ---------------------
-.. automodule:: tests.unittests
+.. automodule:: yolov3.tests.unittests
+   :members:
+
+Scripts/
+---------------------
+.. automodule:: yolov3.scripts.train
+   :members:
+
+.. automodule:: yolov3.scripts.detect
    :members:
