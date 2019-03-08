@@ -3,8 +3,7 @@ import sys,os
 import configparser
 
 class InputFile():
-    """
-    Class for packaging all input/config file options together. 
+    """Class for packaging all input/config file options together. 
 
     .. note:: 
          There are separate options required by InputFile depending on whether the intended goal is training or testing. The user must declare on the first line of the InputFile either ``[TRAIN]`` or ``[TEST]``, depending on their desired objective.
@@ -22,30 +21,95 @@ class InputFile():
     of type ``[TRAIN]``:
 
     ==============================  ============  ===============================================
-    option                          data type     meaning
+    option                          type          description
     ==============================  ============  ===============================================
-    loaddir                         string        Absolute path to load directory.        
-    outdir                          string        Absolute path to output directory.
-    targetspath                     string        Absolute path to target file.
-    targetfiletype                  string        Type of target file.
-    traindir                        string        Type of target file.
-    epochs                          int           Number of training epochs.
-    epochstart                      int           Starting epoch.
-    batchsize                       int           Training batch size.
-    networkcfg                      string        Absolute path to network architecture file.
-    imgsize                         int           Base image crop size.
-    resume                          bool          Boolean value specifying whether training is 
-                                                  resuming from previous iteration.
-    invalid_class_list              string        Comma-separated list of classes to be 
-                                                  ignored from training data.
-    boundingboxclusters             int           Desired number of bounding-box clusters for 
-                                                  the YOLO architecture.
-    computeboundingboxclusters      bool          Boolean value specifying whether to compute 
-                                                  bounding box clusters.
-    class_path                      string        Absolute path to class.
-    sampling_weight                 string        String specifying type of sampling weight. 
-                                                  Options are inverse_class_frequency and uniform
+    loaddir                         string        - Full path to load directory.
+                                                  - Any pre-trained YOLOv3 PyTorch file (.pt) goes here 
+    outdir                          string        - Full  path to output directory.
+    targetspath                     string        - Full path to target file.
+                                                  - Supported formats: ``.geojson``
+                                                  - **[See notes below]**
+    targetfiletype                  string        - Type of target file.
+                                                  - Supported options: ``json``
+    traindir                        string        - Full path to training image dataset
+                                                  - Supported image types: ``.tif``, ``.bmp``
+                                                  - **[See notes below]**
+    epochs                          int           - Number of training epochs.
+    epochstart                      int           - Starting epoch.
+    batchsize                       int           - Training batch size.
+    networkcfg                      string        - Full path to YOLOv3 network architecture file.
+                                                  - Base template in ``yolov3/cfg/yolov3_template.cfg``
+                                                  - **[See notes below]**
+    imgsize                         int           - Base image chip size.
+                                                  - Must be multiple of 32
+    resume                          bool          - Specifies whether training is resuming from previous training.
+    invalid_class_list              string        - .csv list of classes to be ignored from training data.
+                                                  - **[See notes below]**
+    boundingboxclusters             int           - Desired number of bounding-box clusters for the YOLO architecture.
+    computeboundingboxclusters      bool          - Specifies whether to compute bounding box clusters.
+    class_path                      string        - Full path to class names/labels file.
+                                                  - **[See notes below]**
+    sampling_weight                 string        - String specifying type of sampling weight. 
+                                                  - Options are ``inverse_class_frequency`` and ``uniform``
+                                                  - **[See notes below]**
     ==============================  ============  ===============================================
+
+    Notes on ``[TRAIN]`` options above:
+
+    #. ``traindir`` : If ``.tif`` images are used in the training data
+       directory, then a .bmp copy is produced to be used in training.
+    
+    #. ``targetspath`` : Currently, the target metadata file must be
+       formatted in .json format, similar to the xView .geojson
+       format. Most important is that the target file must be
+       compatible with the ``yolov3.utils.get_labels_geojson( )``
+       function, which provides the implementation for retrieving
+       object coordinates, corresponding filenames, and
+       classes. Please consult the documentation for that function for
+       further details.
+
+    #. ``networkcfg`` : You have two options here: you may provide a
+       complete YOLOv3 architecture file, or provide a network
+       template file and request that the software precompute the
+       architecture for you, prior to training.  We strongly recommend
+       the latter option. To do this, provide the full filepath to the
+       generic template file located in
+       ``yolov3/cfg/yolov3_template.cfg``, set
+       ``computeboundingboxclusters = True`` in the inputfile, and
+       provide the desired number of bounding box clusters (i.e. YOLO
+       anchors) in the ``boundingboxclusters`` argument of the
+       inputfile. This will tell the software to precompute bounding
+       box priors (anchors) for the training dataset, and a custom
+       architecture file will be calculated and outputted to
+       ``yolov3/cfg/yolov3_custom.cfg``, which may be used later in
+       detection/testing.
+
+    #. ``invalid_class_list`` : This option was added to give the user
+       the ability to specify a list of classes referred to in the
+       ``targetspath`` metadata file that either are not present or
+       need to be excluded from the training dataset. For example, the
+       xView dataset makes reference to classes 75 and 82 in the
+       .geojson target file, but these are ``None`` classes. If there
+       are no "invalid" classes in your target metadata file, then
+       simply leave this option blank.
+
+    #. ``class_path`` : This file is a comma-separated list of all classes
+       and any associated numeric labels. For example, the xView dataset
+       contains 60 classes, with associated labels ranging from 11
+       to 94. Thus, the ``class_path`` file for the xView dataset would be
+       a 60-line .csv file that would look as follows::
+
+         Fixed-wing Aircraft , 11
+         Small Aircraft , 12
+         Cargo Plane , 13
+         ...
+         Tower , 94
+
+    #. ``sampling_weight`` : This option sets how images are weighted for
+       random selection at runtime during the training routine. Options
+       are ``inverse_class_frequency`` and ``uniform``. The former weights
+       an image by the sum of the inverse of the class frequencies of all
+       its objects; the latter weights all images uniformly.
     
     **Test Options**
 
@@ -56,30 +120,77 @@ class InputFile():
     ==============================  ============  ===============================================
     option                          data type     meaning
     ==============================  ============  ===============================================
-    loaddir                         string        Absolute path to load directory.        
-    outdir                          string        Absolute path to output directory.
-    targetspath                     string        Absolute path to target file.
-    targetfiletype                  string        Type of target file.
-    imagepath                       string        Absolute path to directory containing images.
-    plot_flag                       bool          Flag to indicate whether to plot and output 
-                                                  object detections.
-    networkcfg                      string        Absolute path to network architecture file.
-    networksavefile                 string        Absolute path to trained YOLOv3 network file, 
-                                                  saved by PyTorch (.pt).
-    class_path                      string        Absolute path to .csv file containing list 
-                                                  of classes/labels.
-    conf_thres                      float         Confidence threshold for detection.
-    cls_thres                       float         Class threshold for detection.
-    nms_thres                       float         NMS threshold.
-    batch_size                      int           Batch size.
-    imgsize                         int           Desired cropped image size.
-    rgb_mean                        string        Absolute path to dataset RGB mean file.
-    rgb_std                         string        Absolute path to dataset RGB standard deviation file.
-    class_mean                      string        Absolute path to class mean file.
-    class_sigma                     string        Absolute path to class standard deviation file.
-    invalid_class_list              string        Comma-separated list of classes to be ignored
-                                                  from training data.
+    loaddir                         string        - Full path to load directory.
+    outdir                          string        - Full path to output directory.
+    targetspath                     string        - Full path to target file.
+                                                  - Only needed for scoring the object detections.
+    targetfiletype                  string        - Type of target file.
+                                                  - Supported options: ``json``
+    imagepath                       string        - Full path to directory containing images.
+    plot_flag                       bool          - Flag to indicate whether to plot and output object detections.
+                                                  - **[See notes below]**
+    networkcfg                      string        - Full path to network architecture file.
+                                                  - **[See notes below]**
+    networksavefile                 string        - Full path to trained YOLOv3 network file.
+                                                  - **[See notes below]**
+    class_path                      string        - Full path to .csv file containing list of classes/labels.
+    conf_thres                      float         - Confidence threshold for detection.
+    cls_thres                       float         - Class threshold for detection.
+    nms_thres                       float         - NMS threshold.
+    batch_size                      int           - Batch size.
+    imgsize                         int           - Desired chip size.
+    rgb_mean                        string        - Full path to dataset RGB mean file.
+                                                  - **[See notes below]**
+    rgb_std                         string        - Full path to dataset RGB standard deviation file.
+                                                  - **[See notes below]**
+    class_mean                      string        - Full path to class mean file.
+                                                  - **[See notes below]**
+    class_sigma                     string        - Full path to class standard deviation file.
+                                                  - **[See notes below]**
+    invalid_class_list              string        - Comma-separated list of classes to be ignored from training data.
     ==============================  ============  ===============================================
+
+    Notes on the testing inputfile:
+
+    #. ``targetspath`` , ``invalid_class_list`` , ``imgsize`` ,
+       ``class_path`` : Same notes apply as in the training case above.
+
+    #. ``imagepath`` : This option sets the full filepath to the location
+       on your machine where your test dataset resides. There should be
+       nothing in this directory except the test image files. Currently
+       supported image files are ``.tif`` and ``.bmp``.
+    
+    #. ``networkcfg`` : This option specifies the full filepath to a
+       trained YOLOv3 configuration file. If you used the recommended
+       input to this option in the training stage, then the code will
+       have produced this file for you, saved as
+       ``cfg/yolov3_custom.cfg``. Otherwise, you will have to fill in
+       the YOLO anchors yourself directly into a copy of the template
+       file.
+    
+    #. ``networksavefile`` : This option specifies the full filepath to
+       the PyTorch savefile (.pt extension) that contains all weights for
+       the trained network.
+     
+    #. ``rgb_mean`` , ``rgb_std`` : These files contain RGB statistics
+       that were computed on the training dataset by the training
+       routine. Each of them is simply a 3-line file, where each line
+       contains a single numeric value that is the mean (or standard
+       deviation) of the respective RGB channel. These values are used to
+       normalize any data that is fed into the network.
+    
+    #. ``class_mean`` , ``class_std`` : These files contain class
+       statistics that were computed on the training dataset by the
+       training routine. Each of these files contains N-lines, where N is
+       the number of classes, and each line contains a comma-separated
+       list of 4 values, corresponding to the mean (or standard deviation)
+       of the width, height, area, and aspect ratio (in that order) of the
+       respective class objects. These statistics are used as prior
+       information to reduce false positives in the object detection
+       stage.
+
+    #. ``plot_flag`` : This option specifies whether you would like to
+       score the object detections that are calculated.
 
     **Examples**
 
@@ -130,6 +241,7 @@ class InputFile():
       class_mean           = /full/path/to/statdir/training_class_mean.out
       class_sigma          = /full/path/to/statdir/training_class_sigma.out
       invalid_class_list   = 75,82
+
     """
 
     def __init__(self, inputfile):

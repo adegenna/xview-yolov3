@@ -5,7 +5,7 @@
 
 Welcome to YOLOv3's documentation
 ==================================
-Project repository: https://github.com/adegenna/xview-yolov3.
+Project repository: https://github.com/adegenna/yolov3.
 
 .. toctree::
    :maxdepth: 2
