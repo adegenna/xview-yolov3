@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Code Docs &mdash; YOLOv3 0.5.3 documentation</title>
+  <title>Code Docs &mdash; YOLOv3 0.5.4 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.3
+                0.5.4
               </div>
             
           
@@ -184,96 +184,211 @@
 of type <code class="docutils literal notranslate"><span class="pre">[TRAIN]</span></code>:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="34%" />
-<col width="13%" />
-<col width="53%" />
+<col width="27%" />
+<col width="11%" />
+<col width="62%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">option</th>
-<th class="head">data type</th>
-<th class="head">meaning</th>
+<th class="head">type</th>
+<th class="head">description</th>
 </tr>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>loaddir</td>
 <td>string</td>
-<td>Absolute path to load directory.</td>
+<td><ul class="first last simple">
+<li>Full path to load directory.</li>
+<li>Any pre-trained YOLOv3 PyTorch file (.pt) goes here</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>outdir</td>
 <td>string</td>
-<td>Absolute path to output directory.</td>
+<td><ul class="first last simple">
+<li>Full  path to output directory.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>targetspath</td>
 <td>string</td>
-<td>Absolute path to target file.</td>
+<td><ul class="first last simple">
+<li>Full path to target file.</li>
+<li>Supported formats: <code class="docutils literal notranslate"><span class="pre">.geojson</span></code></li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>targetfiletype</td>
 <td>string</td>
-<td>Type of target file.</td>
+<td><ul class="first last simple">
+<li>Type of target file.</li>
+<li>Supported options: <code class="docutils literal notranslate"><span class="pre">json</span></code></li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>traindir</td>
 <td>string</td>
-<td>Type of target file.</td>
+<td><ul class="first last simple">
+<li>Full path to training image dataset</li>
+<li>Supported image types: <code class="docutils literal notranslate"><span class="pre">.tif</span></code>, <code class="docutils literal notranslate"><span class="pre">.bmp</span></code></li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>epochs</td>
 <td>int</td>
-<td>Number of training epochs.</td>
+<td><ul class="first last simple">
+<li>Number of training epochs.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>epochstart</td>
 <td>int</td>
-<td>Starting epoch.</td>
+<td><ul class="first last simple">
+<li>Starting epoch.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>batchsize</td>
 <td>int</td>
-<td>Training batch size.</td>
+<td><ul class="first last simple">
+<li>Training batch size.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>networkcfg</td>
 <td>string</td>
-<td>Absolute path to network architecture file.</td>
+<td><ul class="first last simple">
+<li>Full path to YOLOv3 network architecture file.</li>
+<li>Base template in <code class="docutils literal notranslate"><span class="pre">yolov3/cfg/yolov3_template.cfg</span></code></li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>imgsize</td>
 <td>int</td>
-<td>Base image crop size.</td>
+<td><ul class="first last simple">
+<li>Base image chip size.</li>
+<li>Must be multiple of 32</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>resume</td>
 <td>bool</td>
-<td>Boolean value specifying whether training is
-resuming from previous iteration.</td>
+<td><ul class="first last simple">
+<li>Specifies whether training is resuming from previous training.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>invalid_class_list</td>
 <td>string</td>
-<td>Comma-separated list of classes to be
-ignored from training data.</td>
+<td><ul class="first last simple">
+<li>.csv list of classes to be ignored from training data.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>boundingboxclusters</td>
 <td>int</td>
-<td>Desired number of bounding-box clusters for
-the YOLO architecture.</td>
+<td><ul class="first last simple">
+<li>Desired number of bounding-box clusters for the YOLO architecture.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>computeboundingboxclusters</td>
 <td>bool</td>
-<td>Boolean value specifying whether to compute
-bounding box clusters.</td>
+<td><ul class="first last simple">
+<li>Specifies whether to compute bounding box clusters.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>class_path</td>
 <td>string</td>
-<td>Absolute path to class.</td>
+<td><ul class="first last simple">
+<li>Full path to class names/labels file.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>sampling_weight</td>
 <td>string</td>
-<td>String specifying type of sampling weight.
-Options are inverse_class_frequency and uniform</td>
+<td><ul class="first last simple">
+<li>String specifying type of sampling weight.</li>
+<li>Options are <code class="docutils literal notranslate"><span class="pre">inverse_class_frequency</span></code> and <code class="docutils literal notranslate"><span class="pre">uniform</span></code></li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
+<p>Notes on <code class="docutils literal notranslate"><span class="pre">[TRAIN]</span></code> options above:</p>
+<ol class="arabic">
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">traindir</span></code> : If <code class="docutils literal notranslate"><span class="pre">.tif</span></code> images are used in the training data
+directory, then a .bmp copy is produced to be used in training.</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">targetspath</span></code> : Currently, the target metadata file must be
+formatted in .json format, similar to the xView .geojson
+format. Most important is that the target file must be
+compatible with the <code class="docutils literal notranslate"><span class="pre">yolov3.utils.get_labels_geojson(</span> <span class="pre">)</span></code>
+function, which provides the implementation for retrieving
+object coordinates, corresponding filenames, and
+classes. Please consult the documentation for that function for
+further details.</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">networkcfg</span></code> : You have two options here: you may provide a
+complete YOLOv3 architecture file, or provide a network
+template file and request that the software precompute the
+architecture for you, prior to training.  We strongly recommend
+the latter option. To do this, provide the full filepath to the
+generic template file located in
+<code class="docutils literal notranslate"><span class="pre">yolov3/cfg/yolov3_template.cfg</span></code>, set
+<code class="docutils literal notranslate"><span class="pre">computeboundingboxclusters</span> <span class="pre">=</span> <span class="pre">True</span></code> in the inputfile, and
+provide the desired number of bounding box clusters (i.e. YOLO
+anchors) in the <code class="docutils literal notranslate"><span class="pre">boundingboxclusters</span></code> argument of the
+inputfile. This will tell the software to precompute bounding
+box priors (anchors) for the training dataset, and a custom
+architecture file will be calculated and outputted to
+<code class="docutils literal notranslate"><span class="pre">yolov3/cfg/yolov3_custom.cfg</span></code>, which may be used later in
+detection/testing.</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">invalid_class_list</span></code> : This option was added to give the user
+the ability to specify a list of classes referred to in the
+<code class="docutils literal notranslate"><span class="pre">targetspath</span></code> metadata file that either are not present or
+need to be excluded from the training dataset. For example, the
+xView dataset makes reference to classes 75 and 82 in the
+.geojson target file, but these are <code class="docutils literal notranslate"><span class="pre">None</span></code> classes. If there
+are no “invalid” classes in your target metadata file, then
+simply leave this option blank.</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">class_path</span></code> : This file is a comma-separated list of all classes
+and any associated numeric labels. For example, the xView dataset
+contains 60 classes, with associated labels ranging from 11
+to 94. Thus, the <code class="docutils literal notranslate"><span class="pre">class_path</span></code> file for the xView dataset would be
+a 60-line .csv file that would look as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Fixed</span><span class="o">-</span><span class="n">wing</span> <span class="n">Aircraft</span> <span class="p">,</span> <span class="mi">11</span>
+<span class="n">Small</span> <span class="n">Aircraft</span> <span class="p">,</span> <span class="mi">12</span>
+<span class="n">Cargo</span> <span class="n">Plane</span> <span class="p">,</span> <span class="mi">13</span>
+<span class="o">...</span>
+<span class="n">Tower</span> <span class="p">,</span> <span class="mi">94</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">sampling_weight</span></code> : This option sets how images are weighted for
+random selection at runtime during the training routine. Options
+are <code class="docutils literal notranslate"><span class="pre">inverse_class_frequency</span></code> and <code class="docutils literal notranslate"><span class="pre">uniform</span></code>. The former weights
+an image by the sum of the inverse of the class frequencies of all
+its objects; the latter weights all images uniformly.</p>
+</li>
+</ol>
 <p><strong>Test Options</strong></p>
 <p>Below are a list of options that must be specified in an inputfile
 of type <code class="docutils literal notranslate"><span class="pre">[TEST]</span></code>:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="32%" />
-<col width="13%" />
-<col width="56%" />
+<col width="28%" />
+<col width="11%" />
+<col width="61%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">option</th>
@@ -284,86 +399,184 @@ of type <code class="docutils literal notranslate"><span class="pre">[TEST]</spa
 <tbody valign="top">
 <tr class="row-even"><td>loaddir</td>
 <td>string</td>
-<td>Absolute path to load directory.</td>
+<td><ul class="first last simple">
+<li>Full path to load directory.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>outdir</td>
 <td>string</td>
-<td>Absolute path to output directory.</td>
+<td><ul class="first last simple">
+<li>Full path to output directory.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>targetspath</td>
 <td>string</td>
-<td>Absolute path to target file.</td>
+<td><ul class="first last simple">
+<li>Full path to target file.</li>
+<li>Only needed for scoring the object detections.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>targetfiletype</td>
 <td>string</td>
-<td>Type of target file.</td>
+<td><ul class="first last simple">
+<li>Type of target file.</li>
+<li>Supported options: <code class="docutils literal notranslate"><span class="pre">json</span></code></li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>imagepath</td>
 <td>string</td>
-<td>Absolute path to directory containing images.</td>
+<td><ul class="first last simple">
+<li>Full path to directory containing images.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>plot_flag</td>
 <td>bool</td>
-<td>Flag to indicate whether to plot and output
-object detections.</td>
+<td><ul class="first last simple">
+<li>Flag to indicate whether to plot and output object detections.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>networkcfg</td>
 <td>string</td>
-<td>Absolute path to network architecture file.</td>
+<td><ul class="first last simple">
+<li>Full path to network architecture file.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>networksavefile</td>
 <td>string</td>
-<td>Absolute path to trained YOLOv3 network file,
-saved by PyTorch (.pt).</td>
+<td><ul class="first last simple">
+<li>Full path to trained YOLOv3 network file.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>class_path</td>
 <td>string</td>
-<td>Absolute path to .csv file containing list
-of classes/labels.</td>
+<td><ul class="first last simple">
+<li>Full path to .csv file containing list of classes/labels.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>conf_thres</td>
 <td>float</td>
-<td>Confidence threshold for detection.</td>
+<td><ul class="first last simple">
+<li>Confidence threshold for detection.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>cls_thres</td>
 <td>float</td>
-<td>Class threshold for detection.</td>
+<td><ul class="first last simple">
+<li>Class threshold for detection.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>nms_thres</td>
 <td>float</td>
-<td>NMS threshold.</td>
+<td><ul class="first last simple">
+<li>NMS threshold.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>batch_size</td>
 <td>int</td>
-<td>Batch size.</td>
+<td><ul class="first last simple">
+<li>Batch size.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>imgsize</td>
 <td>int</td>
-<td>Desired cropped image size.</td>
+<td><ul class="first last simple">
+<li>Desired chip size.</li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>rgb_mean</td>
 <td>string</td>
-<td>Absolute path to dataset RGB mean file.</td>
+<td><ul class="first last simple">
+<li>Full path to dataset RGB mean file.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>rgb_std</td>
 <td>string</td>
-<td>Absolute path to dataset RGB standard deviation file.</td>
+<td><ul class="first last simple">
+<li>Full path to dataset RGB standard deviation file.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>class_mean</td>
 <td>string</td>
-<td>Absolute path to class mean file.</td>
+<td><ul class="first last simple">
+<li>Full path to class mean file.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td>class_sigma</td>
 <td>string</td>
-<td>Absolute path to class standard deviation file.</td>
+<td><ul class="first last simple">
+<li>Full path to class standard deviation file.</li>
+<li><strong>[See notes below]</strong></li>
+</ul>
+</td>
 </tr>
 <tr class="row-even"><td>invalid_class_list</td>
 <td>string</td>
-<td>Comma-separated list of classes to be ignored
-from training data.</td>
+<td><ul class="first last simple">
+<li>Comma-separated list of classes to be ignored from training data.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
+<p>Notes on the testing inputfile:</p>
+<ol class="arabic simple">
+<li><code class="docutils literal notranslate"><span class="pre">targetspath</span></code> , <code class="docutils literal notranslate"><span class="pre">invalid_class_list</span></code> , <code class="docutils literal notranslate"><span class="pre">imgsize</span></code> ,
+<code class="docutils literal notranslate"><span class="pre">class_path</span></code> : Same notes apply as in the training case above.</li>
+<li><code class="docutils literal notranslate"><span class="pre">imagepath</span></code> : This option sets the full filepath to the location
+on your machine where your test dataset resides. There should be
+nothing in this directory except the test image files. Currently
+supported image files are <code class="docutils literal notranslate"><span class="pre">.tif</span></code> and <code class="docutils literal notranslate"><span class="pre">.bmp</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">networkcfg</span></code> : This option specifies the full filepath to a
+trained YOLOv3 configuration file. If you used the recommended
+input to this option in the training stage, then the code will
+have produced this file for you, saved as
+<code class="docutils literal notranslate"><span class="pre">cfg/yolov3_custom.cfg</span></code>. Otherwise, you will have to fill in
+the YOLO anchors yourself directly into a copy of the template
+file.</li>
+<li><code class="docutils literal notranslate"><span class="pre">networksavefile</span></code> : This option specifies the full filepath to
+the PyTorch savefile (.pt extension) that contains all weights for
+the trained network.</li>
+<li><code class="docutils literal notranslate"><span class="pre">rgb_mean</span></code> , <code class="docutils literal notranslate"><span class="pre">rgb_std</span></code> : These files contain RGB statistics
+that were computed on the training dataset by the training
+routine. Each of them is simply a 3-line file, where each line
+contains a single numeric value that is the mean (or standard
+deviation) of the respective RGB channel. These values are used to
+normalize any data that is fed into the network.</li>
+<li><code class="docutils literal notranslate"><span class="pre">class_mean</span></code> , <code class="docutils literal notranslate"><span class="pre">class_std</span></code> : These files contain class
+statistics that were computed on the training dataset by the
+training routine. Each of these files contains N-lines, where N is
+the number of classes, and each line contains a comma-separated
+list of 4 values, corresponding to the mean (or standard deviation)
+of the width, height, area, and aspect ratio (in that order) of the
+respective class objects. These statistics are used as prior
+information to reduce false positives in the object detection
+stage.</li>
+<li><code class="docutils literal notranslate"><span class="pre">plot_flag</span></code> : This option specifies whether you would like to
+score the object detections that are calculated.</li>
+</ol>
 <p><strong>Examples</strong></p>
 <p>To use this class, 
 follow this interface:</p>
